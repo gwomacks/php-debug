@@ -1,0 +1,30 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle Debugging'
+      'command': 'php-debug:toggleDebugging'
+    },
+    {
+      'label': 'Toggle Breakpoint'
+      'command': 'php-debug:toggleBreakpoint'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'php-debug'
+      'submenu': [
+        {
+          'label': 'Toggle Debugging'
+          'command': 'php-debug:toggleDebugging'
+        },
+        {
+          'label': 'Toggle Breakpoint'
+          'command': 'php-debug:toggleBreakpoint'
+        }
+      ]
+    ]
+  }
+]

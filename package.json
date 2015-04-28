@@ -1,0 +1,23 @@
+{
+  "name": "php-debug",
+  "main": "./lib/php-debug",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationCommands": {
+    "atom-workspace": [
+        "php-debug:toggleBreakpoint",
+        "php-debug:toggleDebugging"
+      ]
+  },
+  "repository": "https://github.com/atom/php-debug",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "xml2js": ">= 0.4.6 < 0.5",
+    "atom-space-pen-views": "^2.0.0",
+    "event-kit": "^1.0.3",
+    "q" : "^1.1.2"
+  }
+}
