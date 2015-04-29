@@ -10,3 +10,7 @@
 'atom-workspace':
   'ctrl-alt-d': 'php-debug:toggleDebugging'
   'alt-f9': 'php-debug:toggleBreakpoint'
+  'alt-f5': 'php-debug:run'
+  'alt-f6': 'php-debug:stepOver'
+  'alt-f6': 'php-debug:stepIn'
+  'alt-f7': 'php-debug:stepOut'

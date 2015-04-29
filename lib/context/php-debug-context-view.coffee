@@ -34,7 +34,6 @@ class PhpDebugContextView extends ScrollView
   showContexts: ->
     @contextViewList.empty()
     for index, context of @debugContext.scopeList
-      console.dir context
       if context == undefined
         continue
       @contextViewList.append(new ContextView(context))

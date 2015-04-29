@@ -14,5 +14,4 @@ class BreakpointListView extends View
 
   render: ->
     for breakpoint in @breakpoints
-      console.log breakpoint.getLine()
       @breakpointItemList.append(new BreakpointItemView(breakpoint))

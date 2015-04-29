@@ -25,6 +25,27 @@ createWatchView =  (state) ->
 module.exports = PhpDebug =
   subscriptions: null
 
+  config:
+    PathMaps:
+      type: 'array'
+      default:
+        from: 'meow'
+        to: 'poop'
+      items:
+        type: 'PathMap'
+        properties:
+          from:
+            type: 'string'
+          to:
+            type: 'string'
+    TestArray:
+      type: 'array'
+      default: []
+      items:
+        type: 'string'
+
+
+
   activate: (state) ->
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -44,14 +65,18 @@ module.exports = PhpDebug =
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp()
     @dbgp.onDebugContextChange @updateDebugContext
+    @dbgp.onResponseBreak @doBreak
 
   deactivate: ->
     @modalPanel.destroy()
     @subscriptions.dispose()
 
   updateDebugContext: (data) ->
-    console.log("Updating view context")
     @contextView.setDebugContext(data)
+
+  doBreak: (data) ->
+    console.dir data
+    console.log "break dance"
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()

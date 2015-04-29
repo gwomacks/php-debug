@@ -13,10 +13,10 @@ class ContextVariableView extends View
     @render()
 
   render: ->
-    console.log "Rendering variable"
     @name.append @variable.fullname
     switch @variable.type
       when 'string' then @value.append @variable.value
+      when 'int' then @value.append @variable.value
       when 'uninitialized' then @value.append "?"
       when 'array'
         ContextVariableListView = require "./context-variable-list-view"

@@ -60,19 +60,15 @@ class Dbgp
     return buffer
 
   parseResponse: (data) =>
-    console.log "Parsing response"
-    console.dir data
     result = data.response.$
     transactionId = result.transaction_id
-    # if data.response.$.status == "break"
-    #   console.log "A break!"
-      #@notifyResponseBreak data
+    if data.response.$.status == "break"
+      @notifyResponseBreak data
     # if data.response.$.command == "context_get"
     #   context = @buildContext(data)
     #   @notifyContextChange(context)
 
     if @promises[transactionId] != undefined
-      console.log "Promise fulfilled for transaction " + transactionId
       @promises[transactionId].resolve(data)
       delete @promises[transactionId]
     else
@@ -80,7 +76,6 @@ class Dbgp
 
 
   stuff: (data) =>
-    console.log(data)
     message = @parse(data)
     # @getFeature('language_supports_threads')
 
@@ -117,7 +112,6 @@ class Dbgp
     .then (data) =>
       return @processContextNames(data)
     .then () =>
-      console.dir @debugContext
       return @notifyDebugContextChange(@debugContext)
 
 
@@ -137,15 +131,11 @@ class Dbgp
     return @command(type)
 
   getContextNames: () ->
-    console.log "getting context names"
     return @command("context_names")
 
   processContextNames: (data) =>
-    console.log "Context names: "
-    console.dir data
     @debugContext.clear()
     for context in data.response.context
-      console.dir context
       @debugContext.addScope(context.$.id,context.$.name)
 
     commands = []
@@ -155,7 +145,6 @@ class Dbgp
 
     # for watchpoint in GlobalContext.getWatchpoints
     #   commands.push @evalWatchpoint(watchpoint)
-    console.dir commands
     return Q.all(commands)
 
 
@@ -163,20 +152,13 @@ class Dbgp
 
     return @command("eval", null, watchpoint.getExpression())
     .then (data) ->
-      console.log "The data with the eval is: "
-      console.dir data
       @debugContext.setWatchpointValue(watchpoint, data)
 
   updateContext: (scope) =>
     p = @contextGet(scope.scopeId)
     return p.then (data) =>
-      console.log("this does run")
       context = @buildContext data
-      console.log("this doesn't run");
-      console.dir context
-      console.dir scope
       @debugContext.setScopeContext(scope.scopeId, context)
-      console.log 'resolving'
 
   contextGet: (scope) =>
     return @command("context_get", {c: scope})
@@ -210,10 +192,13 @@ class Dbgp
         if variable.property
           for property in variable.property
             datum.value.push @parseContextVariable(property)
+      when "int"
+        datum.value = variable._
       when "uninitialized"
         datum.value = undefined
       else
         console.error "Unhandled context variable type: " + variable.$.type
+        console.dir variable
     return datum
 
   # events

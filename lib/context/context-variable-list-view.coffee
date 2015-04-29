@@ -10,12 +10,9 @@ class ContextVariableListView extends View
 
   initialize: (variables) ->
     @variables = variables
-    console.dir @variables
-    console.log "Constructed"
     @render()
 
   render: ->
     for variable in @variables
-      console.log "adding variable"
       @contextVariableList.append(new ContextVariableView(variable))
       #@variableListView.append "moo"
