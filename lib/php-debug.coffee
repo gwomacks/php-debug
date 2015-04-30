@@ -53,6 +53,10 @@ module.exports = PhpDebug =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleBreakpoint': => @toggleBreakpoint()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleDebugging': => @toggleDebugging()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:run': => @run()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOver': => @stepOver()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepIn': => @stepIn()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOut': => @stepOut()
     @subscriptions.add atom.workspace.addOpener (filePath) ->
       switch filePath
         when PhpDebugContextUri
@@ -86,6 +90,16 @@ module.exports = PhpDebug =
   toggleDebugging: ->
     @showWindows()
     @dbgp.listen()
+
+  run: ->
+    @dbgp.continue "run"
+
+  stepOver: ->
+    @dbgp.continue "step_over"
+  stepIn: ->
+    @dbgp.continue "step_in"
+  stepOut: ->
+    @dbgp.continue "step_out"
 
   showWindows: ->
     editor = atom.workspace.getActivePaneItem()

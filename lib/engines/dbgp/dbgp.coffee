@@ -47,6 +47,7 @@ class Dbgp
     console.log("closed")
 
   parse: (buffer) =>
+    console.dir buffer
     while buffer.split("\0").length >= 2
       n = buffer.indexOf("\0")
       len = parseInt(buffer.slice(0, n))
@@ -107,12 +108,6 @@ class Dbgp
     @sendAllBreakpoints()
     .then () =>
       return @continue("run")
-    .then () =>
-      return @getContextNames()
-    .then (data) =>
-      return @processContextNames(data)
-    .then () =>
-      return @notifyDebugContextChange(@debugContext)
 
 
   sendAllBreakpoints: ->
@@ -128,7 +123,13 @@ class Dbgp
     return Q.all(commands)
 
   continue: (type) ->
-    return @command(type)
+    @command(type)
+    .then () =>
+      return @getContextNames()
+    .then (data) =>
+      return @processContextNames(data)
+    .then () =>
+      return @notifyDebugContextChange(@debugContext)
 
   getContextNames: () ->
     return @command("context_names")
