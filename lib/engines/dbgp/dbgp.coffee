@@ -64,7 +64,8 @@ class Dbgp
     result = data.response.$
     transactionId = result.transaction_id
     if data.response.$.status == "break"
-      @notifyResponseBreak data
+      GlobalContext.notifyBreak(data)
+      #@notifyResponseBreak data
     # if data.response.$.command == "context_get"
     #   context = @buildContext(data)
     #   @notifyContextChange(context)
@@ -135,12 +136,13 @@ class Dbgp
     return @command("context_names")
 
   processContextNames: (data) =>
-    @debugContext.clear()
+    GlobalContext.getContext().clear()
     for context in data.response.context
-      @debugContext.addScope(context.$.id,context.$.name)
+      GlobalContext.getContext().addScope(context.$.id,context.$.name)
 
+    console.dir GlobalContext.getContext()
     commands = []
-    scopes = @debugContext.getScopes()
+    scopes = GlobalContext.getContext().getScopes()
     for index, scope of scopes
       commands.push @updateContext (scope)
 
@@ -156,10 +158,13 @@ class Dbgp
       @debugContext.setWatchpointValue(watchpoint, data)
 
   updateContext: (scope) =>
+    console.log "updating context"
     p = @contextGet(scope.scopeId)
     return p.then (data) =>
       context = @buildContext data
-      @debugContext.setScopeContext(scope.scopeId, context)
+      c = GlobalContext.getContext()
+      c.setScopeContext(scope.scopeId, context)
+      GlobalContext.setContext(c)
 
   contextGet: (scope) =>
     return @command("context_get", {c: scope})

@@ -9,6 +9,7 @@ PhpDebugContextUri = "phpdebug://context"
 PhpDebugStackUri = "phpdebug://stack"
 PhpDebugBreakpointsUri = "phpdebug://breakpoints"
 PhpDebugWatchUri = "phpdebug://watch"
+PhpDebugUnifiedUri = "phpdebug://unified"
 
 createContextView =  (state) ->
   PhpDebugContextView = require './context/php-debug-context-view'
@@ -21,6 +22,10 @@ createBreakpointsView =  (state) ->
 createWatchView =  (state) ->
   PhpDebugWatchView = require './watch/php-debug-watch-view'
   @watchView = new PhpDebugWatchView(state)
+
+createUnifiedView =  (state) ->
+  PhpDebugUnifiedView = require './unified/php-debug-unified-view'
+  @unifiedView = new PhpDebugUnifiedView(state)
 
 module.exports = PhpDebug =
   subscriptions: null
@@ -65,11 +70,12 @@ module.exports = PhpDebug =
           createBreakpointsView(uri: PhpDebugBreakpointsUri)
         when PhpDebugWatchUri
           createWatchView(uri: PhpDebugWatchUri)
-
+        when PhpDebugUnifiedUri
+          createUnifiedView(uri: PhpDebugUnifiedUri)
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp()
-    @dbgp.onDebugContextChange @updateDebugContext
-    @dbgp.onResponseBreak @doBreak
+    # @dbgp.onDebugContextChange @updateDebugContext
+    # @dbgp.onResponseBreak @doBreak
 
   deactivate: ->
     @modalPanel.destroy()
@@ -103,9 +109,10 @@ module.exports = PhpDebug =
 
   showWindows: ->
     editor = atom.workspace.getActivePaneItem()
-    atom.workspace.open(PhpDebugContextUri)
-    atom.workspace.open(PhpDebugBreakpointsUri)
-    atom.workspace.open(PhpDebugWatchUri)
+    # atom.workspace.open(PhpDebugContextUri)
+    # atom.workspace.open(PhpDebugBreakpointsUri)
+    # atom.workspace.open(PhpDebugWatchUri)
+    atom.workspace.open(PhpDebugUnifiedUri)
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()

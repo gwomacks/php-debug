@@ -8,21 +8,25 @@ class GlobalContext
     @watchpoints = []
 
   addBreakpoint: (breakpoint) ->
-    # index = helpers.getInsertIndex(@breakpoints, breakpoint)
-    # @breakpoints.splice(index,0, breakpoint)
     helpers.insertOrdered  @breakpoints, breakpoint
 
   getBreakpoints: ->
     return @breakpoints
 
   addWatchpoint: (watchpoint) ->
-    # index = getInsertIndex(@watchpoints, watchpoint)
-    # @watchpoints.splice(index,0, watchpoint)
     helpers.insertOrdered  @watchpoints, watchpoint
     @notifyWatchpointsChange()
 
   getWatchpoints: ->
     return @watchpoints
+
+  setContext: (context) ->
+    console.log "setting context"
+    console.dir context
+    @context = context
+
+  getContext: ->
+      return @context
 
   onBreakpointsChange: (callback) ->
     @emitter.on 'php-debug.breakpointsChange', callback
@@ -35,6 +39,12 @@ class GlobalContext
 
   notifyWatchpointsChange: (data) ->
     @emitter.emit 'php-debug.watchpointsChange', data
+
+  onBreak: (callback) ->
+    @emitter.on 'php-debug.break', callback
+
+  notifyBreak: (data) ->
+    @emitter.emit 'php-debug.break', data
 
 
 module.exports = new GlobalContext
