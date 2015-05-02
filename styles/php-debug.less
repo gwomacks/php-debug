@@ -9,8 +9,27 @@
   .php-debug-tab
   {
     background-color: blue;
-    width: 25%;
-    height: 100%;
-    display: inline-block;
+    flex:1;
+    overflow-y: scroll;
   }
+
+}
+
+.tabs-view {
+
+    display: flex;
+    height: 100%
+}
+
+.tabs-view:nth-child(1) {
+  order: 0;
+}
+.tabs-view:nth-child(2) {
+  order: 1;
+}
+.tabs-view:nth-child(3) {
+  order: 2;
+}
+.tabs-view:nth-child(3) {
+  order: 3;
 }

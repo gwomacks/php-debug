@@ -26,7 +26,10 @@ class GlobalContext
     @context = context
 
   getContext: ->
-      return @context
+    return @context
+
+  clearContext: ->
+    
 
   onBreakpointsChange: (callback) ->
     @emitter.on 'php-debug.breakpointsChange', callback

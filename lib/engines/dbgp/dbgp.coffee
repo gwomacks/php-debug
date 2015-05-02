@@ -63,8 +63,8 @@ class Dbgp
   parseResponse: (data) =>
     result = data.response.$
     transactionId = result.transaction_id
-    if data.response.$.status == "break"
-      GlobalContext.notifyBreak(data)
+    # if data.response.$.status == "break"
+    #   GlobalContext.notifyBreak(data)
       #@notifyResponseBreak data
     # if data.response.$.command == "context_get"
     #   context = @buildContext(data)
@@ -131,15 +131,20 @@ class Dbgp
       return @processContextNames(data)
     .then () =>
       return @notifyDebugContextChange(@debugContext)
+    .then () =>
+      GlobalContext.notifyBreak()
 
   getContextNames: () ->
+    console.log "getting context names"
     return @command("context_names")
 
   processContextNames: (data) =>
-    GlobalContext.getContext().clear()
+    console.log "processing context names"
+    console.dir data
+    GlobalContext.setContext(new DebugContext())
     for context in data.response.context
+      console.log "context!"
       GlobalContext.getContext().addScope(context.$.id,context.$.name)
-
     console.dir GlobalContext.getContext()
     commands = []
     scopes = GlobalContext.getContext().getScopes()

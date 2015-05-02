@@ -21,6 +21,7 @@ class DebugContext
   setWatchpointValue: (watchpoint, value) ->
 
   clear: () ->
+    console.log "meow?"
     @scopeList = {}
 
   getScopes: ->

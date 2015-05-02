@@ -1,27 +1,28 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
+ContextVariableScalarView = require "./context-variable-scalar-view"
+
 
 module.exports =
 class ContextVariableView extends View
   @content: =>
-    @li class: 'meow', =>
-      @div class: 'meow', =>
-        @span outlet: 'name'
-        @span outlet: 'value'
+    @li =>
+      @div outlet: 'variableView'
 
-  initialize: (variable) ->
-    @variable = variable
+  initialize: (@variable) ->
     @render()
 
   render: ->
-    @name.append @variable.fullname
+    console.dir @variable
     switch @variable.type
-      when 'string' then @value.append @variable.value
-      when 'int' then @value.append @variable.value
-      when 'uninitialized' then @value.append "?"
+      when 'string' then @variableView.append(new ContextVariableScalarView(@variable.fullname, @variable.value))
+      when 'int'
+        console.log "Sir we have an int"
+        @variableView.append(new ContextVariableScalarView(@variable.fullname, @variable.value))
+      when 'uninitialized' then @variableView.append(new ContextVariableScalarView(@variable.fullname, "?"))
       when 'array'
         ContextVariableListView = require "./context-variable-list-view"
-        @value.append("array("+@variable.value.length+")")
-        @value.append(new ContextVariableListView(@variable.value))
+        summary ="array["+@variable.value.length+"]"
+        @variableView.append(new ContextVariableListView(@variable.fullname, summary, @variable.value))
         #@value.append "ARRAY"
       else
         console.log "Unhandled variable type: " + @variable.type

@@ -7,7 +7,6 @@ module.exports =
 class PhpDebugContextView extends ScrollView
   @content: ->
     @div class: 'php-debug php-debug-context-view pane-item native-key-bindings padded', style: "overflow:auto;", tabindex: -1, =>
-      @button class: 'btn btn-collapse-all', 'Collapse All Sections'
       @div outlet: 'contextViewList', class:'php-debug-contexts'
 
   constructor: ->
@@ -36,7 +35,7 @@ class PhpDebugContextView extends ScrollView
     @debugContext = context
     @showContexts()
 
-  showContexts: ->
+  showContexts: =>
     console.log "Showing contexts"
     if @contextViewList
       @contextViewList.empty()
@@ -45,4 +44,5 @@ class PhpDebugContextView extends ScrollView
     for index, context of contexts.scopeList
       if context == undefined
         continue
+      console.log "adding scope"
       @contextViewList.append(new ContextView(context))

@@ -1,17 +1,16 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
 ContextVariableListView = require './context-variable-list-view'
 
 module.exports =
 class ContextView extends View
 
   @content: =>
-    @div class: 'thing', =>
-      @div outlet: 'contextListView'
+    @div =>
+      @span outlet: 'contextListView'
 
-  initialize: (context) ->
-    @context = context
+  initialize: (@context) ->
     @render()
 
   render: ->
-    @contextListView.append(new ContextVariableListView(@context.context.variables))
-    #@contextListView.append "List View"
+    console.dir @context
+    @contextListView.append(new ContextVariableListView( @context.name, null, @context.context.variables))
