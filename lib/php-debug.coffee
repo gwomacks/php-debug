@@ -25,7 +25,7 @@ createWatchView =  (state) ->
 
 createUnifiedView =  (state) ->
   PhpDebugUnifiedView = require './unified/php-debug-unified-view'
-  @unifiedView = new PhpDebugUnifiedView(state)
+  return new PhpDebugUnifiedView(state)
 
 module.exports = PhpDebug =
   subscriptions: null
@@ -108,11 +108,14 @@ module.exports = PhpDebug =
     @dbgp.continue "step_out"
 
   showWindows: ->
-    editor = atom.workspace.getActivePaneItem()
+    editor = atom.workspace.getActivePane()
     # atom.workspace.open(PhpDebugContextUri)
     # atom.workspace.open(PhpDebugBreakpointsUri)
     # atom.workspace.open(PhpDebugWatchUri)
+    # atom.workspace.addBottomPanel()
+    editor.splitDown()
     atom.workspace.open(PhpDebugUnifiedUri)
+    #createUnifiedView().openWindow()
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()

@@ -29,7 +29,7 @@ class GlobalContext
     return @context
 
   clearContext: ->
-    
+
 
   onBreakpointsChange: (callback) ->
     @emitter.on 'php-debug.breakpointsChange', callback
@@ -47,6 +47,7 @@ class GlobalContext
     @emitter.on 'php-debug.break', callback
 
   notifyBreak: (data) ->
+    console.log "breakdance"
     @emitter.emit 'php-debug.break', data
 
 

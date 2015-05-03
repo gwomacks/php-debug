@@ -1,6 +1,8 @@
 {Disposable} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 PhpDebugContextView = require '../context/php-debug-context-view'
+PhpDebugWatchView = require '../watch/php-debug-watch-view'
+PhpDebugBreakpointView = require '../breakpoint/php-debug-breakpoint-view'
 GlobalContext = require '../models/global-context'
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
@@ -27,7 +29,15 @@ class PhpDebugUnifiedView extends ScrollView
   initialize: (@editor) ->
     super
     @contextView.append(new PhpDebugContextView())
+    @watchpointView.append(new PhpDebugWatchView())
+    @breakpointView.append(new PhpDebugBreakpointView())
     # GlobalContext.onBreak @doUpdate
+
+  openWindow: ->
+    atom.workspace.addBottomPanel({
+      item: this
+      visible: true
+    })
 
   # doUpdate: =>
   #   console.log "showing context"
