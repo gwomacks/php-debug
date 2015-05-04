@@ -7,12 +7,14 @@ DebugContext = require '../../models/debug-context'
 Watchpoint = require '../../models/watchpoint'
 
 module.exports =
-class DbgpInstance
+class DbgpInstance extends DebugContext
   constructor: (@socket) ->
+    super()
     @promises = []
     @socket.on 'data', @stuff
     @emitter = new Emitter
     @buffer = ''
+    GlobalContext.addDebugContext(this)
 
   nextTransactionId: ->
     if !@transaction_id
@@ -20,7 +22,6 @@ class DbgpInstance
     return @transaction_id++
 
   parse: (buffer) =>
-    console.dir buffer
     while buffer.split("\0").length >= 2
       n = buffer.indexOf("\0")
       len = parseInt(buffer.slice(0, n))
@@ -31,7 +32,6 @@ class DbgpInstance
         switch type
           when "init" then @onInit result
           when "response"
-            console.log "wee response"
             @parseResponse result
     return buffer
 
@@ -46,11 +46,12 @@ class DbgpInstance
     #   @notifyContextChange(context)
 
     if @promises[transactionId] != undefined
-      console.log "response resolved"
       @promises[transactionId].resolve(data)
+      console.log "Resolved " + transactionId
+      console.dir @promises
       delete @promises[transactionId]
     else
-      console.warning "Could not find promise for transaction " + transactionId
+      console.warn "Could not find promise for transaction " + transactionId
 
 
   stuff: (data) =>
@@ -64,12 +65,14 @@ class DbgpInstance
     @promises[transactionId] = deferred
 
     payload = command + " -i " + transactionId
+    console.log "transactionId: " + transactionId
     if options && Object.keys(options).length > 0
       argu = ("-"+arg + " " + val for arg, val of options)
       argu2 = argu.join(" ")
       payload += " " + argu2
+
     if data
-      payload += + " -- " + new Buffer(data, 'ascii').toString('base64')
+      payload += " -- " + new Buffer(data, 'ascii').toString('base64')
     console.log payload
     if @socket
       @socket.write(payload + "\0")
@@ -93,61 +96,65 @@ class DbgpInstance
   sendAllBreakpoints: ->
     breakpoints = GlobalContext.getBreakpoints()
     commands = []
-    console.log "Sending al lbreakpoints"
     for breakpoint in breakpoints
       options = {
         t: 'line',
         f: breakpoint.getPath(), #'file://C:/Users/gabriel/Documents/test.php',
         n: breakpoint.getLine()
       }
-      console.dir options
       commands.push @command("breakpoint_set", options)
     return Q.all(commands)
 
-  continue: (type) ->
+  continue: (type) =>
     @command(type)
     .then () =>
       return @getContextNames()
     .then (data) =>
       return @processContextNames(data)
-    # .then () =>
-    #   return @notifyDebugContextChange(@debugContext)
     .then () =>
+      console.log "break dance time"
       GlobalContext.notifyBreak()
 
   syncContext: () ->
     return
 
   getContextNames: () ->
-    console.log "getting context names"
     return @command("context_names")
 
   processContextNames: (data) =>
-    console.log "processing context names"
-    console.dir data
-    GlobalContext.setContext(new DebugContext())
+    #GlobalContext.setContext(new DebugContext())
     for context in data.response.context
-      console.log "context!"
-      GlobalContext.getContext().addScope(context.$.id,context.$.name)
-    console.dir GlobalContext.getContext()
+      @addScope(context.$.id,context.$.name)
     commands = []
-    scopes = GlobalContext.getContext().getScopes()
+    scopes = @getScopes()
     for index, scope of scopes
-      commands.push @updateContext (scope)
+      console.log "scope!"
+      commands.push @updateContext(scope)
+    console.dir commands
+    # for watchpoint in GlobalContext.getWatchpoints
+    #   commands.push @evalWatchpoint(watchpoint)
+    return Q.all(commands)
+
+
+  updateWatchpoints: (data) =>
+    commands = []
+    for watch in GlobalContext.getWatchpoints()
+      commands.push @evalWatchpoint(watch)
 
     # for watchpoint in GlobalContext.getWatchpoints
     #   commands.push @evalWatchpoint(watchpoint)
     return Q.all(commands)
 
 
-  evalWatchpoint: (watchpoint) ->
+  executeEval: (expression) ->
+    return @command("eval", null, expression)
 
+  evalWatchpoint: (watchpoint) ->
     return @command("eval", null, watchpoint.getExpression())
-    .then (data) ->
+    .then (data) =>
       @debugContext.setWatchpointValue(watchpoint, data)
 
   updateContext: (scope) =>
-    console.log "updating context"
     p = @contextGet(scope.scopeId)
     return p.then (data) =>
       context = @buildContext data

@@ -19,6 +19,7 @@ class DebugContext
     @watchpointList.push({watchpoint: watchpoint, value: undefined})
 
   setWatchpointValue: (watchpoint, value) ->
+    console.log "meow"
 
   clear: () ->
     console.log "meow?"

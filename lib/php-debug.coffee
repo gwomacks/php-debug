@@ -98,14 +98,18 @@ module.exports = PhpDebug =
     @dbgp.listen()
 
   run: ->
-    @dbgp.continue "run"
+    GlobalContext.getCurrentDebugContext()
+      .continue "run"
 
   stepOver: ->
-    @dbgp.continue "step_over"
+    GlobalContext.getCurrentDebugContext()
+      .continue "step_over"
   stepIn: ->
-    @dbgp.continue "step_in"
+    GlobalContext.getCurrentDebugContext()
+      .continue "step_in"
   stepOut: ->
-    @dbgp.continue "step_out"
+    GlobalContext.getCurrentDebugContext()
+      .continue "step_out"
 
   showWindows: ->
     editor = atom.workspace.getActivePane()

@@ -6,12 +6,19 @@ class GlobalContext
     @emitter = new Emitter
     @breakpoints = []
     @watchpoints = []
+    @debugContexts = []
 
   addBreakpoint: (breakpoint) ->
     helpers.insertOrdered  @breakpoints, breakpoint
 
   getBreakpoints: ->
     return @breakpoints
+
+  addDebugContext: (debugContext) ->
+    @debugContexts.push debugContext
+
+  getCurrentDebugContext: () ->
+    return @debugContexts[0]
 
   addWatchpoint: (watchpoint) ->
     helpers.insertOrdered  @watchpoints, watchpoint
