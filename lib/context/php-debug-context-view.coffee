@@ -36,13 +36,10 @@ class PhpDebugContextView extends ScrollView
     @showContexts()
 
   showContexts: =>
-    console.log "Showing contexts"
     if @contextViewList
       @contextViewList.empty()
-    contexts = GlobalContext.getContext()
-    console.dir contexts
+    contexts = GlobalContext.getCurrentDebugContext()
     for index, context of contexts.scopeList
       if context == undefined
         continue
-      console.log "adding scope"
       @contextViewList.append(new ContextView(context))

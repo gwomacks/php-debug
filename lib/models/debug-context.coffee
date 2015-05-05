@@ -16,10 +16,13 @@ class DebugContext
 
   addWatchpoint: (watchpoint) ->
     index = helpers.getInsertIndex(@watchpointList, watchpoint)
-    @watchpointList.push({watchpoint: watchpoint, value: undefined})
+    @watchpointList.push(watchpoint)
 
-  setWatchpointValue: (watchpoint, value) ->
-    console.log "meow"
+  clearWatchpoints: () ->
+    @watchpointList = []
+
+  getWatchpoints: () ->
+    return @watchpointList
 
   clear: () ->
     console.log "meow?"

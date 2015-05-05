@@ -5,11 +5,13 @@ class WatchView extends View
 
   @content: =>
     @div class: 'thing', =>
-      @div outlet: 'watchItemView'
+      @div outlet: 'expression'
+      @div outlet: 'value'
 
   initialize: (watchpoint) ->
     @watchpoint = watchpoint
     @render()
 
   render: ->
-    @watchItemView.append @watchpoint.getExpression()
+    @expression.append @watchpoint.getExpression()
+    @value.append @watchpoint.getValue()

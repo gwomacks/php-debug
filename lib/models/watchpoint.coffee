@@ -9,6 +9,12 @@ class Watchpoint
   getExpression: ->
     return @expression
 
+  setValue: (@value) ->
+    undefined
+
+  getValue: () ->
+    return @value
+    
   isLessThan: (other) ->
     return true if !other instanceof Watchpoint
     return true if other.getExpression() < @getExpression()

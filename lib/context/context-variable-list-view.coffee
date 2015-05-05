@@ -4,7 +4,7 @@ ContextVariableView = require './context-variable-view'
 module.exports =
 class ContextVariableListView extends View
 
-  @content: =>
+  @content: (params) ->
     @li class: "context-variable-list-view", =>
       @details =>
         @summary =>
@@ -14,14 +14,18 @@ class ContextVariableListView extends View
 
 
 
-  initialize: (@name, @summary, @variables) ->
-    console.dir @name
-    console.dir @summary
-    console.dir @variables
+  initialize: (params) ->
+    @name = params.name
+    @summary = params.summary
+    @variables = params.variables
+    @autoopen = params.autoopen
     @render()
 
   render: ->
     @listName.append(@name)
     @listSummary.append(@summary)
+    console.log "details are: "
+    if @autoopen
+      @find('details').attr("open", "open")
     for variable in @variables
       @contextVariableList.append(new ContextVariableView(variable))

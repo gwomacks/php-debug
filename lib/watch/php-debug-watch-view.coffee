@@ -32,7 +32,7 @@ class PhpDebugWatchView extends ScrollView
 
   initialize: ->
     @newWatchpointEditor.getModel().onWillInsertText @submitWatchpoint
-    GlobalContext.onWatchpointsChange @showWatches
+    GlobalContext.onBreak @showWatches
 
   submitWatchpoint: (event) =>
     return unless event.text is "\n"
@@ -54,8 +54,11 @@ class PhpDebugWatchView extends ScrollView
     @showWatches()
 
   showWatches: =>
+    console.log "showing watches"
     @watchpointViewList.empty()
-    for watch in GlobalContext.getWatchpoints()
+    watches = GlobalContext.getCurrentDebugContext().getWatchpoints()
+    console.dir watches
+    for watch in watches
       if watch == undefined
         continue
       @watchpointViewList.append(new WatchView(watch))

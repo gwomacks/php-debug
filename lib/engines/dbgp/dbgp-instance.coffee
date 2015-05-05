@@ -49,7 +49,8 @@ class DbgpInstance extends DebugContext
       @promises[transactionId].resolve(data)
       console.log "Resolved " + transactionId
       console.dir @promises
-      delete @promises[transactionId]
+      console.dir data
+      #delete @promises[transactionId]
     else
       console.warn "Could not find promise for transaction " + transactionId
 
@@ -93,7 +94,7 @@ class DbgpInstance extends DebugContext
       return @continue("run")
 
 
-  sendAllBreakpoints: ->
+  sendAllBreakpoints: =>
     breakpoints = GlobalContext.getBreakpoints()
     commands = []
     for breakpoint in breakpoints
@@ -106,17 +107,26 @@ class DbgpInstance extends DebugContext
     return Q.all(commands)
 
   continue: (type) =>
-    @command(type)
-    .then () =>
-      return @getContextNames()
-    .then (data) =>
-      return @processContextNames(data)
-    .then () =>
-      console.log "break dance time"
-      GlobalContext.notifyBreak()
+    p1 = @command(type).then(
+      (data) =>
+        return @getContextNames()
+    )
 
-  syncContext: () ->
-    return
+    p2 = p1.then(
+      (data) =>
+        return @processContextNames(data)
+    )
+
+    p3 = p2.then(
+      (data) =>
+        return @updateWatchpoints(data)
+    )
+
+
+    p4 = p3.then(
+      (data) =>
+        GlobalContext.notifyBreak()
+    )
 
   getContextNames: () ->
     return @command("context_names")
@@ -128,8 +138,8 @@ class DbgpInstance extends DebugContext
     commands = []
     scopes = @getScopes()
     for index, scope of scopes
-      console.log "scope!"
-      commands.push @updateContext(scope)
+      console.log "scope! "+ scope
+      commands.push(@updateContext(scope))
     console.dir commands
     # for watchpoint in GlobalContext.getWatchpoints
     #   commands.push @evalWatchpoint(watchpoint)
@@ -137,6 +147,7 @@ class DbgpInstance extends DebugContext
 
 
   updateWatchpoints: (data) =>
+    @clearWatchpoints()
     commands = []
     for watch in GlobalContext.getWatchpoints()
       commands.push @evalWatchpoint(watch)
@@ -150,17 +161,18 @@ class DbgpInstance extends DebugContext
     return @command("eval", null, expression)
 
   evalWatchpoint: (watchpoint) ->
-    return @command("eval", null, watchpoint.getExpression())
-    .then (data) =>
-      @debugContext.setWatchpointValue(watchpoint, data)
+    p = @command("eval", null, watchpoint.getExpression())
+    return p.then (data) =>
+      console.log "updating watchpoint"
+      console.dir data
+      watchpoint.setValue(data.response.property[0]._)
+      @addWatchpoint(watchpoint)
 
   updateContext: (scope) =>
     p = @contextGet(scope.scopeId)
     return p.then (data) =>
       context = @buildContext data
-      c = GlobalContext.getContext()
-      c.setScopeContext(scope.scopeId, context)
-      GlobalContext.setContext(c)
+      @setScopeContext(scope.scopeId, context)
 
   contextGet: (scope) =>
     return @command("context_get", {c: scope})
