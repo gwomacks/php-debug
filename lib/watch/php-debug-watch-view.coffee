@@ -32,7 +32,7 @@ class PhpDebugWatchView extends ScrollView
 
   initialize: ->
     @newWatchpointEditor.getModel().onWillInsertText @submitWatchpoint
-    GlobalContext.onBreak @showWatches
+    GlobalContext.onContextUpdate @showWatches
 
   submitWatchpoint: (event) =>
     return unless event.text is "\n"

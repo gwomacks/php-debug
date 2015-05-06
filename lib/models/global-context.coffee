@@ -54,8 +54,13 @@ class GlobalContext
     @emitter.on 'php-debug.break', callback
 
   notifyBreak: (data) ->
-    console.log "breakdance"
     @emitter.emit 'php-debug.break', data
+
+  onContextUpdate: (callback) ->
+    @emitter.on 'php-debug.contextUpdate', callback
+
+  notifyContextUpdate: (data) ->
+    @emitter.emit 'php-debug.contextUpdate', data
 
 
 module.exports = new GlobalContext

@@ -75,7 +75,7 @@ module.exports = PhpDebug =
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp()
     # @dbgp.onDebugContextChange @updateDebugContext
-    # @dbgp.onResponseBreak @doBreak
+    GlobalContext.onBreak @doBreak
 
   deactivate: ->
     @modalPanel.destroy()
@@ -84,9 +84,12 @@ module.exports = PhpDebug =
   updateDebugContext: (data) ->
     @contextView.setDebugContext(data)
 
-  doBreak: (data) ->
-    console.dir data
-    console.log "break dance"
+  doBreak: (breakpoint) ->
+    console.log "Doing break"
+    console.dir breakpoint
+    #Workspace.open(breakpoint.getPath(),{searchAllPanes: true, activatePane:true})
+    atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
+    GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
