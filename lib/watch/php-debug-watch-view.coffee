@@ -54,10 +54,8 @@ class PhpDebugWatchView extends ScrollView
     @showWatches()
 
   showWatches: =>
-    console.log "showing watches"
     @watchpointViewList.empty()
     watches = GlobalContext.getCurrentDebugContext().getWatchpoints()
-    console.dir watches
     for watch in watches
       if watch == undefined
         continue

@@ -64,7 +64,6 @@ class DbgpInstance extends DebugContext
     @promises[transactionId] = deferred
 
     payload = command + " -i " + transactionId
-    console.log "transactionId: " + transactionId
     if options && Object.keys(options).length > 0
       argu = ("-"+arg + " " + val for arg, val of options)
       argu2 = argu.join(" ")
@@ -72,12 +71,10 @@ class DbgpInstance extends DebugContext
 
     if data
       payload += " -- " + new Buffer(data, 'ascii').toString('base64')
-    console.log payload
     if @socket
       @socket.write(payload + "\0")
     else
       console.error "No socket found"
-    console.log payload
     return deferred.promise
 
   getFeature: (feature_name) =>
@@ -111,7 +108,7 @@ class DbgpInstance extends DebugContext
         messages = response["xdebug:message"]
         message = messages[0]
         thing = message.$
-        filepath = thing['filename']
+        filepath = thing['filename'].replace("file:///", "")
         lineno = thing['lineno']
         breakpoint = new Breakpoint(filepath, lineno)
         GlobalContext.notifyBreak(breakpoint)
@@ -131,7 +128,6 @@ class DbgpInstance extends DebugContext
 
     p3.then(
       (data) =>
-        console.log "context update!"
         GlobalContext.notifyContextUpdate()
     )
 
@@ -215,5 +211,4 @@ class DbgpInstance extends DebugContext
         datum.value = undefined
       else
         console.error "Unhandled context variable type: " + variable.$.type
-        console.dir variable
     return datum

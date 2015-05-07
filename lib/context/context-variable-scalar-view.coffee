@@ -3,8 +3,8 @@ module.exports =
 class ContextVariableScalarView extends View
   @content: =>
     @div =>
-      @span outlet: "variableName"
-      @span outlet: "variableValue"
+      @span class: 'variable php', outlet: "variableName"
+      @span class: 'type php', outlet: "variableValue"
 
   initialize: (@name, @value) ->
     @render()

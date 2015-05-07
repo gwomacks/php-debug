@@ -33,22 +33,14 @@ module.exports = PhpDebug =
   config:
     PathMaps:
       type: 'array'
-      default:
-        from: 'meow'
-        to: 'poop'
+      default: []
       items:
-        type: 'PathMap'
+        type: 'object'
         properties:
           from:
             type: 'string'
           to:
             type: 'string'
-    TestArray:
-      type: 'array'
-      default: []
-      items:
-        type: 'string'
-
 
 
   activate: (state) ->
@@ -87,8 +79,20 @@ module.exports = PhpDebug =
   doBreak: (breakpoint) ->
     console.log "Doing break"
     console.dir breakpoint
-    #Workspace.open(breakpoint.getPath(),{searchAllPanes: true, activatePane:true})
-    atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
+    filepath = breakpoint.getPath()
+
+    pathMaps = atom.config.get('php-debug.PathMaps')
+    console.dir pathMaps
+    console.log filepath
+    for pathMap in pathMaps
+      console.dir pathMap
+      if filepath.indexOf(pathMap.from) == 0
+        console.log "pathmap matched"
+        filepath = filepath.replace(pathMap.from, pathMap.to)
+        break
+
+    atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true})
+    #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
     GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
