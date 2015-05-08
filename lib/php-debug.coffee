@@ -122,7 +122,7 @@ module.exports = PhpDebug =
     editor = atom.workspace.getActivePane()
     # atom.workspace.open(PhpDebugContextUri)
     # atom.workspace.open(PhpDebugBreakpointsUri)
-    # atom.workspace.open(PhpDebugWatchUri)
+    atom.workspace.open(PhpDebugWatchUri)
     # atom.workspace.addBottomPanel()
     editor.splitDown()
     atom.workspace.open(PhpDebugUnifiedUri)

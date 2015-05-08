@@ -7,7 +7,7 @@ GlobalContext = require '../models/global-context'
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-unified-view pane-item native-key-bindings padded', style: 'overflow:auto;', tabindex: -1, =>
+    @div class: 'php-debug php-debug-unified-view pane-item padded', style: 'overflow:auto;', tabindex: -1, =>
       @div class: 'tabs-view', =>
         @div outlet: 'stackView', class:'php-debug-tab'
         @div outlet: 'contextView', class:'php-debug-tab'
