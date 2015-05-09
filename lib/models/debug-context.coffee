@@ -7,6 +7,7 @@ class DebugContext
   constructor: () ->
     @scopeList = {}
     @watchpointList = []
+    @stackFrameList = []
 
   addScope: (scopeId, name) ->
     @scopeList[scopeId] = { name: name, scopeId: scopeId, context: {} }
@@ -23,6 +24,16 @@ class DebugContext
 
   getWatchpoints: () ->
     return @watchpointList
+
+  setStack: (stack) ->
+    console.log "setting stack"
+    console.dir stack
+    @stackFrameList = stack
+
+  getStack: () ->
+    console.log "getting stack"
+    console.dir @stackFrameList
+    return @stackFrameList
 
   clear: () ->
     console.log "meow?"

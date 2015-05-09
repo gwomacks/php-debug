@@ -77,17 +77,11 @@ module.exports = PhpDebug =
     @contextView.setDebugContext(data)
 
   doBreak: (breakpoint) ->
-    console.log "Doing break"
-    console.dir breakpoint
     filepath = breakpoint.getPath()
 
     pathMaps = atom.config.get('php-debug.PathMaps')
-    console.dir pathMaps
-    console.log filepath
     for pathMap in pathMaps
-      console.dir pathMap
       if filepath.indexOf(pathMap.from) == 0
-        console.log "pathmap matched"
         filepath = filepath.replace(pathMap.from, pathMap.to)
         break
 
@@ -122,7 +116,7 @@ module.exports = PhpDebug =
     editor = atom.workspace.getActivePane()
     # atom.workspace.open(PhpDebugContextUri)
     # atom.workspace.open(PhpDebugBreakpointsUri)
-    atom.workspace.open(PhpDebugWatchUri)
+    #atom.workspace.open(PhpDebugWatchUri)
     # atom.workspace.addBottomPanel()
     editor.splitDown()
     atom.workspace.open(PhpDebugUnifiedUri)

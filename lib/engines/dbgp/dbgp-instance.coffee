@@ -17,6 +17,20 @@ class DbgpInstance extends DebugContext
     @buffer = ''
     GlobalContext.addDebugContext(this)
 
+  syncStack: ->
+    return @executeCommand('stack_get').then (data) =>
+      stackFrames = []
+      for frame in data.response.stack
+        csonFrame = {
+          id:       frame.$.level
+          label:    frame.$.where
+          filepath: frame.$.filename
+          line:     frame.$.lineno
+        }
+        stackFrames.push csonFrame
+      @setStack(stackFrames)
+
+
   nextTransactionId: ->
     if !@transaction_id
       @transaction_id = 1
@@ -56,6 +70,10 @@ class DbgpInstance extends DebugContext
   stuff: (data) =>
     message = @parse(data)
     # @getFeature('language_supports_threads')
+
+
+  executeCommand: (command, options, data) ->
+    @command(command, options, data)
 
   command: (command, options, data) =>
 
@@ -126,10 +144,17 @@ class DbgpInstance extends DebugContext
         return @updateWatchpoints(data)
     )
 
-    p3.then(
+    p4 = p3.then (
       (data) =>
-        GlobalContext.notifyContextUpdate()
+        @syncStack()
     )
+
+    p5 = p4.then(
+      (data) =>
+        return GlobalContext.notifyContextUpdate()
+    )
+
+    p5.done()
 
   getContextNames: () ->
     return @command("context_names")

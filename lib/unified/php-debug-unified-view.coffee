@@ -1,6 +1,7 @@
 {Disposable} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 PhpDebugContextView = require '../context/php-debug-context-view'
+PhpDebugStackView = require '../stack/php-debug-stack-view'
 PhpDebugWatchView = require '../watch/php-debug-watch-view'
 PhpDebugBreakpointView = require '../breakpoint/php-debug-breakpoint-view'
 GlobalContext = require '../models/global-context'
@@ -28,6 +29,7 @@ class PhpDebugUnifiedView extends ScrollView
 
   initialize: (@editor) ->
     super
+    @stackView.append(new PhpDebugStackView())
     @contextView.append(new PhpDebugContextView())
     @watchpointView.append(new PhpDebugWatchView())
     @breakpointView.append(new PhpDebugBreakpointView())

@@ -9,10 +9,6 @@ class PhpDebugContextView extends ScrollView
     @div class: 'php-debug php-debug-context-view pane-item native-key-bindings padded', style: "overflow:auto;", tabindex: -1, =>
       @div outlet: 'contextViewList', class:'php-debug-contexts'
 
-  constructor: ->
-    super()
-    @contextList = []
-
   serialize: ->
     deserializer: @constructor.name
     uri: @getURI()
@@ -31,9 +27,9 @@ class PhpDebugContextView extends ScrollView
   isEqual: (other) ->
     other instanceof PhpDebugContextView
 
-  setDebugContext: (context) ->
-    @debugContext = context
-    @showContexts()
+  # setDebugContext: (context) ->
+  #   @debugContext = context
+  #   @showContexts()
 
   showContexts: =>
     if @contextViewList
