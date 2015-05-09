@@ -1,15 +1,36 @@
 helpers = require '../helpers.coffee'
 {Emitter, Disposable} = require 'event-kit'
 
+module.exports =
 class GlobalContext
+  atom.deserializers.add(this)
   constructor: ->
     @emitter = new Emitter
     @breakpoints = []
     @watchpoints = []
     @debugContexts = []
 
+  serialize: -> {
+    deserializer: 'GlobalContext'
+    data: {
+      breakpoints: @breakpoints
+      watchpoints: @watchpoints
+    }
+  }
+
+  deserialize: ({data}) ->
+    @breakpoints = data.breakpoints
+    @watchpoints = data.watchpoints
+
+
   addBreakpoint: (breakpoint) ->
     helpers.insertOrdered  @breakpoints, breakpoint
+
+  setBreakpoints: (breakpoints) ->
+    @breakpoints = breakpoints
+
+  setWatchpoints: (watchpoints) ->
+    @watchpoints = watchpoints
 
   getBreakpoints: ->
     return @breakpoints
@@ -17,7 +38,8 @@ class GlobalContext
   addDebugContext: (debugContext) ->
     @debugContexts.push debugContext
 
-  getCurrentDebugContext: () ->
+  getCurrentDebugContext: () =>
+    console.log "getting context"
     return @debugContexts[0]
 
   addWatchpoint: (watchpoint) ->
@@ -61,6 +83,3 @@ class GlobalContext
 
   notifyContextUpdate: (data) ->
     @emitter.emit 'php-debug.contextUpdate', data
-
-
-module.exports = new GlobalContext

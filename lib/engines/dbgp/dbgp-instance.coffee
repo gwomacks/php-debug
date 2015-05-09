@@ -2,20 +2,21 @@ parseString = require('xml2js').parseString
 Q = require 'q'
 {Emitter, Disposable} = require 'event-kit'
 
-GlobalContext = require '../../models/global-context'
 DebugContext = require '../../models/debug-context'
 Watchpoint = require '../../models/watchpoint'
 Breakpoint = require '../../models/breakpoint'
 
 module.exports =
 class DbgpInstance extends DebugContext
-  constructor: (@socket) ->
-    super()
+  constructor: (params) ->
+    super
+    @socket = params.socket
+    @GlobalContext = params.context
     @promises = []
     @socket.on 'data', @stuff
     @emitter = new Emitter
     @buffer = ''
-    GlobalContext.addDebugContext(this)
+    @GlobalContext.addDebugContext(this)
 
   syncStack: ->
     return @executeCommand('stack_get').then (data) =>
@@ -108,7 +109,7 @@ class DbgpInstance extends DebugContext
 
 
   sendAllBreakpoints: =>
-    breakpoints = GlobalContext.getBreakpoints()
+    breakpoints = @GlobalContext.getBreakpoints()
     commands = []
     for breakpoint in breakpoints
       options = {
@@ -129,11 +130,12 @@ class DbgpInstance extends DebugContext
         filepath = thing['filename'].replace("file:///", "")
         lineno = thing['lineno']
         breakpoint = new Breakpoint(filepath, lineno)
-        GlobalContext.notifyBreak(breakpoint)
+        @GlobalContext.notifyBreak(breakpoint)
     )
 
   syncCurrentContext: () ->
 
+    console.log "syncing context"
     p2 = @getContextNames().then(
       (data) =>
         return @processContextNames(data)
@@ -151,7 +153,7 @@ class DbgpInstance extends DebugContext
 
     p5 = p4.then(
       (data) =>
-        return GlobalContext.notifyContextUpdate()
+        return @GlobalContext.notifyContextUpdate()
     )
 
     p5.done()
@@ -175,7 +177,7 @@ class DbgpInstance extends DebugContext
   updateWatchpoints: (data) =>
     @clearWatchpoints()
     commands = []
-    for watch in GlobalContext.getWatchpoints()
+    for watch in @GlobalContext.getWatchpoints()
       commands.push @evalWatchpoint(watch)
 
     # for watchpoint in GlobalContext.getWatchpoints

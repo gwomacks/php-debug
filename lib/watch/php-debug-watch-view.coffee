@@ -15,7 +15,7 @@ class PhpDebugWatchView extends ScrollView
         @div outlet: 'watchpointViewList', class:'php-debug-watchpoints'
 
   constructor: ->
-    super()
+    super
     @watchList = []
 
   serialize: ->
@@ -30,9 +30,10 @@ class PhpDebugWatchView extends ScrollView
   onDidChangeModified: -> new Disposable ->
 
 
-  initialize: ->
+  initialize: (params) ->
+    @GlobalContext = params.context
     @newWatchpointEditor.getModel().onWillInsertText @submitWatchpoint
-    GlobalContext.onContextUpdate @showWatches
+    @GlobalContext.onContextUpdate @showWatches
 
   submitWatchpoint: (event) =>
     return unless event.text is "\n"
@@ -40,7 +41,7 @@ class PhpDebugWatchView extends ScrollView
       .getModel()
       .getText()
     w = new Watchpoint(expression)
-    GlobalContext.addWatchpoint(w)
+    @GlobalContext.addWatchpoint(w)
     @newWatchpointEditor
       .getModel()
       .setText('')
@@ -55,7 +56,7 @@ class PhpDebugWatchView extends ScrollView
 
   showWatches: =>
     @watchpointViewList.empty()
-    watches = GlobalContext.getCurrentDebugContext().getWatchpoints()
+    watches = @GlobalContext.getCurrentDebugContext().getWatchpoints()
     for watch in watches
       if watch == undefined
         continue

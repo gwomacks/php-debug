@@ -4,7 +4,6 @@ PhpDebugContextView = require '../context/php-debug-context-view'
 PhpDebugStackView = require '../stack/php-debug-stack-view'
 PhpDebugWatchView = require '../watch/php-debug-watch-view'
 PhpDebugBreakpointView = require '../breakpoint/php-debug-breakpoint-view'
-GlobalContext = require '../models/global-context'
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
   @content: ->
@@ -15,8 +14,10 @@ class PhpDebugUnifiedView extends ScrollView
         @div outlet: 'watchpointView', class:'php-debug-tab'
         @div outlet: 'breakpointView', class:'php-debug-tab'
 
-  constructor: ->
-    super()
+  constructor: (params) ->
+    super
+    console.dir params
+    @GlobalContext = params.context
     @contextList = []
 
   serialize: ->
@@ -27,12 +28,13 @@ class PhpDebugUnifiedView extends ScrollView
 
   getTitle: -> "Unified"
 
-  initialize: (@editor) ->
+  initialize: (params) =>
     super
-    @stackView.append(new PhpDebugStackView())
-    @contextView.append(new PhpDebugContextView())
-    @watchpointView.append(new PhpDebugWatchView())
-    @breakpointView.append(new PhpDebugBreakpointView())
+    console.dir params
+    @stackView.append(new PhpDebugStackView(context: params.context))
+    @contextView.append(new PhpDebugContextView(context: params.context))
+    @watchpointView.append(new PhpDebugWatchView(context: params.context))
+    @breakpointView.append(new PhpDebugBreakpointView(context: params.context))
     # GlobalContext.onBreak @doUpdate
 
   openWindow: ->

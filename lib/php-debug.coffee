@@ -23,9 +23,6 @@ createWatchView =  (state) ->
   PhpDebugWatchView = require './watch/php-debug-watch-view'
   @watchView = new PhpDebugWatchView(state)
 
-createUnifiedView =  (state) ->
-  PhpDebugUnifiedView = require './unified/php-debug-unified-view'
-  return new PhpDebugUnifiedView(state)
 
 module.exports = PhpDebug =
   subscriptions: null
@@ -44,6 +41,9 @@ module.exports = PhpDebug =
 
 
   activate: (state) ->
+    console.dir state
+
+    @GlobalContext = new GlobalContext()
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -54,7 +54,7 @@ module.exports = PhpDebug =
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOver': => @stepOver()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepIn': => @stepIn()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOut': => @stepOut()
-    @subscriptions.add atom.workspace.addOpener (filePath) ->
+    @subscriptions.add atom.workspace.addOpener (filePath) =>
       switch filePath
         when PhpDebugContextUri
           createContextView(uri: PhpDebugContextUri)
@@ -63,11 +63,22 @@ module.exports = PhpDebug =
         when PhpDebugWatchUri
           createWatchView(uri: PhpDebugWatchUri)
         when PhpDebugUnifiedUri
-          createUnifiedView(uri: PhpDebugUnifiedUri)
+          @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
-    @dbgp = new Dbgp()
+    @dbgp = new Dbgp(context: @GlobalContext)
     # @dbgp.onDebugContextChange @updateDebugContext
-    GlobalContext.onBreak @doBreak
+    @GlobalContext.onBreak (breakpoint) =>
+      @doBreak(breakpoint)
+
+  createUnifiedView: (state) ->
+    PhpDebugUnifiedView = require './unified/php-debug-unified-view'
+    return new PhpDebugUnifiedView(state)
+
+  serialize: ->
+    return {
+      boop: "doop"
+      meowp: "cool"
+    }
 
   deactivate: ->
     @modalPanel.destroy()
@@ -87,7 +98,10 @@ module.exports = PhpDebug =
 
     atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true})
     #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
-    GlobalContext.getCurrentDebugContext().syncCurrentContext()
+    console.log "doing break"
+    console.dir this
+    console.dir @GlobalContext
+    @GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
@@ -99,17 +113,17 @@ module.exports = PhpDebug =
     @dbgp.listen()
 
   run: ->
-    GlobalContext.getCurrentDebugContext()
+    @GlobalContext.getCurrentDebugContext()
       .continue "run"
 
   stepOver: ->
-    GlobalContext.getCurrentDebugContext()
+    @GlobalContext.getCurrentDebugContext()
       .continue "step_over"
   stepIn: ->
-    GlobalContext.getCurrentDebugContext()
+    @GlobalContext.getCurrentDebugContext()
       .continue "step_in"
   stepOut: ->
-    GlobalContext.getCurrentDebugContext()
+    @GlobalContext.getCurrentDebugContext()
       .continue "step_out"
 
   showWindows: ->
@@ -129,4 +143,4 @@ module.exports = PhpDebug =
     path = editor.getPath()
     breakpoint = new Breakpoint(path, marker)
     decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
-    GlobalContext.addBreakpoint breakpoint
+    @GlobalContext.addBreakpoint breakpoint

@@ -14,15 +14,17 @@ class PhpDebugStackView extends ScrollView
       @div class: "panel-heading", "Stack"
       @ul outlet: 'stackFrameViewList', class:'php-debug-contexts'
 
-  initialize: (@editor) ->
+  initialize: (params) ->
+    console.dir params
     super
-    GlobalContext.onContextUpdate @showStackFrames
+    @GlobalContext = params.context
+    @GlobalContext.onContextUpdate @showStackFrames
 
   showStackFrames: =>
     console.dir this
     if @stackFrameViewList
       @stackFrameViewList.empty()
-    context = GlobalContext.getCurrentDebugContext()
+    context = @GlobalContext.getCurrentDebugContext()
     for index, stackFrame of context.getStack()
       if stackFrame == undefined
         continue

@@ -10,8 +10,8 @@ class PhpDebugBreakpointView extends ScrollView
     @div class: 'php-debug php-debug-breakpoint-view pane-item native-key-bindings padded', tabindex: -1, =>
       @div outlet: 'breakpointViewList', class:'php-debug-breakpoints'
 
-  constructor: ->
-    super()
+  constructor: (params) ->
+    super
     @contextList = []
 
   serialize: ->
@@ -28,10 +28,11 @@ class PhpDebugBreakpointView extends ScrollView
   isEqual: (other) ->
     other instanceof PhpDebugBreakpointView
 
-  initialize: ->
+  initialize: (params) =>
+    @GlobalContext = params.context
     @showBreakpoints()
 
   showBreakpoints: ->
     @breakpointViewList.empty()
-    breakpoints = GlobalContext.getBreakpoints()
+    breakpoints = @GlobalContext.getBreakpoints()
     @breakpointViewList.append(new BreakpointView(breakpoints))

@@ -1,7 +1,6 @@
 {Disposable} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 ContextView = require './context-view'
-GlobalContext = require '../models/global-context'
 
 module.exports =
 class PhpDebugContextView extends ScrollView
@@ -17,9 +16,10 @@ class PhpDebugContextView extends ScrollView
 
   getTitle: -> "Context"
 
-  initialize: (@editor) ->
+  initialize: (params) ->
     super
-    GlobalContext.onContextUpdate @showContexts
+    @GlobalContext = params.context
+    @GlobalContext.onContextUpdate @showContexts
 
   onDidChangeTitle: -> new Disposable ->
   onDidChangeModified: -> new Disposable ->
@@ -34,7 +34,7 @@ class PhpDebugContextView extends ScrollView
   showContexts: =>
     if @contextViewList
       @contextViewList.empty()
-    contexts = GlobalContext.getCurrentDebugContext()
+    contexts = @GlobalContext.getCurrentDebugContext()
     for index, context of contexts.scopeList
       if context == undefined
         continue
