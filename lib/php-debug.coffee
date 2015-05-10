@@ -3,7 +3,6 @@
 events = require 'events'
 
 Breakpoint    = require './models/breakpoint'
-Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
 
 PhpDebugContextUri = "phpdebug://context"
@@ -43,14 +42,8 @@ module.exports = PhpDebug =
 
   activate: (state) ->
     console.dir state
-    if state
-      @GlobalContext = atom.deserializers.deserialize(state)
 
-    if !@GlobalContext
-      console.warn "Loading new global context"
-      console.dir @GlobalContext
-      @GlobalContext = new GlobalContext()
-    console.dir @GlobalContext
+    @GlobalContext = new GlobalContext()
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -82,7 +75,10 @@ module.exports = PhpDebug =
     return new PhpDebugUnifiedView(state)
 
   serialize: ->
-    @GlobalContext.serialize()
+    return {
+      boop: "doop"
+      meowp: "cool"
+    }
 
   deactivate: ->
     @modalPanel.destroy()
@@ -100,7 +96,6 @@ module.exports = PhpDebug =
         filepath = filepath.replace(pathMap.from, pathMap.to)
         break
 
-    console.log "Opening file " + filepath
     atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true})
     #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
     console.log "doing break"
@@ -146,7 +141,6 @@ module.exports = PhpDebug =
     range = editor.getSelectedBufferRange()
     marker = editor.markBufferRange(range)
     path = editor.getPath()
-    breakpoint = new Breakpoint({filepath:path, marker:marker})
+    breakpoint = new Breakpoint(path, marker)
     decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
     @GlobalContext.addBreakpoint breakpoint
-    console.dir @serialize()

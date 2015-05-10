@@ -40,7 +40,7 @@ class PhpDebugWatchView extends ScrollView
     expression = @newWatchpointEditor
       .getModel()
       .getText()
-    w = new Watchpoint(expression:expression)
+    w = new Watchpoint(expression)
     @GlobalContext.addWatchpoint(w)
     @newWatchpointEditor
       .getModel()

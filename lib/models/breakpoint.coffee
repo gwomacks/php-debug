@@ -1,41 +1,17 @@
 module.exports =
 class Breakpoint
-  atom.deserializers.add(this)
-  @version: '1a'
-
-  constructor: (data) ->
-    @filepath = data.filepath
-    @marker = data.marker
-    @line = data.line
-    if @marker
-      @syncLineFromMarker()
-
-  serialize: -> {
-    deserializer: 'Breakpoint'
-    version: @constructor.version
-    data: {
-      filepath: @getPath()
-      line: @getLine()
-    }
-  }
-
-  @deserialize: ({data}) ->
-    console.log "Deserializing individual breakpoint"
-    console.dir data
-    return new Breakpoint(filepath: data.filepath, line: data.line)
-
+  constructor: (path, marker) ->
+    @path = path
+    @marker = marker
 
   getPath: ->
-    return @filepath
+    return @path
 
   getMarker: ->
     return @marker
 
-  syncLineFromMarker: () ->
-    @line = @marker.getStartBufferPosition().row + 1
-
   getLine: ->
-    return @line
+    return @marker.getStartBufferPosition().row + 1
 
   isLessThan: (other) ->
     return true if !other instanceof Breakpoint
@@ -47,6 +23,6 @@ class Breakpoint
     return false if other.getPath() != @getPath()
     return false if other.getLine() != @getLine()
     return true
-
+    
   isGreaterThan: (other) ->
     return !@isLessThan(other) && !@isEqual(other)

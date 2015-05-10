@@ -4,7 +4,6 @@ helpers = require '../helpers.coffee'
 module.exports =
 class GlobalContext
   atom.deserializers.add(this)
-  # @version = '1a'
   constructor: ->
     @emitter = new Emitter
     @breakpoints = []
@@ -14,22 +13,14 @@ class GlobalContext
   serialize: -> {
     deserializer: 'GlobalContext'
     data: {
-      version: @constructor.version
-      breakpoints: helpers.serializeArray(@getBreakpoints())
-      watchpoints: helpers.serializeArray(@getWatchpoints())
+      breakpoints: @breakpoints
+      watchpoints: @watchpoints
     }
   }
 
-  @deserialize: ({data}) ->
-    context = new GlobalContext()
-    console.dir data
-    breakpoints = helpers.deserializeArray(data.breakpoints)
-    context.setBreakpoints(breakpoints)
-    watchpoints = helpers.deserializeArray(data.watchpoints)
-    context.setWatchpoints(watchpoints)
-    console.dir context
-    return context
-
+  deserialize: ({data}) ->
+    @breakpoints = data.breakpoints
+    @watchpoints = data.watchpoints
 
 
   addBreakpoint: (breakpoint) ->
@@ -48,6 +39,7 @@ class GlobalContext
     @debugContexts.push debugContext
 
   getCurrentDebugContext: () =>
+    console.log "getting context"
     return @debugContexts[0]
 
   addWatchpoint: (watchpoint) ->
@@ -58,6 +50,8 @@ class GlobalContext
     return @watchpoints
 
   setContext: (context) ->
+    console.log "setting context"
+    console.dir context
     @context = context
 
   getContext: ->
