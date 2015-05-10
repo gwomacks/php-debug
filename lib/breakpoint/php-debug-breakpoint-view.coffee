@@ -31,8 +31,10 @@ class PhpDebugBreakpointView extends ScrollView
   initialize: (params) =>
     @GlobalContext = params.context
     @showBreakpoints()
+    @GlobalContext.onBreakpointsChange @showBreakpoints
 
-  showBreakpoints: ->
-    @breakpointViewList.empty()
+  showBreakpoints: =>
+    if @breakpointViewList
+      @breakpointViewList.empty()
     breakpoints = @GlobalContext.getBreakpoints()
     @breakpointViewList.append(new BreakpointView(breakpoints))

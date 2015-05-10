@@ -22,24 +22,23 @@ class GlobalContext
 
   @deserialize: ({data}) ->
     context = new GlobalContext()
-    console.dir data
     breakpoints = helpers.deserializeArray(data.breakpoints)
     context.setBreakpoints(breakpoints)
     watchpoints = helpers.deserializeArray(data.watchpoints)
     context.setWatchpoints(watchpoints)
-    console.dir context
     return context
-
-
 
   addBreakpoint: (breakpoint) ->
     helpers.insertOrdered  @breakpoints, breakpoint
+    @notifyBreakpointsChange()
 
   setBreakpoints: (breakpoints) ->
     @breakpoints = breakpoints
+    @notifyBreakpointsChange()
 
   setWatchpoints: (watchpoints) ->
     @watchpoints = watchpoints
+    @notifyWatchpointsChange()
 
   getBreakpoints: ->
     return @breakpoints

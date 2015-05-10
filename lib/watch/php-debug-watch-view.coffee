@@ -16,7 +16,6 @@ class PhpDebugWatchView extends ScrollView
 
   constructor: ->
     super
-    @watchList = []
 
   serialize: ->
     deserializer: @constructor.name
@@ -34,6 +33,7 @@ class PhpDebugWatchView extends ScrollView
     @GlobalContext = params.context
     @newWatchpointEditor.getModel().onWillInsertText @submitWatchpoint
     @GlobalContext.onContextUpdate @showWatches
+    @GlobalContext.onWatchpointsChange @showWatches
 
   submitWatchpoint: (event) =>
     return unless event.text is "\n"
@@ -50,13 +50,12 @@ class PhpDebugWatchView extends ScrollView
   isEqual: (other) ->
     other instanceof PhpDebugWatchView
 
-  setContext: (watch, data) ->
-    @watchList[watch] = data
-    @showWatches()
-
   showWatches: =>
     @watchpointViewList.empty()
-    watches = @GlobalContext.getCurrentDebugContext().getWatchpoints()
+    if @GlobalContext.getCurrentDebugContext()
+      watches = @GlobalContext.getCurrentDebugContext().getWatchpoints()
+    else
+      watches = @GlobalContext.getWatchpoints()
     for watch in watches
       if watch == undefined
         continue

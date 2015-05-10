@@ -21,14 +21,10 @@ exports.serializeArray = (array) ->
 
 exports.deserializeArray = (array) ->
   ret = []
-  console.log "The thing being deserialized"
-  console.dir array
   for index, curObject of array
     try
       object =  atom.deserializers.deserialize(curObject)
       if object == undefined
-        console.log "Could not deserialize object:"
-        console.dir curObject
         continue
       ret.push object
     catch error

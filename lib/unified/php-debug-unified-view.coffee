@@ -30,7 +30,6 @@ class PhpDebugUnifiedView extends ScrollView
 
   initialize: (params) =>
     super
-    console.dir params
     @stackView.append(new PhpDebugStackView(context: params.context))
     @contextView.append(new PhpDebugContextView(context: params.context))
     @watchpointView.append(new PhpDebugWatchView(context: params.context))

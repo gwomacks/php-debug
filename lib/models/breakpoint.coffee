@@ -20,8 +20,6 @@ class Breakpoint
   }
 
   @deserialize: ({data}) ->
-    console.log "Deserializing individual breakpoint"
-    console.dir data
     return new Breakpoint(filepath: data.filepath, line: data.line)
 
 
