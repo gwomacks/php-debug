@@ -1,7 +1,23 @@
 module.exports =
 class Watchpoint
-  constructor: (expression) ->
-    @expression = expression
+  atom.deserializers.add(this)
+  @version: '1b'
+  constructor: (data) ->
+    if (!data.expression)
+      throw new Error("Invalid watchpoint")
+    @expression = data.expression
+
+  serialize: () ->
+    return {
+      deserializer: 'Watchpoint'
+      version: @constructor.version
+      data: {
+        expression: @getExpression()
+      }
+    }
+
+  @deserialize: ({data}) ->
+    return new Watchpoint(expression: data.expression)
 
   getPath: ->
     return @path
@@ -14,7 +30,7 @@ class Watchpoint
 
   getValue: () ->
     return @value
-    
+
   isLessThan: (other) ->
     return true if !other instanceof Watchpoint
     return true if other.getExpression() < @getExpression()

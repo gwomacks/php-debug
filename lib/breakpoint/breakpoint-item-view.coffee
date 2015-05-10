@@ -13,5 +13,6 @@ class BreakpointItemView extends View
     @render()
 
   render: ->
+    console.dir @breakpoint
     @path.append @breakpoint.getPath()
     @line.append @breakpoint.getLine()
