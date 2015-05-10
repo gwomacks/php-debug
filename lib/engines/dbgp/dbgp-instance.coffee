@@ -100,10 +100,12 @@ class DbgpInstance extends DebugContext
     @command("feature_get", {n: feature_name})
 
   setFeature: (feature_name, value) =>
-    @command("feature_set", {n: feature_name, v: value})
+    return @command("feature_set", {n: feature_name, v: value})
 
   onInit: (data) =>
-    @sendAllBreakpoints()
+    @setFeature('show_hidden', 1)
+    .then () =>
+      @sendAllBreakpoints()
     .then () =>
       return @continue("run")
 
@@ -232,10 +234,17 @@ class DbgpInstance extends DebugContext
         if variable.property
           for property in variable.property
             datum.value.push @parseContextVariable(property)
+      when "object"
+        datum.value = []
+        if variable.property
+          for property in variable.property
+            datum.value.push @parseContextVariable(property)
       when "int"
         datum.value = variable._
       when "uninitialized"
         datum.value = undefined
+      when "null"
+        datum.value = null
       else
         console.error "Unhandled context variable type: " + variable.$.type
     return datum
