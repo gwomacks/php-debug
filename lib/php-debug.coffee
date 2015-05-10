@@ -42,15 +42,11 @@ module.exports = PhpDebug =
 
 
   activate: (state) ->
-    console.dir state
     if state
       @GlobalContext = atom.deserializers.deserialize(state)
 
     if !@GlobalContext
-      console.warn "Loading new global context"
-      console.dir @GlobalContext
       @GlobalContext = new GlobalContext()
-    console.dir @GlobalContext
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -61,6 +57,8 @@ module.exports = PhpDebug =
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOver': => @stepOver()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepIn': => @stepIn()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOut': => @stepOut()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllBreakpoints': => @clearAllBreakpoints()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllWatchpoints': => @clearAllWatchpoints()
     @subscriptions.add atom.workspace.addOpener (filePath) =>
       switch filePath
         when PhpDebugContextUri
@@ -100,12 +98,8 @@ module.exports = PhpDebug =
         filepath = filepath.replace(pathMap.from, pathMap.to)
         break
 
-    console.log "Opening file " + filepath
     atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true})
     #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
-    console.log "doing break"
-    console.dir this
-    console.dir @GlobalContext
     @GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
@@ -131,6 +125,11 @@ module.exports = PhpDebug =
     @GlobalContext.getCurrentDebugContext()
       .continue "step_out"
 
+  clearAllBreakpoints: ->
+    @GlobalContext.setBreakpoints([])
+
+  clearAllWatchpoints: ->
+    @GlobalContext.setWatchpoints([])
   showWindows: ->
     editor = atom.workspace.getActivePane()
     # atom.workspace.open(PhpDebugContextUri)
@@ -149,4 +148,3 @@ module.exports = PhpDebug =
     breakpoint = new Breakpoint({filepath:path, marker:marker})
     decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
     @GlobalContext.addBreakpoint breakpoint
-    console.dir @serialize()
