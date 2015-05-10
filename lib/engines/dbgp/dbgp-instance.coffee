@@ -129,7 +129,7 @@ class DbgpInstance extends DebugContext
         thing = message.$
         filepath = thing['filename'].replace("file:///", "")
         lineno = thing['lineno']
-        breakpoint = new Breakpoint(filepath, lineno)
+        breakpoint = new Breakpoint(filepath: filepath, line:lineno)
         @GlobalContext.notifyBreak(breakpoint)
     )
 
