@@ -9,6 +9,11 @@ class PhpDebugUnifiedView extends ScrollView
   @content: ->
     @div class: 'php-debug php-debug-unified-view pane-item padded', style: 'overflow:auto;', tabindex: -1, =>
       @div class: "block", =>
+        @button class: "btn octicon icon-playback-play inline-block-tight", "Run"
+        @button class: "btn octicon icon-steps inline-block-tight", "Step Over"
+        @button class: "btn octicon icon-sign-in inline-block-tight", "Step In"
+        @button class: "btn octicon icon-sign-out inline-block-tight", "Step Out"
+        @button class: "btn octicon icon-primitive-square inline-block-tight", "Stop"
       @div class: 'tabs-view', =>
         @div outlet: 'stackView', class:'php-debug-tab'
         @div outlet: 'contextView', class:'php-debug-tab'
