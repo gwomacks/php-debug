@@ -123,7 +123,7 @@ class DbgpInstance extends DebugContext
     return Q.all(commands)
 
   continue: (type) =>
-    p1 = @command(type).then(
+    return @command(type).then(
       (data) =>
         response = data.response
         messages = response["xdebug:message"]
@@ -175,6 +175,10 @@ class DbgpInstance extends DebugContext
     #   commands.push @evalWatchpoint(watchpoint)
     return Q.all(commands)
 
+  executeDetach: () =>
+    @command('detach')
+    .then () =>
+      @continue("run")
 
   updateWatchpoints: (data) =>
     @clearWatchpoints()
