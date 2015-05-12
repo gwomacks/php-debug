@@ -26,17 +26,12 @@ class DebugContext
     return @watchpointList
 
   setStack: (stack) ->
-    console.log "setting stack"
-    console.dir stack
     @stackFrameList = stack
 
   getStack: () ->
-    console.log "getting stack"
-    console.dir @stackFrameList
     return @stackFrameList
 
   clear: () ->
-    console.log "meow?"
     @scopeList = {}
 
   getScopes: ->

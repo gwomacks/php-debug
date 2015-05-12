@@ -107,7 +107,14 @@ module.exports = PhpDebug =
         filepath = filepath.replace(pathMap.from, pathMap.to)
         break
 
-    atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true})
+    atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
+      if @currentBreakDecoration
+        @currentBreakDecoration.destroy()
+      line = breakpoint.getLine()
+      range = [[line, 0], [line, 0]]
+      marker = editor.markBufferRange(range, {invalidate: 'surround'})
+      @currentBreakDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break'})
+      editor.scrollToBufferPosition([line,0])
     #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
     @GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
