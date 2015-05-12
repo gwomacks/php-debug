@@ -75,6 +75,15 @@ module.exports = PhpDebug =
     @GlobalContext.onBreak (breakpoint) =>
       @doBreak(breakpoint)
 
+    @GlobalContext.onWatchpointsChange () =>
+      if @GlobalContext.getCurrentDebugContext()
+        @GlobalContext.getCurrentDebugContext().syncCurrentContext()
+
+    @GlobalContext.onBreakpointsChange (event) =>
+      if @GlobalContext.getCurrentDebugContext()
+        for breakpoint in event.added
+          @GlobalContext.getCurrentDebugContext().executeBreakpoint(breakpoint)
+
   createUnifiedView: (state) ->
     PhpDebugUnifiedView = require './unified/php-debug-unified-view'
     return new PhpDebugUnifiedView(state)

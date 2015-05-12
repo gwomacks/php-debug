@@ -122,6 +122,14 @@ class DbgpInstance extends DebugContext
       commands.push @command("breakpoint_set", options)
     return Q.all(commands)
 
+  executeBreakpoint: (breakpoint) =>
+    options = {
+      t: 'line',
+      f: breakpoint.getPath(),
+      n: breakpoint.getLine()
+    }
+    return @command("breakpoint_set", options)
+
   continue: (type) =>
     return @command(type).then(
       (data) =>
@@ -219,6 +227,8 @@ class DbgpInstance extends DebugContext
       v = @parseContextVariable(property)
       data.variables.push v
     return data
+
+
 
   parseContextVariable: (variable) ->
     datum = {

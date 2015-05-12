@@ -30,14 +30,23 @@ class GlobalContext
 
   addBreakpoint: (breakpoint) ->
     helpers.insertOrdered  @breakpoints, breakpoint
-    @notifyBreakpointsChange()
+    data = {
+      added: [breakpoint]
+    }
+    @notifyBreakpointsChange(data)
 
   setBreakpoints: (breakpoints) ->
     @breakpoints = breakpoints
-    @notifyBreakpointsChange()
+    data = {
+      added: breakpoints
+    }
+    @notifyBreakpointsChange(data)
 
   setWatchpoints: (watchpoints) ->
     @watchpoints = watchpoints
+    data = {
+      added: watchpoints
+    }
     @notifyWatchpointsChange()
 
   getBreakpoints: ->
