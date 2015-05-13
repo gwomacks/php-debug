@@ -1,5 +1,13 @@
-# php-debug package
+# Atom PHP Debugging package
 
-A short description of your package.
+Debug PHP code using the [XDebug PHP Extension](http://xdebug.org/).
 
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+# Features
+- Add Breakpoints
+- Step through debugging (Over, In, Out)
+- Stack and Context views
+- Add Watchpoints to inspect current values of variables
+
+This is currently an alpha release, and still in active development.
+
+![](https://raw.githubusercontent.com/gwomacks/php-debug/master/screenshot.png)
