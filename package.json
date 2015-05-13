@@ -1,15 +1,15 @@
 {
-  "name": "php-debug",
+  "name": "PHP-Debug",
   "main": "./lib/php-debug",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "version": "0.1.0",
+  "description": "A package for the Atom Text Editor for debugging PHP code using the XDebug extension",
   "activationCommands": {
     "atom-workspace": [
-        "php-debug:toggleBreakpoint",
-        "php-debug:toggleDebugging"
-      ]
+      "php-debug:toggleBreakpoint",
+      "php-debug:toggleDebugging"
+    ]
   },
-  "repository": "https://github.com/atom/php-debug",
+  "repository": "https://github.com/gwomacks/php-debug",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
@@ -18,6 +18,6 @@
     "xml2js": ">= 0.4.6 < 0.5",
     "atom-space-pen-views": "^2.0.3",
     "event-kit": "^1.0.3",
-    "q" : "^1.1.2"
+    "q": "^1.1.2"
   }
 }
