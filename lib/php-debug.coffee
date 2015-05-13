@@ -39,6 +39,9 @@ module.exports = PhpDebug =
             type: 'string'
           to:
             type: 'string'
+    ServerPort:
+      type: 'integer'
+      default: 9000
 
 
   activate: (state) ->
@@ -70,8 +73,7 @@ module.exports = PhpDebug =
         when PhpDebugUnifiedUri
           @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
-    @dbgp = new Dbgp(context: @GlobalContext)
-    # @dbgp.onDebugContextChange @updateDebugContext
+    @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
     @GlobalContext.onBreak (breakpoint) =>
       @doBreak(breakpoint)
 
@@ -115,7 +117,6 @@ module.exports = PhpDebug =
       marker = editor.markBufferRange(range, {invalidate: 'surround'})
       @currentBreakDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break'})
       editor.scrollToBufferPosition([line,0])
-    #atom.workspace.open("C:/Users/gabriel/Documents/test.php",{searchAllPanes: true, activatePane:true})
     @GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
@@ -146,15 +147,11 @@ module.exports = PhpDebug =
 
   clearAllWatchpoints: ->
     @GlobalContext.setWatchpoints([])
+
   showWindows: ->
     editor = atom.workspace.getActivePane()
-    # atom.workspace.open(PhpDebugContextUri)
-    # atom.workspace.open(PhpDebugBreakpointsUri)
-    #atom.workspace.open(PhpDebugWatchUri)
-    # atom.workspace.addBottomPanel()
     editor.splitDown()
     atom.workspace.open(PhpDebugUnifiedUri)
-    #createUnifiedView().openWindow()
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()

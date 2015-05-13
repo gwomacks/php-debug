@@ -12,6 +12,7 @@ class Dbgp
     @emitter = new Emitter
     @buffer = ''
     @GlobalContext = params.context
+    @serverPort = params.serverPort
 
   listening: ->
     return @server != undefined
@@ -23,13 +24,13 @@ class Dbgp
 
     @debugContext = new DebugContext
     net = require "net"
-    console.log("listening")
     buffer = ''
+    console.log "Listening on Port " + @serverPort
     @server = net.createServer( (socket) =>
 
       socket.setEncoding('utf8');
       instance = new DbgpInstance(socket:socket, context:@GlobalContext)
-    ).listen 9000
+    ).listen @serverPort
 
   close: (options) ->
     unless !@socket
