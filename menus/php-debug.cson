@@ -23,6 +23,30 @@
         {
           'label': 'Toggle Breakpoint'
           'command': 'php-debug:toggleBreakpoint'
+        },
+        {
+          'label': 'Run'
+          'command': 'php-debug:run'
+        },
+        {
+          'label': 'Step Over'
+          'command': 'php-debug:stepOver'
+        },
+        {
+          'label': 'Step In'
+          'command': 'php-debug:stepIn'
+        },
+        {
+          'label': 'Step Out'
+          'command': 'php-debug:stepOut'
+        },
+        {
+          'label': 'Clear All Breakpoints'
+          'command': 'php-debug:clearAllBreakpoints'
+        },
+        {
+          'label': 'Clear All Watchpoints'
+          'command': 'php-debug:clearAllWatchpoints'
         }
       ]
     ]

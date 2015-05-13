@@ -111,7 +111,7 @@ class DbgpInstance extends DebugContext
     for breakpoint in breakpoints
       options = {
         t: 'line',
-        f: breakpoint.getPath(), #'file://C:/Users/gabriel/Documents/test.php',
+        f: breakpoint.getPath(),
         n: breakpoint.getLine()
       }
       commands.push @command("breakpoint_set", options)
