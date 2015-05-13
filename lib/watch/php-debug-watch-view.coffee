@@ -9,6 +9,7 @@ module.exports =
 class PhpDebugWatchView extends ScrollView
   @content: ->
     @div class: "panel", =>
+      @div class: "panel-heading", "Watchpoints"
       @section class: 'watchpoint-panel section', =>
         @div class: 'editor-container', =>
           @subview 'newWatchpointEditor', new TextEditorView()

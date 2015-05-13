@@ -5,7 +5,8 @@ ContextView = require './context-view'
 module.exports =
 class PhpDebugContextView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-context-view pane-item native-key-bindings padded', style: "overflow:auto;", tabindex: -1, =>
+    @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
+      @div class: "panel-heading", "Context"
       @div outlet: 'contextViewList', class:'php-debug-contexts'
 
   serialize: ->

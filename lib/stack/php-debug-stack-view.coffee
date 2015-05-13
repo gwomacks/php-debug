@@ -5,10 +5,6 @@ GlobalContext = require '../models/global-context'
 
 module.exports =
 class PhpDebugStackView extends ScrollView
-  # @content: ->
-  #   @div class: "php-debug panel", =>
-  #     @div outlet: 'stackFrameViewList', class:'php-debug-stack-frames'
-
   @content: ->
     @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
       @div class: "panel-heading", "Stack"

@@ -7,7 +7,8 @@ GlobalContext = require '../models/global-context'
 module.exports =
 class PhpDebugBreakpointView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-breakpoint-view pane-item native-key-bindings padded', tabindex: -1, =>
+    @div class: 'php-debug php-debug-breakpoint-view pane-item native-key-bindings', tabindex: -1, =>
+      @div class: "panel-heading", "Breakpoints"
       @div outlet: 'breakpointViewList', class:'php-debug-breakpoints'
 
   constructor: (params) ->
