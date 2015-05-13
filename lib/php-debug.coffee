@@ -113,10 +113,10 @@ module.exports = PhpDebug =
       if @currentBreakDecoration
         @currentBreakDecoration.destroy()
       line = breakpoint.getLine()
-      range = [[line, 0], [line, 0]]
+      range = [[line-1, 0], [line-1, 0]]
       marker = editor.markBufferRange(range, {invalidate: 'surround'})
       @currentBreakDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break'})
-      editor.scrollToBufferPosition([line,0])
+      editor.scrollToBufferPosition([line-1,0])
     @GlobalContext.getCurrentDebugContext().syncCurrentContext()
 
   toggle: ->
