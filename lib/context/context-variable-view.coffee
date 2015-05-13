@@ -23,7 +23,6 @@ class ContextVariableView extends View
         summary ="array["+@variable.value.length+"]"
         @variableView.append(new ContextVariableListView({name: @variable.fullname, summary: summary, variables: @variable.value, autoopen: false}))
       when 'object'
-        console.dir @variable
         summary ="object"
         name =  @variable.fullname
         properties = @variable.value

@@ -11,6 +11,10 @@ class GlobalContext
     @watchpoints = []
     @debugContexts = []
 
+    @onSessionEnd () =>
+      delete @debugContexts[0]
+      @debugContexts = []
+
   serialize: -> {
     deserializer: 'GlobalContext'
     data: {
@@ -97,3 +101,9 @@ class GlobalContext
 
   notifyContextUpdate: (data) ->
     @emitter.emit 'php-debug.contextUpdate', data
+
+  onSessionEnd: (callback) ->
+    @emitter.on 'php-debug.sessionEnd', callback
+
+  notifySessionEnd: (data) ->
+    @emitter.emit 'php-debug.sessionEnd', data

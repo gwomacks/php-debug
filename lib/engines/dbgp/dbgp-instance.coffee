@@ -18,6 +18,9 @@ class DbgpInstance extends DebugContext
     @buffer = ''
     @GlobalContext.addDebugContext(this)
 
+    @socket.on "error", (error) =>
+      @GlobalContext.notifySessionEnd()
+
   syncStack: ->
     return @executeCommand('stack_get').then (data) =>
       stackFrames = []
@@ -54,12 +57,6 @@ class DbgpInstance extends DebugContext
   parseResponse: (data) =>
     result = data.response.$
     transactionId = result.transaction_id
-    # if data.response.$.status == "break"
-    #   GlobalContext.notifyBreak(data)
-      #@notifyResponseBreak data
-    # if data.response.$.command == "context_get"
-    #   context = @buildContext(data)
-    #   @notifyContextChange(context)
 
     if @promises[transactionId] != undefined
       @promises[transactionId].resolve(data)
@@ -70,8 +67,6 @@ class DbgpInstance extends DebugContext
 
   stuff: (data) =>
     message = @parse(data)
-    # @getFeature('language_supports_threads')
-
 
   executeCommand: (command, options, data) ->
     @command(command, options, data)
@@ -144,8 +139,6 @@ class DbgpInstance extends DebugContext
     )
 
   syncCurrentContext: () ->
-
-    console.log "syncing context"
     p2 = @getContextNames().then(
       (data) =>
         return @processContextNames(data)
@@ -172,15 +165,12 @@ class DbgpInstance extends DebugContext
     return @command("context_names")
 
   processContextNames: (data) =>
-    #GlobalContext.setContext(new DebugContext())
     for context in data.response.context
       @addScope(context.$.id,context.$.name)
     commands = []
     scopes = @getScopes()
     for index, scope of scopes
       commands.push(@updateContext(scope))
-    # for watchpoint in GlobalContext.getWatchpoints
-    #   commands.push @evalWatchpoint(watchpoint)
     return Q.all(commands)
 
   executeDetach: () =>
@@ -193,9 +183,6 @@ class DbgpInstance extends DebugContext
     commands = []
     for watch in @GlobalContext.getWatchpoints()
       commands.push @evalWatchpoint(watch)
-
-    # for watchpoint in GlobalContext.getWatchpoints
-    #   commands.push @evalWatchpoint(watchpoint)
     return Q.all(commands)
 
 
@@ -217,7 +204,6 @@ class DbgpInstance extends DebugContext
   contextGet: (scope) =>
     return @command("context_get", {c: scope})
 
-
   buildContext: (response) =>
     data = {}
     data.type = 'context'
@@ -227,8 +213,6 @@ class DbgpInstance extends DebugContext
       v = @parseContextVariable(property)
       data.variables.push v
     return data
-
-
 
   parseContextVariable: (variable) ->
     datum = {

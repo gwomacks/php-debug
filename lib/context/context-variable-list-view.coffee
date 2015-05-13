@@ -26,5 +26,6 @@ class ContextVariableListView extends View
     @listSummary.append(@summary)
     if @autoopen
       @find('details').attr("open", "open")
-    for variable in @variables
-      @contextVariableList.append(new ContextVariableView(variable))
+    if @variables
+      for variable in @variables
+        @contextVariableList.append(new ContextVariableView(variable))
