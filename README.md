@@ -1,4 +1,4 @@
-# Atom PHP Debugging package
+# Atom PHP Debugging Package
 
 Debug PHP code using the [XDebug PHP Extension](http://xdebug.org/).
 
