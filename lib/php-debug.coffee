@@ -130,7 +130,7 @@ module.exports = PhpDebug =
 
   run: ->
     @GlobalContext.getCurrentDebugContext()
-      .continue "run"
+      .executeRun()
 
   stepOver: ->
     @GlobalContext.getCurrentDebugContext()

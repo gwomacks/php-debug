@@ -79,7 +79,7 @@ class DbgpInstance extends DebugContext
 
     payload = command + " -i " + transactionId
     if options && Object.keys(options).length > 0
-      argu = ("-"+arg + " " + val for arg, val of options)
+      argu = ("-"+(arg) + " " + encodeURI(val) for arg, val of options)
       argu2 = argu.join(" ")
       payload += " " + argu2
 
@@ -102,7 +102,7 @@ class DbgpInstance extends DebugContext
     .then () =>
       @sendAllBreakpoints()
     .then () =>
-      return @continue("run")
+      return @executeRun()
 
 
   sendAllBreakpoints: =>
@@ -111,7 +111,7 @@ class DbgpInstance extends DebugContext
     for breakpoint in breakpoints
       options = {
         t: 'line',
-        f: breakpoint.getPath(),
+        f: "file://" + breakpoint.getPath(),
         n: breakpoint.getLine()
       }
       commands.push @command("breakpoint_set", options)
@@ -132,7 +132,7 @@ class DbgpInstance extends DebugContext
         messages = response["xdebug:message"]
         message = messages[0]
         thing = message.$
-        filepath = thing['filename'].replace("file:///", "")
+        filepath = decodeURI(thing['filename']).replace("file:///", "")
         lineno = thing['lineno']
         breakpoint = new Breakpoint(filepath: filepath, line:lineno)
         @GlobalContext.notifyBreak(breakpoint)
@@ -176,7 +176,7 @@ class DbgpInstance extends DebugContext
   executeDetach: () =>
     @command('detach')
     .then () =>
-      @continue("run")
+      @executeRun()
 
   updateWatchpoints: (data) =>
     @clearWatchpoints()
@@ -214,6 +214,10 @@ class DbgpInstance extends DebugContext
       data.variables.push v
     return data
 
+  executeRun: () =>
+    console.log "running"
+    return @continue("run")
+
   parseContextVariable: (variable) ->
     datum = {
       name : variable.$.name
@@ -224,7 +228,10 @@ class DbgpInstance extends DebugContext
       when "string"
         switch variable.$.encoding
           when "base64"
-            datum.value = new Buffer(variable._, 'base64').toString('ascii')
+            if variable._ = ""
+              datum.value = ""
+            else
+              datum.value = new Buffer(variable._, 'base64').toString('ascii')
           else
             console.error "Unhandled context variable encoding: " + variable.$.encoding
       when "array"
