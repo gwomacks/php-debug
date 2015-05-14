@@ -1,4 +1,4 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
 BreakpointListView = require './breakpoint-list-view'
 
 module.exports =
