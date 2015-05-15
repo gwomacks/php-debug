@@ -229,7 +229,7 @@ class DbgpInstance extends DebugContext
       when "string"
         switch variable.$.encoding
           when "base64"
-            if variable._ = ""
+            if not variable._?
               datum.value = ""
             else
               datum.value = new Buffer(variable._, 'base64').toString('ascii')
