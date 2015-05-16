@@ -193,7 +193,15 @@ class DbgpInstance extends DebugContext
   evalWatchpoint: (watchpoint) ->
     p = @command("eval", null, watchpoint.getExpression())
     return p.then (data) =>
-      watchpoint.setValue(data.response.property[0]._)
+      # console.dir data.response
+      # datum = {
+      #   label: watchpoint.getExpression()
+      #   value: @parseContextVariable({variable:data.response.property[0]})
+      # }
+
+      datum = @parseContextVariable({variable:data.response.property[0]})
+      datum.label = watchpoint.getExpression()
+      watchpoint.setValue(datum)
       @addWatchpoint(watchpoint)
 
   updateContext: (scope) =>
@@ -211,7 +219,7 @@ class DbgpInstance extends DebugContext
     data.context = response.response.$.context
     data.variables = []
     for property in response.response.property
-      v = @parseContextVariable(property)
+      v = @parseContextVariable({variable:property})
       data.variables.push v
     return data
 
@@ -219,12 +227,18 @@ class DbgpInstance extends DebugContext
     console.log "running"
     return @continue("run")
 
-  parseContextVariable: (variable) ->
+  parseContextVariable: ({variable}) ->
     datum = {
       name : variable.$.name
       fullname : variable.$.fullname
+      type: variable.$.type
     }
-    datum.type = variable.$.type
+
+    if variable.$.fullname?
+      datum.label = variable.$.fullname
+    else if variable.$.name?
+      datum.label = variable.$.name
+
     switch variable.$.type
       when "string"
         switch variable.$.encoding
@@ -239,12 +253,12 @@ class DbgpInstance extends DebugContext
         datum.value = []
         if variable.property
           for property in variable.property
-            datum.value.push @parseContextVariable(property)
+            datum.value.push @parseContextVariable({variable:property})
       when "object"
         datum.value = []
         if variable.property
           for property in variable.property
-            datum.value.push @parseContextVariable(property)
+            datum.value.push @parseContextVariable({variable:property})
       when "int"
         datum.value = variable._
       when "uninitialized"

@@ -35,6 +35,7 @@ class PhpDebugWatchView extends ScrollView
     @newWatchpointEditor.getModel().onWillInsertText @submitWatchpoint
     @GlobalContext.onContextUpdate @showWatches
     @GlobalContext.onWatchpointsChange @showWatches
+    @showWatches()
 
   submitWatchpoint: (event) =>
     return unless event.text is "\n"

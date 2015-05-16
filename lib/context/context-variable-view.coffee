@@ -13,19 +13,19 @@ class ContextVariableView extends View
 
   render: ->
     ContextVariableListView = require "./context-variable-list-view"
+    label = @variable.label
     switch @variable.type
-      when 'string' then @variableView.append(new ContextVariableScalarView(@variable.fullname, "\""+@variable.value+"\""))
+      when 'string' then @variableView.append(new ContextVariableScalarView(label, "\""+@variable.value+"\""))
       when 'int'
-        @variableView.append(new ContextVariableScalarView(@variable.fullname, @variable.value))
-      when 'uninitialized' then @variableView.append(new ContextVariableScalarView(@variable.fullname, "?"))
-      when 'null' then @variableView.append(new ContextVariableScalarView(@variable.fullname, "null"))
+        @variableView.append(new ContextVariableScalarView(label, @variable.value))
+      when 'uninitialized' then @variableView.append(new ContextVariableScalarView(label, "?"))
+      when 'null' then @variableView.append(new ContextVariableScalarView(label, "null"))
       when 'array'
         summary ="array["+@variable.value.length+"]"
-        @variableView.append(new ContextVariableListView({name: @variable.fullname, summary: summary, variables: @variable.value, autoopen: false}))
+        @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: false}))
       when 'object'
         summary ="object"
-        name =  @variable.fullname
         properties = @variable.value
-        @variableView.append(new ContextVariableListView({name:name, summary: summary, variables: properties, autoopen: false}))
+        @variableView.append(new ContextVariableListView({name:label, summary: summary, variables: properties, autoopen: false}))
       else
         console.error "Unhandled variable type: " + @variable.type
