@@ -21,7 +21,7 @@ class ContextVariableView extends View
       when 'uninitialized' then @variableView.append(new ContextVariableScalarView(label, "?"))
       when 'null' then @variableView.append(new ContextVariableScalarView(label, "null"))
       when 'array'
-        summary ="array["+@variable.value.length+"]"
+        summary ="array["+@variable.length+"]"
         @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: false}))
       when 'object'
         summary ="object"

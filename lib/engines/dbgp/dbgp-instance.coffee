@@ -193,12 +193,6 @@ class DbgpInstance extends DebugContext
   evalWatchpoint: (watchpoint) ->
     p = @command("eval", null, watchpoint.getExpression())
     return p.then (data) =>
-      # console.dir data.response
-      # datum = {
-      #   label: watchpoint.getExpression()
-      #   value: @parseContextVariable({variable:data.response.property[0]})
-      # }
-
       datum = @parseContextVariable({variable:data.response.property[0]})
       datum.label = watchpoint.getExpression()
       watchpoint.setValue(datum)
@@ -251,6 +245,7 @@ class DbgpInstance extends DebugContext
             console.error "Unhandled context variable encoding: " + variable.$.encoding
       when "array"
         datum.value = []
+        datum.length = variable.$.children
         if variable.property
           for property in variable.property
             datum.value.push @parseContextVariable({variable:property})
