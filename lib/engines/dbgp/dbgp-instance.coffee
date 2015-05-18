@@ -115,11 +115,6 @@ class DbgpInstance extends DebugContext
     breakpoints = @GlobalContext.getBreakpoints()
     commands = []
     for breakpoint in breakpoints
-      # options = {
-      #   t: 'line',
-      #   f: "file://" + breakpoint.getPath(),
-      #   n: breakpoint.getLine()
-      # }
       commands.push @executeBreakpoint(breakpoint) #@command("breakpoint_set", options)
     return Q.all(commands)
 
