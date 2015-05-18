@@ -11,3 +11,23 @@ Debug PHP code using the [XDebug PHP Extension](http://xdebug.org/).
 This is currently an alpha release, and still in active development.
 
 ![](https://raw.githubusercontent.com/gwomacks/php-debug/master/screenshot.png)
+
+# Settings
+
+Put the following in your config.cson
+```cson
+"php-debug":
+  {
+    ServerPort: 9000
+    PathMaps: [
+      {
+        local: "C:\\base\\path\\on\\local\\system"
+        remote: "/base/path/on/remote/system"
+      },
+      {
+        local: "C:\\another\\path\\map"
+        remote: "/home/yay/"
+      }
+    ]
+  }
+  ```
