@@ -1,7 +1,7 @@
 {
   "name": "PHP-Debug",
   "main": "./lib/php-debug",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A package for the Atom Text Editor for debugging PHP code using the XDebug extension",
   "activationCommands": {
     "atom-workspace": [
