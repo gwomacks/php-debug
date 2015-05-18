@@ -99,10 +99,17 @@ class DbgpInstance extends DebugContext
     return @command("feature_set", {n: feature_name, v: value})
 
   onInit: (data) =>
+    console.log "init"
     @setFeature('show_hidden', 1)
     .then () =>
-      @sendAllBreakpoints()
+      console.log "setting feature multiple sessions"
+      return @setFeature('multiple_sessions', 0)
     .then () =>
+<<<<<<< Updated upstream
+=======
+      return @sendAllBreakpoints()
+    .then () =>
+>>>>>>> Stashed changes
       return @executeRun()
 
 
@@ -218,8 +225,15 @@ class DbgpInstance extends DebugContext
     return data
 
   executeRun: () =>
+<<<<<<< Updated upstream
     console.log "running"
     return @continue("run")
+=======
+    console.log "executing run"
+    return @continue "run"
+    .then () =>
+      console.log "running end"
+>>>>>>> Stashed changes
 
   parseContextVariable: ({variable}) ->
     datum = {
