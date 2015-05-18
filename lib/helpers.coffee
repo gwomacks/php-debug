@@ -31,3 +31,19 @@ exports.deserializeArray = (array) ->
       console.error "Could not deserialize object"
       console.dir curObject
   return ret
+
+exports.localPathToRemote = (localPath) ->
+  pathMaps = atom.config.get('php-debug.PathMaps')
+  for pathMap in pathMaps
+    if localPath.indexOf(pathMap.local) == 0
+      return localPath.replace(pathMap.local, pathMap.remote)
+      break
+  return localPath
+
+exports.remotePathToLocal = (remotePath) ->
+  pathMaps = atom.config.get('php-debug.PathMaps')
+  for pathMap in pathMaps
+    if remotePath.indexOf(pathMap.remote) == 0
+      return remotePath.replace(pathMap.remote, pathMap.local)
+      break
+  return remotePath

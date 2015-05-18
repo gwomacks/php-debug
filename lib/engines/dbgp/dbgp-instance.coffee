@@ -1,6 +1,7 @@
 parseString = require('xml2js').parseString
 Q = require 'q'
 {Emitter, Disposable} = require 'event-kit'
+helpers = require '../../helpers.coffee'
 
 DebugContext = require '../../models/debug-context'
 Watchpoint = require '../../models/watchpoint'
@@ -105,11 +106,8 @@ class DbgpInstance extends DebugContext
       console.log "setting feature multiple sessions"
       return @setFeature('multiple_sessions', 0)
     .then () =>
-<<<<<<< Updated upstream
-=======
       return @sendAllBreakpoints()
     .then () =>
->>>>>>> Stashed changes
       return @executeRun()
 
 
@@ -117,18 +115,20 @@ class DbgpInstance extends DebugContext
     breakpoints = @GlobalContext.getBreakpoints()
     commands = []
     for breakpoint in breakpoints
-      options = {
-        t: 'line',
-        f: "file://" + breakpoint.getPath(),
-        n: breakpoint.getLine()
-      }
-      commands.push @command("breakpoint_set", options)
+      # options = {
+      #   t: 'line',
+      #   f: "file://" + breakpoint.getPath(),
+      #   n: breakpoint.getLine()
+      # }
+      commands.push @executeBreakpoint(breakpoint) #@command("breakpoint_set", options)
     return Q.all(commands)
 
   executeBreakpoint: (breakpoint) =>
+    path = breakpoint.getPath()
+    path = helpers.localPathToRemote(path)
     options = {
-      t: 'line',
-      f: breakpoint.getPath(),
+      t: 'line'
+      f: 'file://' + path
       n: breakpoint.getLine()
     }
     return @command("breakpoint_set", options)
@@ -137,13 +137,19 @@ class DbgpInstance extends DebugContext
     return @command(type).then(
       (data) =>
         response = data.response
-        messages = response["xdebug:message"]
-        message = messages[0]
-        thing = message.$
-        filepath = decodeURI(thing['filename']).replace("file:///", "")
-        lineno = thing['lineno']
-        breakpoint = new Breakpoint(filepath: filepath, line:lineno)
-        @GlobalContext.notifyBreak(breakpoint)
+        switch response.$.status
+          when 'break'
+            messages = response["xdebug:message"]
+            message = messages[0]
+            thing = message.$
+            filepath = decodeURI(thing['filename']).replace("file:///", "")
+            lineno = thing['lineno']
+            breakpoint = new Breakpoint(filepath: filepath, line:lineno)
+            @GlobalContext.notifyBreak(breakpoint)
+          when 'stopping'
+            @executeStop()
+          else
+            console.error "Unhandled status: " + response.$.status
     )
 
   syncCurrentContext: () ->
@@ -225,15 +231,12 @@ class DbgpInstance extends DebugContext
     return data
 
   executeRun: () =>
-<<<<<<< Updated upstream
     console.log "running"
     return @continue("run")
-=======
-    console.log "executing run"
-    return @continue "run"
-    .then () =>
-      console.log "running end"
->>>>>>> Stashed changes
+
+  executeStop: () =>
+    console.log "stopping"
+    return @command("stop")
 
   parseContextVariable: ({variable}) ->
     datum = {
