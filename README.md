@@ -31,3 +31,11 @@ Put the following in your config.cson
     ]
   }
   ```
+
+### Server Port ###
+This is the port that the atom client will listen on.
+Defaults to 9000
+
+### Path Maps ###
+If debugging code that resides on a remote machine, use pathmaps to map a path
+on the remote machine to a path on the local machine.
