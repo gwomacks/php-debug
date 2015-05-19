@@ -15,8 +15,11 @@ class ContextVariableView extends View
     ContextVariableListView = require "./context-variable-list-view"
     label = @variable.label
     switch @variable.type
-      when 'string' then @variableView.append(new ContextVariableScalarView(label, "\""+@variable.value+"\""))
+      when 'string'
+        @variableView.append(new ContextVariableScalarView(label, "\""+@variable.value+"\""))
       when 'int'
+        @variableView.append(new ContextVariableScalarView(label, @variable.value))
+      when 'bool'
         @variableView.append(new ContextVariableScalarView(label, @variable.value))
       when 'uninitialized' then @variableView.append(new ContextVariableScalarView(label, "?"))
       when 'null' then @variableView.append(new ContextVariableScalarView(label, "null"))

@@ -273,6 +273,9 @@ class DbgpInstance extends DebugContext
         datum.value = undefined
       when "null"
         datum.value = null
+      when "bool"
+        datum.value = variable._
       else
+        console.dir variable
         console.error "Unhandled context variable type: " + variable.$.type
     return datum
