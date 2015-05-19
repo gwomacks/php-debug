@@ -144,6 +144,7 @@ class DbgpInstance extends DebugContext
           when 'stopping'
             @executeStop()
           else
+            console.dir response
             console.error "Unhandled status: " + response.$.status
     )
 

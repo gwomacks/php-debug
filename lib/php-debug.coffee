@@ -137,7 +137,7 @@ module.exports = PhpDebug =
       .continue "step_over"
   stepIn: ->
     @GlobalContext.getCurrentDebugContext()
-      .continue "step_in"
+      .continue "step_into"
   stepOut: ->
     @GlobalContext.getCurrentDebugContext()
       .continue "step_out"

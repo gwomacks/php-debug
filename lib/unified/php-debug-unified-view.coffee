@@ -48,7 +48,7 @@ class PhpDebugUnifiedView extends ScrollView
         when 'step'
           @GlobalContext.getCurrentDebugContext().continue "step_over"
         when 'in'
-          @GlobalContext.getCurrentDebugContext().continue "step_in"
+          @GlobalContext.getCurrentDebugContext().continue "step_into"
         when 'out'
           @GlobalContext.getCurrentDebugContext().continue "step_out"
         when 'stop'
