@@ -107,3 +107,15 @@ class GlobalContext
 
   notifySessionEnd: (data) ->
     @emitter.emit 'php-debug.sessionEnd', data
+
+  onSessionStart: (callback) ->
+    @emitter.on 'php-debug.sessionStart', callback
+
+  notifySessionStart: (data) ->
+    @emitter.emit 'php-debug.sessionStart', data
+
+  onRunning: (callback) ->
+    @emitter.on 'php-debug.running', callback
+
+  notifyRunning: (data) ->
+    @emitter.emit 'php-debug.running', data

@@ -9,11 +9,11 @@ class PhpDebugUnifiedView extends ScrollView
   @content: ->
     @div class: 'php-debug php-debug-unified-view pane-item padded', style: 'overflow:auto;', tabindex: -1, =>
       @div class: "block", =>
-        @button class: "btn octicon icon-playback-play inline-block-tight",    'data-action':'continue', "Continue"
-        @button class: "btn octicon icon-steps inline-block-tight",            'data-action':'step', "Step Over"
-        @button class: "btn octicon icon-sign-in inline-block-tight",          'data-action':'in', "Step In"
-        @button class: "btn octicon icon-sign-out inline-block-tight",         'data-action':'out', "Step Out"
-        @button class: "btn octicon icon-primitive-square inline-block-tight", 'data-action':'stop', "Stop"
+        @button class: "btn octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', "Continue"
+        @button class: "btn octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', "Step Over"
+        @button class: "btn octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', "Step In"
+        @button class: "btn octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', "Step Out"
+        @button class: "btn octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', "Stop"
       @div class: 'tabs-view', =>
         @div outlet: 'stackView', class:'php-debug-tab'
         @div outlet: 'contextView', class:'php-debug-tab'
@@ -24,6 +24,12 @@ class PhpDebugUnifiedView extends ScrollView
     super
     @GlobalContext = params.context
     @contextList = []
+    @GlobalContext.onBreak () =>
+      @find('button').enable()
+    @GlobalContext.onRunning () =>
+      @find('button').disable()
+    @GlobalContext.onSessionEnd () =>
+      @find('button').disable()
 
   serialize: ->
     deserializer: @constructor.name
@@ -58,7 +64,6 @@ class PhpDebugUnifiedView extends ScrollView
           console.error "unknown action"
           console.dir action
           console.dir this
-
 
   openWindow: ->
     atom.workspace.addBottomPanel({

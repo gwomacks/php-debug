@@ -18,9 +18,14 @@ class DbgpInstance extends DebugContext
     @emitter = new Emitter
     @buffer = ''
     @GlobalContext.addDebugContext(this)
+    @GlobalContext.notifySessionStart()
 
     @socket.on "error", (error) =>
       @GlobalContext.notifySessionEnd()
+
+  stop: ->
+    @socket.end()
+    @GlobalContext.notifySessionEnd()
 
   syncStack: ->
     return @executeCommand('stack_get').then (data) =>
@@ -34,7 +39,6 @@ class DbgpInstance extends DebugContext
         }
         stackFrames.push csonFrame
       @setStack(stackFrames)
-
 
   nextTransactionId: ->
     if !@transaction_id
@@ -103,7 +107,6 @@ class DbgpInstance extends DebugContext
     console.log "init"
     @setFeature('show_hidden', 1)
     .then () =>
-      console.log "setting feature multiple sessions"
       return @setFeature('multiple_sessions', 0)
     .then () =>
       return @sendAllBreakpoints()
@@ -129,6 +132,7 @@ class DbgpInstance extends DebugContext
     return @command("breakpoint_set", options)
 
   continue: (type) =>
+    @GlobalContext.notifyRunning()
     return @command(type).then(
       (data) =>
         response = data.response
@@ -141,8 +145,6 @@ class DbgpInstance extends DebugContext
             lineno = thing['lineno']
             breakpoint = new Breakpoint(filepath: filepath, line:lineno)
             @GlobalContext.notifyBreak(breakpoint)
-          when 'stopping'
-            @executeStop()
           else
             console.dir response
             console.error "Unhandled status: " + response.$.status
@@ -186,7 +188,7 @@ class DbgpInstance extends DebugContext
   executeDetach: () =>
     @command('detach')
     .then () =>
-      @executeRun()
+      @executeStop()
 
   updateWatchpoints: (data) =>
     @clearWatchpoints()
@@ -227,12 +229,11 @@ class DbgpInstance extends DebugContext
     return data
 
   executeRun: () =>
-    console.log "running"
     return @continue("run")
 
   executeStop: () =>
-    console.log "stopping"
-    return @command("stop")
+    @command("stop")
+    @stop()
 
   parseContextVariable: ({variable}) ->
     datum = {
