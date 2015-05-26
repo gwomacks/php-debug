@@ -12,4 +12,5 @@ class ContextView extends View
     @render()
 
   render: ->
-    @contextListView.append(new ContextVariableListView( {name: @context.name, summary: null, variables: @context.context.variables, autoopen: true}))
+    if @context.context
+      @contextListView.append(new ContextVariableListView( {name: @context.name, summary: null, variables: @context.context.variables, autoopen: true}))

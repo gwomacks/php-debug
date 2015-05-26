@@ -5,6 +5,7 @@ events = require 'events'
 Breakpoint    = require './models/breakpoint'
 Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
+helpers        = require './helpers'
 
 PhpDebugContextUri = "phpdebug://context"
 PhpDebugStackUri = "phpdebug://stack"

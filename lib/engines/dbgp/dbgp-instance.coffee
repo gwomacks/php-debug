@@ -223,10 +223,11 @@ class DbgpInstance extends DebugContext
     data.type = 'context'
     data.context = response.response.$.context
     data.variables = []
-    for property in response.response.property
-      v = @parseContextVariable({variable:property})
-      data.variables.push v
-    return data
+    if response.response.property
+      for property in response.response.property
+        v = @parseContextVariable({variable:property})
+        data.variables.push v
+      return data
 
   executeRun: () =>
     return @continue("run")
