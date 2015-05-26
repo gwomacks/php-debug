@@ -37,7 +37,7 @@ class PhpDebugUnifiedView extends ScrollView
 
   getURI: -> @uri
 
-  getTitle: -> "Unified"
+  getTitle: -> "Debugging"
 
   initialize: (params) =>
     super

@@ -72,7 +72,7 @@ module.exports = PhpDebug =
         when PhpDebugWatchUri
           createWatchView(uri: PhpDebugWatchUri)
         when PhpDebugUnifiedUri
-          @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
+          @window = @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
     @GlobalContext.onBreak (breakpoint) =>
@@ -122,22 +122,29 @@ module.exports = PhpDebug =
     marker = editor.markBufferRange(range)
 
   toggleDebugging: ->
-    @showWindows()
-    @dbgp.listen()
+    if not @window
+      @showWindows()
+      @dbgp.listen()
+    else
+      console.dir @window
 
   run: ->
-    @GlobalContext.getCurrentDebugContext()
-      .executeRun()
+    if @GlobalContext.getCurrentDebugContext()
+      @GlobalContext.getCurrentDebugContext()
+        .executeRun()
 
   stepOver: ->
-    @GlobalContext.getCurrentDebugContext()
-      .continue "step_over"
+    if @GlobalContext.getCurrentDebugContext()
+      @GlobalContext.getCurrentDebugContext()
+        .continue "step_over"
   stepIn: ->
-    @GlobalContext.getCurrentDebugContext()
-      .continue "step_into"
+    if @GlobalContext.getCurrentDebugContext()
+      @GlobalContext.getCurrentDebugContext()
+        .continue "step_into"
   stepOut: ->
-    @GlobalContext.getCurrentDebugContext()
-      .continue "step_out"
+    if @GlobalContext.getCurrentDebugContext()
+      @GlobalContext.getCurrentDebugContext()
+        .continue "step_out"
 
   clearAllBreakpoints: ->
     @GlobalContext.setBreakpoints([])
