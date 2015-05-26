@@ -149,6 +149,8 @@ class DbgpInstance extends DebugContext
             lineno = thing['lineno']
             breakpoint = new Breakpoint(filepath: filepath, line:lineno)
             @GlobalContext.notifyBreak(breakpoint)
+          when 'stopping'
+            @executeStop()
           else
             console.dir response
             console.error "Unhandled status: " + response.$.status
