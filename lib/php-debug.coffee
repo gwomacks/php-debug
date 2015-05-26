@@ -103,11 +103,7 @@ module.exports = PhpDebug =
   doBreak: (breakpoint) ->
     filepath = breakpoint.getPath()
 
-    pathMaps = atom.config.get('php-debug.PathMaps')
-    for pathMap in pathMaps
-      if filepath.indexOf(pathMap.from) == 0
-        filepath = filepath.replace(pathMap.from, pathMap.to)
-        break
+    filepath = helpers.remotePathToLocal(filepath)
 
     atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
       if @currentBreakDecoration

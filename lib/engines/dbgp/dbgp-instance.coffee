@@ -141,7 +141,7 @@ class DbgpInstance extends DebugContext
             messages = response["xdebug:message"]
             message = messages[0]
             thing = message.$
-            filepath = decodeURI(thing['filename']).replace("file:///", "")
+            filepath = decodeURI(thing['filename']).replace("file://", "")
             lineno = thing['lineno']
             breakpoint = new Breakpoint(filepath: filepath, line:lineno)
             @GlobalContext.notifyBreak(breakpoint)
