@@ -71,18 +71,12 @@ class PhpDebugUnifiedView extends ScrollView
       visible: true
     })
 
-  # doUpdate: =>
-  #   console.log "showing context"
-
   onDidChangeTitle: -> new Disposable ->
   onDidChangeModified: -> new Disposable ->
 
-  isEqual: (other) ->
-    other instanceof PhpDebugContextView
+  destroy: =>
+    if @GlobalContext.getCurrentDebugContext()
+      @GlobalContext.getCurrentDebugContext().executeDetach()
 
-  # showContexts: ->
-  #   @contextViewList.empty()
-  #   for index, context of @debugContext.scopeList
-  #     if context == undefined
-  #       continue
-  #     @contextViewList.append(new ContextView(context))
+  isEqual: (other) ->
+    other instanceof PhpDebugUnifiedView

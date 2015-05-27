@@ -28,10 +28,6 @@ class PhpDebugContextView extends ScrollView
   isEqual: (other) ->
     other instanceof PhpDebugContextView
 
-  # setDebugContext: (context) ->
-  #   @debugContext = context
-  #   @showContexts()
-
   showContexts: =>
     if @contextViewList
       @contextViewList.empty()
