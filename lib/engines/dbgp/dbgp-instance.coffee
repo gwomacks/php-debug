@@ -276,12 +276,16 @@ class DbgpInstance extends DebugContext
           for property in variable.property
             datum.value.push @parseContextVariable({variable:property})
       when "int"
+        datum.type = "numeric"
         datum.value = variable._
       when "uninitialized"
         datum.value = undefined
       when "null"
         datum.value = null
       when "bool"
+        datum.value = variable._
+      when "float"
+        datum.type = "numeric"
         datum.value = variable._
       else
         console.dir variable

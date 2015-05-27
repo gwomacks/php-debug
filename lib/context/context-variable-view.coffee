@@ -17,7 +17,7 @@ class ContextVariableView extends View
     switch @variable.type
       when 'string'
         @variableView.append(new ContextVariableScalarView(label, "\""+@variable.value+"\""))
-      when 'int'
+      when 'numeric'
         @variableView.append(new ContextVariableScalarView(label, @variable.value))
       when 'bool'
         @variableView.append(new ContextVariableScalarView(label, @variable.value))

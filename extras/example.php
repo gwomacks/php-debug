@@ -11,10 +11,11 @@
   xdebug_break();
   $i = 1;
 
-  class ResursivePrinter
+  class RecursivePrinter
   {
 
     var $member;
+    var $float = 9.9;
     function __construct() {
       $this->member = array('kittens' => 'doom');
     }
@@ -27,7 +28,7 @@
     }
   }
 
-  $rs = new ResursivePrinter();
+  $rs = new RecursivePrinter();
   $rs->recursivePrintNumber(64); # Try setting a breakpoint on this line
 
   print "finished";
