@@ -72,7 +72,7 @@ module.exports = PhpDebug =
         when PhpDebugWatchUri
           createWatchView(uri: PhpDebugWatchUri)
         when PhpDebugUnifiedUri
-          @window = @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
+          @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
     @GlobalContext.onBreak (breakpoint) =>
@@ -122,11 +122,15 @@ module.exports = PhpDebug =
     marker = editor.markBufferRange(range)
 
   toggleDebugging: ->
-    if not @window
+    pane = atom.workspace.paneForItem(@unifiedWindow)
+    if !pane
       @showWindows()
-      @dbgp.listen()
+      if !@dbgp.listening()
+        @dbgp.listen()
     else
-      console.dir @window
+      pane.destroy()
+      delete @unifiedWindow
+      @dbgp.close()
 
   run: ->
     if @GlobalContext.getCurrentDebugContext()
@@ -156,6 +160,8 @@ module.exports = PhpDebug =
     editor = atom.workspace.getActivePane()
     editor.splitDown()
     atom.workspace.open(PhpDebugUnifiedUri)
+      .then (unifiedWindow) =>
+        @unifiedWindow = unifiedWindow
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()
