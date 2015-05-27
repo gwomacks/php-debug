@@ -1,5 +1,5 @@
 {
-  "name": "PHP-Debug",
+  "name": "php-debug",
   "main": "./lib/php-debug",
   "version": "0.0.8",
   "description": "A package for the Atom Text Editor for debugging PHP code using the XDebug extension",
