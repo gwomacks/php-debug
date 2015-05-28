@@ -49,15 +49,16 @@ class DbgpInstance extends DebugContext
     while buffer.split("\0").length >= 2
       n = buffer.indexOf("\0")
       len = parseInt(buffer.slice(0, n))
-      message = buffer.slice(n+1, n+1+len)
-      buffer = buffer.slice(n+2+len)
-      if message != ""
-        o = parseString message, (err, result) =>
-          type = Object.keys(result)[0]
-          switch type
-            when "init" then @onInit result
-            when "response"
-              @parseResponse result
+      if buffer.length >= n + len + 2
+        message = buffer.slice(n+1, n+1+len)
+        buffer = buffer.slice(n+2+len)
+        if message != ""
+          o = parseString message, (err, result) =>
+            type = Object.keys(result)[0]
+            switch type
+              when "init" then @onInit result
+              when "response"
+                @parseResponse result
     return buffer
 
   parseResponse: (data) =>
