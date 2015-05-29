@@ -73,7 +73,7 @@ class DbgpInstance extends DebugContext
 
 
   stuff: (data) =>
-    message = @parse(data)
+    @buffer = message = @parse(@buffer + data)
 
   executeCommand: (command, options, data) ->
     @command(command, options, data)
