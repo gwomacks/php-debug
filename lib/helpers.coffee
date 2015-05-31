@@ -10,6 +10,22 @@ exports.insertOrdered = (sortedArray, object) ->
   index = exports.getInsertIndex(sortedArray, object)
   sortedArray.splice(index, 0, object)
 
+exports.arraySearch = (array, object) ->
+  if array.length == 0
+    return false
+  for index, curObject of array
+    if object.equals curObject
+      return index
+  return false
+
+exports.arrayRemove = (array, object) ->
+  index = exports.arraySearch(aray, object)
+  if(index == false)
+    return
+  removed = array.splice(index,1)
+  if removed.length > 0
+    return removed[0]
+
 exports.serializeArray = (array) ->
   ret = []
   for index, curObject of array

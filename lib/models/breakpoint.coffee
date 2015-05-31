@@ -2,11 +2,16 @@ module.exports =
 class Breakpoint
   atom.deserializers.add(this)
   @version: '1a'
+  @breakpointId: 1
+
+  @getNextBreakpointId: () ->
+    return @breakpointId++
 
   constructor: (data) ->
     @filepath = data.filepath
     @marker = data.marker
     @line = data.line
+    @id = Breakpoint.getNextBreakpointId()
     if @marker
       @syncLineFromMarker()
 
@@ -28,6 +33,9 @@ class Breakpoint
 
   getMarker: ->
     return @marker
+
+  getId: ->
+    return @id
 
   syncLineFromMarker: () ->
     @line = @marker.getStartBufferPosition().row + 1

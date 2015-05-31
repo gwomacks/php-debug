@@ -19,7 +19,7 @@ class DbgpInstance extends DebugContext
     @buffer = ''
     @GlobalContext.addDebugContext(this)
     @GlobalContext.notifySessionStart()
-
+    @breakpointMap = {}
     @socket.on "error", (error) =>
       @GlobalContext.notifySessionEnd()
 
@@ -130,7 +130,17 @@ class DbgpInstance extends DebugContext
       f: 'file://' + path
       n: breakpoint.getLine()
     }
-    return @command("breakpoint_set", options)
+    p =  @command("breakpoint_set", options)
+    return p.then (data) =>
+      @breakpointMap[breakpoint.getId()] = data.response.$.id
+
+  executeBreakpointRemove: (breakpoint) =>
+    path = breakpoint.getPath()
+    path = helpers.localPathToRemote(path)
+    options = {
+      d: @breakpointMap[breakpoint.getId()]
+    }
+    return @command("breakpoint_remove", options)
 
   continue: (type) =>
     @GlobalContext.notifyRunning()
