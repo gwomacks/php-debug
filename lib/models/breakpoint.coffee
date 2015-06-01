@@ -56,3 +56,6 @@ class Breakpoint
 
   isGreaterThan: (other) ->
     return !@isLessThan(other) && !@isEqual(other)
+
+  @fromMarker: (marker) ->
+    

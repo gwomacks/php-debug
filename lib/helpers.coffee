@@ -14,12 +14,12 @@ exports.arraySearch = (array, object) ->
   if array.length == 0
     return false
   for index, curObject of array
-    if object.equals curObject
+    if object.isEqual curObject
       return index
   return false
 
 exports.arrayRemove = (array, object) ->
-  index = exports.arraySearch(aray, object)
+  index = exports.arraySearch(array, object)
   if(index == false)
     return
   removed = array.splice(index,1)

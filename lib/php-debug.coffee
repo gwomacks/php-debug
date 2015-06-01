@@ -173,5 +173,10 @@ module.exports = PhpDebug =
     marker = editor.markBufferRange(range)
     path = editor.getPath()
     breakpoint = new Breakpoint({filepath:path, marker:marker})
-    decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
-    @GlobalContext.addBreakpoint breakpoint
+    removed = @GlobalContext.removeBreakpoint breakpoint
+    if removed
+      if removed.getMarker()
+        removed.getMarker().destroy()
+    else
+      decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
+      @GlobalContext.addBreakpoint breakpoint
