@@ -2,19 +2,24 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle Debugging'
-      'command': 'php-debug:toggleDebugging'
-    },
-    {
-      'label': 'Toggle Breakpoint'
-      'command': 'php-debug:toggleBreakpoint'
+      label: 'PHP-Debug',
+      submenu: [
+        {
+          'label': 'Toggle Debugging'
+          'command': 'php-debug:toggleDebugging'
+        },
+        {
+          'label': 'Toggle Breakpoint'
+          'command': 'php-debug:toggleBreakpoint'
+        }
+      ]
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'php-debug'
+      'label': 'PHP-Debug'
       'submenu': [
         {
           'label': 'Toggle Debugging'
@@ -24,6 +29,7 @@
           'label': 'Toggle Breakpoint'
           'command': 'php-debug:toggleBreakpoint'
         },
+        { type: 'separator'},
         {
           'label': 'Run'
           'command': 'php-debug:run'
@@ -40,6 +46,7 @@
           'label': 'Step Out'
           'command': 'php-debug:stepOut'
         },
+        { type: 'separator'},
         {
           'label': 'Clear All Breakpoints'
           'command': 'php-debug:clearAllBreakpoints'
