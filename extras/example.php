@@ -17,7 +17,10 @@
     var $member;
     var $float = 9.9;
     function __construct() {
-      $this->member = array('kittens' => 'doom');
+      $this->member = array('key' => 'doom');
+
+      for($i = 0; $i < 10; $i++)
+        $this->member = array('key' => $this->member);
     }
 
     function recursivePrintNumber($limit, $cur = 0) {

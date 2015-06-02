@@ -43,7 +43,15 @@ module.exports = PhpDebug =
     ServerPort:
       type: 'integer'
       default: 9000
-
+    MaxChildren:
+      type: 'integer'
+      default: 8
+    MaxData:
+      type: 'integer'
+      default: 1024
+    MaxDepth:
+      type: 'integer'
+      default: 64
 
   activate: (state) ->
     if state

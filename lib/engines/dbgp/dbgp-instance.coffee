@@ -109,6 +109,9 @@ class DbgpInstance extends DebugContext
   onInit: (data) =>
     console.log "init"
     @setFeature('show_hidden', 1)
+    @setFeature('max_depth', atom.config.get('php-debug.MaxDepth'))
+    @setFeature('max_data', atom.config.get('php-debug.MaxData'))
+    @setFeature('max_children', atom.config.get('php-debug.MaxChildren'))
     .then () =>
       return @setFeature('multiple_sessions', 0)
     .then () =>
