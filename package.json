@@ -3,12 +3,6 @@
   "main": "./lib/php-debug",
   "version": "0.0.13",
   "description": "A package for the Atom Text Editor for debugging PHP code using the XDebug extension",
-  "activationCommands": {
-    "atom-workspace": [
-      "php-debug:toggleBreakpoint",
-      "php-debug:toggleDebugging"
-    ]
-  },
   "repository": "https://github.com/gwomacks/php-debug",
   "license": "MIT",
   "engines": {
