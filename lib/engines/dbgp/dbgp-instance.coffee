@@ -59,6 +59,8 @@ class DbgpInstance extends DebugContext
               when "init" then @onInit result
               when "response"
                 @parseResponse result
+      else
+        return buffer
     return buffer
 
   parseResponse: (data) =>
