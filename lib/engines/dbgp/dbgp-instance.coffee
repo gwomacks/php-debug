@@ -282,7 +282,7 @@ class DbgpInstance extends DebugContext
             console.error "Unhandled context variable encoding: " + variable.$.encoding
       when "array"
         datum.value = []
-        datum.length = variable.$.children
+        datum.length = variable.$.numchildren
         if variable.property
           for property in variable.property
             datum.value.push @parseContextVariable({variable:property})
