@@ -41,6 +41,8 @@ class Breakpoint
     @line = @marker.getStartBufferPosition().row + 1
 
   getLine: ->
+    if @marker
+      return @marker.getStartBufferPosition().row + 1
     return @line
 
   isLessThan: (other) ->
@@ -58,4 +60,3 @@ class Breakpoint
     return !@isLessThan(other) && !@isEqual(other)
 
   @fromMarker: (marker) ->
-    
