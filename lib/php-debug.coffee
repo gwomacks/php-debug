@@ -90,6 +90,11 @@ module.exports = PhpDebug =
         if event.added
           for breakpoint in event.added
             @GlobalContext.getCurrentDebugContext().executeBreakpoint(breakpoint)
+    atom.workspace.observeTextEditors (editor) =>
+      for breakpoint in @GlobalContext.getBreakpoints()
+        if breakpoint.getPath() == editor.getPath()
+          marker = @addBreakpointMarker(breakpoint.getLine(), editor)
+          breakpoint.setMarker(marker)
 
   createUnifiedView: (state) ->
     PhpDebugUnifiedView = require './unified/php-debug-unified-view'
@@ -119,6 +124,12 @@ module.exports = PhpDebug =
       @currentBreakDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break'})
       editor.scrollToBufferPosition([line-1,0])
     @GlobalContext.getCurrentDebugContext().syncCurrentContext()
+
+  addBreakpointMarker: (line, editor) =>
+    range = [[line-1, 0], [line-1, 0]]
+    marker = editor.markBufferRange(range)
+    decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
+    return marker
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
@@ -170,13 +181,13 @@ module.exports = PhpDebug =
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()
     range = editor.getSelectedBufferRange()
-    marker = editor.markBufferRange(range)
     path = editor.getPath()
-    breakpoint = new Breakpoint({filepath:path, marker:marker})
+    breakpoint = new Breakpoint({filepath:path, line:range.getRows()[0]+1})
     removed = @GlobalContext.removeBreakpoint breakpoint
     if removed
       if removed.getMarker()
         removed.getMarker().destroy()
     else
-      decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
+      marker = @addBreakpointMarker(range.getRows()[0]+1, editor)
+      breakpoint.setMarker(marker)
       @GlobalContext.addBreakpoint breakpoint

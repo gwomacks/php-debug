@@ -34,6 +34,9 @@ class Breakpoint
   getMarker: ->
     return @marker
 
+  setMarker: (@marker) ->
+    undefined
+
   getId: ->
     return @id
 
