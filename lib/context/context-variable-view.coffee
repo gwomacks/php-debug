@@ -16,13 +16,13 @@ class ContextVariableView extends View
     label = @variable.label
     switch @variable.type
       when 'string'
-        @variableView.append(new ContextVariableScalarView(label, "\""+@variable.value+"\""))
+        @variableView.append(new ContextVariableScalarView({label:label, value: "\""+@variable.value+"\""}))
       when 'numeric'
-        @variableView.append(new ContextVariableScalarView(label, @variable.value))
+        @variableView.append(new ContextVariableScalarView({label: label, value:@variable.value}))
       when 'bool'
-        @variableView.append(new ContextVariableScalarView(label, @variable.value))
-      when 'uninitialized' then @variableView.append(new ContextVariableScalarView(label, "?"))
-      when 'null' then @variableView.append(new ContextVariableScalarView(label, "null"))
+        @variableView.append(new ContextVariableScalarView({label: label, value:@variable.value}))
+      when 'uninitialized' then @variableView.append(new ContextVariableScalarView({label:label, value:"?"}))
+      when 'null' then @variableView.append(new ContextVariableScalarView({label: label, value: "null"}))
       when 'array'
         summary ="array["+@variable.length+"]"
         @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: false}))
