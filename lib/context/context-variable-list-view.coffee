@@ -8,22 +8,14 @@ class ContextVariableListView extends View
     @li class: "context-variable-list-view", =>
       @details =>
         @summary =>
-          @span class: 'variable php', outlet: "listName"
-          @span class: 'type php', outlet: "listSummary"
+          @span class: 'variable php', params.name
+          @span class: 'type php', params.summary
         @ul outlet: "contextVariableList"
 
-
-
-  initialize: (params) ->
-    @name = params.name
-    @summary = params.summary
-    @variables = params.variables
-    @autoopen = params.autoopen
+  initialize: ({@variables}) ->
     @render()
 
   render: ->
-    @listName.append(@name)
-    @listSummary.append(@summary)
     if @autoopen
       @find('details').attr("open", "open")
     if @variables

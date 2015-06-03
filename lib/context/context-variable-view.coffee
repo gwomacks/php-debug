@@ -11,18 +11,23 @@ class ContextVariableView extends View
   initialize: (@variable) ->
     @render()
 
+  renderScalar: ({label,value}) ->
+    "<span class=\"variable php\">#{label}</span><span class=\"type php\">#{value}</span>"
+
   render: ->
     ContextVariableListView = require "./context-variable-list-view"
     label = @variable.label
     switch @variable.type
       when 'string'
-        @variableView.append(new ContextVariableScalarView({label:label, value: "\""+@variable.value+"\""}))
+        @variableView.append(@renderScalar({label:label, value: "\""+@variable.value+"\""}))
       when 'numeric'
-        @variableView.append(new ContextVariableScalarView({label: label, value:@variable.value}))
+        @variableView.append(@renderScalar({label: label, value:@variable.value}))
       when 'bool'
-        @variableView.append(new ContextVariableScalarView({label: label, value:@variable.value}))
-      when 'uninitialized' then @variableView.append(new ContextVariableScalarView({label:label, value:"?"}))
-      when 'null' then @variableView.append(new ContextVariableScalarView({label: label, value: "null"}))
+        @variableView.append(@renderScalar({label: label, value:@variable.value}))
+      when 'uninitialized'
+        @variableView.append(@renderScalar({label:label, value:"?"}))
+      when 'null'
+        @variableView.append(@renderScalar({label: label, value: "null"}))
       when 'array'
         summary ="array["+@variable.length+"]"
         @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: false}))
