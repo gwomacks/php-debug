@@ -41,11 +41,12 @@ class GlobalContext
 
   removeBreakpoint: (breakpoint) ->
     removed = helpers.arrayRemove(@breakpoints, breakpoint)
-    data = {
-      removed: [removed]
-    }
-    @notifyBreakpointsChange(data)
-    return removed
+    if removed
+      data = {
+        removed: [removed]
+      }
+      @notifyBreakpointsChange(data)
+      return removed
 
   setBreakpoints: (breakpoints) ->
     removed = @breakpoints
