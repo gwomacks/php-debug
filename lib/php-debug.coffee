@@ -45,13 +45,13 @@ module.exports = PhpDebug =
       default: 9000
     MaxChildren:
       type: 'integer'
-      default: 64
+      default: 32
     MaxData:
       type: 'integer'
       default: 1024
     MaxDepth:
       type: 'integer'
-      default: 8
+      default: 4
 
   activate: (state) ->
     if state
