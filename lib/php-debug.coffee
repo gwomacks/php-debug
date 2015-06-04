@@ -30,6 +30,12 @@ module.exports = PhpDebug =
   subscriptions: null
 
   config:
+    CustomExceptions:
+      type: 'array'
+      default: []
+      items:
+        type: 'string'
+      description: "Custom Exceptions to break on"
     PathMaps:
       type: 'array'
       default: []
@@ -52,6 +58,27 @@ module.exports = PhpDebug =
     MaxDepth:
       type: 'integer'
       default: 4
+    PhpException:
+      type: 'object'
+      properties:
+        FatalError:
+          type: 'boolean'
+          default: true
+        CatchableFatalError:
+          type: 'boolean'
+          default: true
+        Warning:
+          type: 'boolean'
+          default: true
+        StrictStandards:
+          type: 'boolean'
+          default: true
+        Xdebug:
+          type: 'boolean'
+          default: true
+        UnknownError:
+          type: 'boolean'
+          default: true
 
   activate: (state) ->
     if state
