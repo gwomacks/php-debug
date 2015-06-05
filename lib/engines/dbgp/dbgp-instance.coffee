@@ -109,9 +109,12 @@ class DbgpInstance extends DebugContext
   onInit: (data) =>
     console.log "init"
     @setFeature('show_hidden', 1)
-    @setFeature('max_depth', atom.config.get('php-debug.MaxDepth'))
-    @setFeature('max_data', atom.config.get('php-debug.MaxData'))
-    @setFeature('max_children', atom.config.get('php-debug.MaxChildren'))
+    .then () =>
+      return @setFeature('max_depth', atom.config.get('php-debug.MaxDepth'))
+    .then () =>
+      return @setFeature('max_data', atom.config.get('php-debug.MaxData'))
+    .then () =>
+      return @setFeature('max_children', atom.config.get('php-debug.MaxChildren'))
     .then () =>
       return @setFeature('multiple_sessions', 0)
     .then () =>
@@ -124,17 +127,39 @@ class DbgpInstance extends DebugContext
     breakpoints = @GlobalContext.getBreakpoints()
     commands = []
     for breakpoint in breakpoints
-      commands.push @executeBreakpoint(breakpoint) #@command("breakpoint_set", options)
+      commands.push @executeBreakpoint(breakpoint)
+
+    if atom.config.get('php-debug.PhpException.FatalError')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Fatal Error'))
+    if atom.config.get('php-debug.PhpException.CatchableFatalError')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Catchable Fatal Error'))
+    if atom.config.get('php-debug.PhpException.Warning')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Warning'))
+    if atom.config.get('php-debug.PhpException.StrictStandards')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Strict Standards'))
+    if atom.config.get('php-debug.PhpException.Xdebug')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Xdebug'))
+    if atom.config.get('php-debug.PhpException.UnknownError')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown Error'))
+    if atom.config.get('php-debug.PhpException.Notice')
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Notice'))
     return Q.all(commands)
 
   executeBreakpoint: (breakpoint) =>
-    path = breakpoint.getPath()
-    path = helpers.localPathToRemote(path)
-    options = {
-      t: 'line'
-      f: 'file://' + path
-      n: breakpoint.getLine()
-    }
+    switch breakpoint.getType()
+      when Breakpoint.TYPE_LINE
+        path = breakpoint.getPath()
+        path = helpers.localPathToRemote(path)
+        options = {
+          t: 'line'
+          f: 'file://' + path
+          n: breakpoint.getLine()
+        }
+      when Breakpoint.TYPE_EXCEPTION
+        options = {
+          t: 'exception'
+          x: breakpoint.getException()
+        }
     p =  @command("breakpoint_set", options)
     return p.then (data) =>
       @breakpointMap[breakpoint.getId()] = data.response.$.id

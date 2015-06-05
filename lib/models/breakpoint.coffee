@@ -3,14 +3,16 @@ class Breakpoint
   atom.deserializers.add(this)
   @version: '1a'
   @breakpointId: 1
+  @TYPE_LINE = 'line'
+  @TYPE_EXCEPTION = 'exception'
+
 
   @getNextBreakpointId: () ->
     return @breakpointId++
 
-  constructor: (data) ->
-    @filepath = data.filepath
-    @marker = data.marker
-    @line = data.line
+  constructor: ({@filepath, @marker, @line, @type, @exception}) ->
+    if !@type
+      @type =  Breakpoint.TYPE_LINE
     @id = Breakpoint.getNextBreakpointId()
     if @marker
       @syncLineFromMarker()
@@ -39,6 +41,12 @@ class Breakpoint
 
   getId: ->
     return @id
+
+  getType: ->
+    return @type
+
+  getException: ->
+    return @exception
 
   syncLineFromMarker: () ->
     @line = @marker.getStartBufferPosition().row + 1

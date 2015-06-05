@@ -67,10 +67,19 @@ module.exports = PhpDebug =
         CatchableFatalError:
           type: 'boolean'
           default: true
+        Notice:
+          type: 'boolean'
+          default: true
         Warning:
           type: 'boolean'
           default: true
+        Deprecated:
+          type: 'boolean'
+          default: true
         StrictStandards:
+          type: 'boolean'
+          default: true
+        ParseError:
           type: 'boolean'
           default: true
         Xdebug:
