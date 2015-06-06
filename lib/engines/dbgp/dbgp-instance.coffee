@@ -143,6 +143,11 @@ class DbgpInstance extends DebugContext
       commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown Error'))
     if atom.config.get('php-debug.PhpException.Notice')
       commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Notice'))
+
+    for exception in atom.config.get('php-debug.CustomExceptions')
+      console.log exception
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: exception))
+
     return Q.all(commands)
 
   executeBreakpoint: (breakpoint) =>
