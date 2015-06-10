@@ -187,13 +187,17 @@ class DbgpInstance extends DebugContext
             messages = response["xdebug:message"]
             message = messages[0]
             thing = message.$
+            console.dir data
             filepath = decodeURI(thing['filename']).replace("file:///", "")
 
             if not filepath.match(/^[a-zA-Z]:/)
               filepath = '/' + filepath
 
             lineno = thing['lineno']
-            breakpoint = new Breakpoint(filepath: filepath, line:lineno)
+            type = 'break'
+            if thing.exception
+              type = "error"
+            breakpoint = new Breakpoint(filepath: filepath, line:lineno, type: type)
             @GlobalContext.notifyBreak(breakpoint)
           when 'stopping'
             @executeStop()

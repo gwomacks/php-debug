@@ -33,5 +33,5 @@
 
   $rs = new RecursivePrinter();
   $rs->recursivePrintNumber(64); # Try setting a breakpoint on this line
-
+  throw new Exception();
   print "finished";
