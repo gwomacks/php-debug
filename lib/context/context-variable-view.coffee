@@ -5,8 +5,8 @@ ContextVariableScalarView = require "./context-variable-scalar-view"
 module.exports =
 class ContextVariableView extends View
   @content: =>
-    @li =>
-      @div outlet: 'variableView'
+    @li class: 'native-key-bindings', =>
+      @div class: 'native-key-bindings', tabindex: -1, outlet: 'variableView'
 
   initialize: (@variable) ->
     @render()

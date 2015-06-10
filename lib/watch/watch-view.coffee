@@ -3,8 +3,8 @@ ContextVariableView = require '../context/context-variable-view'
 module.exports =
 class WatchView extends View
 
-  @content: =>
-    @div class: 'thing', =>
+  @content: ->
+    @div class: 'native-key-bindings', =>
       @div outlet: 'variable'
 
   initialize: (watchpoint) ->
@@ -18,7 +18,4 @@ class WatchView extends View
         label : @watchpoint.getExpression()
         type: 'uninitialized'
       }
-    # datum.
     @variable.append new ContextVariableView(datum)
-    # @expression.append @watchpoint.getExpression()
-    # @value.append @watchpoint.getValue()

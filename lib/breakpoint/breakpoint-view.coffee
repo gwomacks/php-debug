@@ -5,7 +5,7 @@ module.exports =
 class BreakpointView extends View
 
   @content: =>
-    @div class: 'thing', =>
+    @div =>
       @div outlet: 'breakpointListView'
 
   initialize: (breakpoints) ->
@@ -14,4 +14,3 @@ class BreakpointView extends View
 
   render: ->
     @breakpointListView.append(new BreakpointListView(@breakpoints))
-    #@contextListView.append "List View"
