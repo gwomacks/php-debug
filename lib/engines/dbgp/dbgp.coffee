@@ -29,7 +29,12 @@ class Dbgp
     @server = net.createServer( (socket) =>
 
       socket.setEncoding('utf8');
-      instance = new DbgpInstance(socket:socket, context:@GlobalContext)
+      if !@GlobalContext.getCurrentDebugContext()
+        console.log "Session initiated"
+        instance = new DbgpInstance(socket:socket, context:@GlobalContext)
+      else
+        console.log "New session rejected"
+        socket.end()
     ).listen @serverPort
 
   close: (options) ->

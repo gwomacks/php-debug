@@ -54,11 +54,14 @@ class DbgpInstance extends DebugContext
         buffer = buffer.slice(n+2+len)
         if message != ""
           o = parseString message, (err, result) =>
-            type = Object.keys(result)[0]
-            switch type
-              when "init" then @onInit result
-              when "response"
-                @parseResponse result
+            if err
+              console.error err
+            else
+              type = Object.keys(result)[0]
+              switch type
+                when "init" then @onInit result
+                when "response"
+                  @parseResponse result
       else
         return buffer
     return buffer
