@@ -122,6 +122,10 @@ module.exports = PhpDebug =
     @GlobalContext.onBreak (breakpoint) =>
       @doBreak(breakpoint)
 
+    @GlobalContext.onRunning () =>
+      if @currentBreakDecoration
+        @currentBreakDecoration.destroy()
+
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext()
@@ -182,6 +186,8 @@ module.exports = PhpDebug =
     marker = editor.markBufferRange(range)
 
   toggleDebugging: ->
+    if @currentBreakDecoration
+      @currentBreakDecoration.destroy()
     pane = atom.workspace.paneForItem(@unifiedWindow)
     if !pane
       @showWindows()
