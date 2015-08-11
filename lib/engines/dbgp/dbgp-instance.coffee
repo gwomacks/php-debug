@@ -91,7 +91,7 @@ class DbgpInstance extends DebugContext
 
     payload = command + " -i " + transactionId
     if options && Object.keys(options).length > 0
-      argu = ("-"+(arg) + " " + encodeURI(val) for arg, val of options)
+      argu = ("-"+(arg) + " " + helpers.escapeValue(val) for arg, val of options)
       argu2 = argu.join(" ")
       payload += " " + argu2
 
@@ -133,17 +133,17 @@ class DbgpInstance extends DebugContext
       commands.push @executeBreakpoint(breakpoint)
 
     if atom.config.get('php-debug.PhpException.FatalError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Fatal Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Fatal error'))
     if atom.config.get('php-debug.PhpException.CatchableFatalError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Catchable Fatal Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Catchable fatal error'))
     if atom.config.get('php-debug.PhpException.Warning')
       commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Warning'))
     if atom.config.get('php-debug.PhpException.StrictStandards')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Strict Standards'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Strict standards'))
     if atom.config.get('php-debug.PhpException.Xdebug')
       commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Xdebug'))
     if atom.config.get('php-debug.PhpException.UnknownError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown error'))
     if atom.config.get('php-debug.PhpException.Notice')
       commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Notice'))
 

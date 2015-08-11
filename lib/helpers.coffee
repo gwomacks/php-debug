@@ -10,6 +10,11 @@ exports.insertOrdered = (sortedArray, object) ->
   index = exports.getInsertIndex(sortedArray, object)
   sortedArray.splice(index, 0, object)
 
+exports.escapeValue = (object) ->
+  if (typeof object == "string")
+    return "\"" + object.replace("\\","\\\\").replace("\"","\\\"") + "\""
+  return object;
+
 exports.arraySearch = (array, object) ->
   if array.length == 0
     return false
