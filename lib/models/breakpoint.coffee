@@ -1,7 +1,9 @@
+Codepoint = require('./codepoint')
+
 module.exports =
-class Breakpoint
+class Breakpoint extends Codepoint
   atom.deserializers.add(this)
-  @version: '1a'
+  @version: '1c'
   @breakpointId: 1
   @TYPE_LINE = 'line'
   @TYPE_EXCEPTION = 'exception'
@@ -10,12 +12,12 @@ class Breakpoint
   @getNextBreakpointId: () ->
     return @breakpointId++
 
-  constructor: ({@filepath, @marker, @line, @type, @exception}) ->
+  constructor: ({filepath, marker, line, @type, @exception}) ->
+    super
     if !@type
       @type =  Breakpoint.TYPE_LINE
     @id = Breakpoint.getNextBreakpointId()
-    if @marker
-      @syncLineFromMarker()
+
 
   serialize: -> {
     deserializer: 'Breakpoint'
@@ -30,15 +32,6 @@ class Breakpoint
     return new Breakpoint(filepath: data.filepath, line: data.line)
 
 
-  getPath: ->
-    return @filepath
-
-  getMarker: ->
-    return @marker
-
-  setMarker: (@marker) ->
-    undefined
-
   getId: ->
     return @id
 
@@ -47,14 +40,6 @@ class Breakpoint
 
   getException: ->
     return @exception
-
-  syncLineFromMarker: () ->
-    @line = @marker.getStartBufferPosition().row + 1
-
-  getLine: ->
-    if @marker
-      return @marker.getStartBufferPosition().row + 1
-    return @line
 
   isLessThan: (other) ->
     return true if !other instanceof Breakpoint
