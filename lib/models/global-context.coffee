@@ -113,6 +113,12 @@ class GlobalContext
   notifyContextUpdate: (data) ->
     @emitter.emit 'php-debug.contextUpdate', data
 
+  onStackChange: (callback) ->
+    @emitter.on 'php-debug.stackChange', callback
+
+  notifyStackChange: (data) ->
+    @emitter.emit 'php-debug.stackChange', data
+
   onSessionEnd: (callback) ->
     @emitter.on 'php-debug.sessionEnd', callback
 

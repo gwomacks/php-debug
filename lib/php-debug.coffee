@@ -2,6 +2,7 @@
 {Emitter} = require 'event-kit'
 events = require 'events'
 
+Codepoint    = require './models/codepoint'
 Breakpoint    = require './models/breakpoint'
 Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
@@ -120,15 +121,18 @@ module.exports = PhpDebug =
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
     @GlobalContext.onBreak (breakpoint) =>
-      @doBreak(breakpoint)
+      @doCodePoint(breakpoint)
+
+    @GlobalContext.onStackChange (codepoint) =>
+      @doCodePoint(codepoint)
 
     @GlobalContext.onRunning () =>
-      if @currentBreakDecoration
-        @currentBreakDecoration.destroy()
+      if @currentCodePointDecoration
+        @currentCodePointDecoration.destroy()
 
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
-        @GlobalContext.getCurrentDebugContext().syncCurrentContext()
+        @GlobalContext.getCurrentDebugContext().syncCurrentContext(0)
 
     @GlobalContext.onBreakpointsChange (event) =>
       if @GlobalContext.getCurrentDebugContext()
@@ -138,6 +142,7 @@ module.exports = PhpDebug =
         if event.added
           for breakpoint in event.added
             @GlobalContext.getCurrentDebugContext().executeBreakpoint(breakpoint)
+
     atom.workspace.observeTextEditors (editor) =>
       for breakpoint in @GlobalContext.getBreakpoints()
         if breakpoint.getPath() == editor.getPath()
@@ -158,21 +163,26 @@ module.exports = PhpDebug =
   updateDebugContext: (data) ->
     @contextView.setDebugContext(data)
 
-  doBreak: (breakpoint) ->
-    filepath = breakpoint.getPath()
+  doCodePoint: (point) ->
+      filepath = point.getPath()
 
-    filepath = helpers.remotePathToLocal(filepath)
+      filepath = helpers.remotePathToLocal(filepath)
 
-    atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
-      if @currentBreakDecoration
-        @currentBreakDecoration.destroy()
-      line = breakpoint.getLine()
-      range = [[line-1, 0], [line-1, 0]]
-      marker = editor.markBufferRange(range, {invalidate: 'surround'})
-      type = breakpoint.getType()
-      @currentBreakDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
-      editor.scrollToBufferPosition([line-1,0])
-    @GlobalContext.getCurrentDebugContext().syncCurrentContext()
+      atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
+        if @currentCodePointDecoration
+          @currentCodePointDecoration.destroy()
+        line = point.getLine()
+        range = [[line-1, 0], [line-1, 0]]
+        marker = editor.markBufferRange(range, {invalidate: 'surround'})
+
+        type = point.getType?() ? 'generic'
+        console.log(marker)
+        console.log(type)
+        @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
+        console.log(line)
+        editor.scrollToBufferPosition([line-1,0])
+      console.log(point)
+      @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
   addBreakpointMarker: (line, editor) =>
     range = [[line-1, 0], [line-1, 0]]
@@ -186,8 +196,8 @@ module.exports = PhpDebug =
     marker = editor.markBufferRange(range)
 
   toggleDebugging: ->
-    if @currentBreakDecoration
-      @currentBreakDecoration.destroy()
+    if @currentCodePointDecoration
+      @currentCodePointDecoration.destroy()
     pane = atom.workspace.paneForItem(@unifiedWindow)
     if !pane
       @showWindows()
