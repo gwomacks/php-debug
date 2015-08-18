@@ -176,12 +176,8 @@ module.exports = PhpDebug =
         marker = editor.markBufferRange(range, {invalidate: 'surround'})
 
         type = point.getType?() ? 'generic'
-        console.log(marker)
-        console.log(type)
         @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
-        console.log(line)
         editor.scrollToBufferPosition([line-1,0])
-      console.log(point)
       @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
   addBreakpointMarker: (line, editor) =>
