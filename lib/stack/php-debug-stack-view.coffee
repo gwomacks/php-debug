@@ -14,6 +14,9 @@ class PhpDebugStackView extends ScrollView
     super
     @GlobalContext = params.context
     @GlobalContext.onContextUpdate @showStackFrames
+    @GlobalContext.onSessionEnd () =>
+      if @stackFrameViewList
+        @stackFrameViewList.empty()
 
     @stackFrameViewList.on 'mousedown', 'li', (e) =>
       @selectStackFrame($(e.target).closest('li'))

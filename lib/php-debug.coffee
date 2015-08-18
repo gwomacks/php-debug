@@ -126,6 +126,10 @@ module.exports = PhpDebug =
     @GlobalContext.onStackChange (codepoint) =>
       @doCodePoint(codepoint)
 
+    @GlobalContext.onSessionEnd () =>
+      if @currentCodePointDecoration
+        @currentCodePointDecoration.destroy()
+
     @GlobalContext.onRunning () =>
       if @currentCodePointDecoration
         @currentCodePointDecoration.destroy()

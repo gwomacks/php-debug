@@ -21,7 +21,9 @@ class PhpDebugContextView extends ScrollView
     super
     @GlobalContext = params.context
     @GlobalContext.onContextUpdate @showContexts
-
+    @GlobalContext.onSessionEnd () =>
+      if @contextViewList
+        @contextViewList.empty()
   onDidChangeTitle: -> new Disposable ->
   onDidChangeModified: -> new Disposable ->
 
