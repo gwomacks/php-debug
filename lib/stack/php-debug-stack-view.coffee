@@ -40,4 +40,4 @@ class PhpDebugStackView extends ScrollView
     return unless view.length
     @stackFrameViewList.find('.selected').removeClass('selected')
     view.addClass('selected')
-    @GlobalContext.notifyStackChange(new Codepoint(filepath: view.find('.stack-frame-filepath').text(), line: view.find('.stack-frame-line').text() , stackdepth: view.find('.stack-frame-level').text()))
+    @GlobalContext.notifyStackChange(new Codepoint(filepath: view.find('.stack-frame-filepath').data('path'), line: view.find('.stack-frame-line').data('line') , stackdepth: view.find('.stack-frame-level').data('level')))
