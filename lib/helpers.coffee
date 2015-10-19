@@ -69,6 +69,7 @@ exports.localPathToRemote = (localPath) ->
 
 exports.remotePathToLocal = (remotePath) ->
   pathMaps = atom.config.get('php-debug.PathMaps')
+  remotePath = decodeURI(remotePath)
   for pathMap in pathMaps
     if remotePath.indexOf(pathMap.remote) == 0
       return remotePath.replace(pathMap.remote, pathMap.local)
