@@ -5,8 +5,8 @@ class BreakpointItemView extends View
   @content: =>
     @li class: 'meow', =>
       @div class: 'meow', =>
-        @span outlet: 'path'
-        @span outlet: 'line'
+        @span class: 'breakpoint-path', outlet: 'path'
+        @span class: 'breakpoint-line', outlet: 'line'
 
   initialize: (breakpoint) ->
     @breakpoint = breakpoint
@@ -14,4 +14,6 @@ class BreakpointItemView extends View
 
   render: ->
     @path.append @breakpoint.getPath()
-    @line.append @breakpoint.getLine()
+    @line.append '(' + @breakpoint.getLine() + ')'
+    @find('.breakpoint-path').data('path', @breakpoint.getPath())
+    @find('.breakpoint-line').data('line', @breakpoint.getLine())

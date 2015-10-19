@@ -27,17 +27,24 @@ class DbgpInstance extends DebugContext
     @socket.end()
     @GlobalContext.notifySessionEnd()
 
-  syncStack: ->
-    return @executeCommand('stack_get').then (data) =>
+  syncStack: (depth) ->
+    options = {}
+    #if depth >= 0
+    #  options.d = depth;
+    if depth < 0
+      depth = 0
+    return @executeCommand('stack_get', options).then (data) =>
       stackFrames = []
-      for frame in data.response.stack
-        csonFrame = {
-          id:       frame.$.level
-          label:    frame.$.where
-          filepath: frame.$.filename
-          line:     frame.$.lineno
-        }
-        stackFrames.push csonFrame
+      if data.response.stack?
+        for frame in data.response.stack
+          csonFrame = {
+            id:       frame.$.level
+            label:    frame.$.where
+            filepath: frame.$.filename
+            line:     frame.$.lineno
+            active:   if parseInt(frame.$.level,10) == depth then true else false
+          }
+          stackFrames.push csonFrame
       @setStack(stackFrames)
 
   nextTransactionId: ->
@@ -91,10 +98,10 @@ class DbgpInstance extends DebugContext
 
     payload = command + " -i " + transactionId
     if options && Object.keys(options).length > 0
-      argu = ("-"+(arg) + " " + encodeURI(val) for arg, val of options)
+      argu = ("-"+(arg) + " " + helpers.escapeValue(val) for arg, val of options)
+      #argu = ("-"+(arg) + " " + encodeURI(val) for arg, val of options)
       argu2 = argu.join(" ")
       payload += " " + argu2
-
     if data
       payload += " -- " + new Buffer(data, 'ascii').toString('base64')
     if @socket
@@ -133,23 +140,23 @@ class DbgpInstance extends DebugContext
       commands.push @executeBreakpoint(breakpoint)
 
     if atom.config.get('php-debug.PhpException.FatalError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Fatal Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Fatal error', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.CatchableFatalError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Catchable Fatal Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Catchable fatal error', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.Warning')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Warning'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Warning', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.StrictStandards')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Strict Standards'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Strict standards', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.Xdebug')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Xdebug'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Xdebug', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.UnknownError')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown Error'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Unknown error', stackdepth: -1))
     if atom.config.get('php-debug.PhpException.Notice')
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Notice'))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: 'Notice', stackdepth: -1))
 
     for exception in atom.config.get('php-debug.CustomExceptions')
       console.log exception
-      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: exception))
+      commands.push @executeBreakpoint(new Breakpoint(type: Breakpoint.TYPE_EXCEPTION, exception: exception, stackdepth: -1))
 
     return Q.all(commands)
 
@@ -160,7 +167,7 @@ class DbgpInstance extends DebugContext
         path = helpers.localPathToRemote(path)
         options = {
           t: 'line'
-          f: 'file://' + path
+          f: encodeURI('file://' + path)
           n: breakpoint.getLine()
         }
       when Breakpoint.TYPE_EXCEPTION
@@ -209,10 +216,10 @@ class DbgpInstance extends DebugContext
             console.error "Unhandled status: " + response.$.status
     )
 
-  syncCurrentContext: () ->
-    p2 = @getContextNames().then(
+  syncCurrentContext: (depth) ->
+    p2 = @getContextNames(depth).then(
       (data) =>
-        return @processContextNames(data)
+        return @processContextNames(depth,data)
     )
 
     p3 = p2.then(
@@ -222,7 +229,7 @@ class DbgpInstance extends DebugContext
 
     p4 = p3.then (
       (data) =>
-        @syncStack()
+        @syncStack(depth)
     )
 
     p5 = p4.then(
@@ -232,22 +239,35 @@ class DbgpInstance extends DebugContext
 
     p5.done()
 
-  getContextNames: () ->
-    return @command("context_names")
+  getContextNames: (depth) ->
+    options = {}
+    if depth >= 0
+      options.d = depth
+    return @command("context_names", options)
 
-  processContextNames: (data) =>
+  processContextNames: (depth, data) =>
     for context in data.response.context
       @addScope(context.$.id,context.$.name)
     commands = []
     scopes = @getScopes()
     for index, scope of scopes
-      commands.push(@updateContext(scope))
+      commands.push(@updateContext(depth, scope))
     return Q.all(commands)
 
   executeDetach: () =>
-    @command('detach')
-    .then () =>
-      @executeStop()
+    @command('status').then (data) =>
+      if data.response.$.status == 'break'
+        breakpoints = @GlobalContext.getBreakpoints()
+        for breakpoint in breakpoints
+          @executeBreakpointRemove(breakpoint)
+        @command('run').then (data) =>
+          @command('detach').then (data) =>
+              @executeStop()
+      else if data.response.$.status == 'stopped'
+        @executeStop()
+      else
+        @command('detach').then (data) =>
+            @executeStop()
 
   updateWatchpoints: (data) =>
     @clearWatchpoints()
@@ -268,14 +288,17 @@ class DbgpInstance extends DebugContext
       watchpoint.setValue(datum)
       @addWatchpoint(watchpoint)
 
-  updateContext: (scope) =>
-    p = @contextGet(scope.scopeId)
+  updateContext: (depth, scope) =>
+    p = @contextGet(depth,scope.scopeId)
     return p.then (data) =>
       context = @buildContext data
       @setScopeContext(scope.scopeId, context)
 
-  contextGet: (scope) =>
-    return @command("context_get", {c: scope})
+  contextGet: (depth, scope) =>
+    options = { c : scope }
+    if depth >= 0
+      options.d = depth
+    return @command("context_get", options)
 
   buildContext: (response) =>
     data = {}

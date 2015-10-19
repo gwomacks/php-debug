@@ -12,7 +12,7 @@ class ContextVariableListView extends View
           @span class: 'type php', params.summary
         @ul outlet: "contextVariableList"
 
-  initialize: ({@variables}) ->
+  initialize: ({@variables,@autoopen}) ->
     @render()
 
   render: ->

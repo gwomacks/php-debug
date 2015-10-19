@@ -2,7 +2,7 @@
 
 StackFrameView = require('./stack-frame-view')
 GlobalContext = require '../models/global-context'
-
+Codepoint = require '../models/codepoint'
 module.exports =
 class PhpDebugStackView extends ScrollView
   @content: ->
@@ -14,6 +14,18 @@ class PhpDebugStackView extends ScrollView
     super
     @GlobalContext = params.context
     @GlobalContext.onContextUpdate @showStackFrames
+    @GlobalContext.onSessionEnd () =>
+      if @stackFrameViewList
+        @stackFrameViewList.empty()
+
+    @stackFrameViewList.on 'mousedown', 'li', (e) =>
+      @selectStackFrame($(e.target).closest('li'))
+      e.preventDefault()
+      false
+
+    @stackFrameViewList.on 'mouseup', 'li', (e) =>
+      e.preventDefault()
+      false
 
   showStackFrames: =>
     if @stackFrameViewList
@@ -23,3 +35,9 @@ class PhpDebugStackView extends ScrollView
       if stackFrame == undefined
         continue
       @stackFrameViewList.append(new StackFrameView(stackFrame))
+
+  selectStackFrame: (view) ->
+    return unless view.length
+    @stackFrameViewList.find('.selected').removeClass('selected')
+    view.addClass('selected')
+    @GlobalContext.notifyStackChange(new Codepoint(filepath: view.find('.stack-frame-filepath').data('path'), line: view.find('.stack-frame-line').data('line') , stackdepth: view.find('.stack-frame-level').data('level')))

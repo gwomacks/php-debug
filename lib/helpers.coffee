@@ -10,6 +10,11 @@ exports.insertOrdered = (sortedArray, object) ->
   index = exports.getInsertIndex(sortedArray, object)
   sortedArray.splice(index, 0, object)
 
+exports.escapeValue = (object) ->
+  if (typeof object == "string")
+    return "\"" + object.replace("\\","\\\\").replace("\"","\\\"") + "\""
+  return object;
+
 exports.arraySearch = (array, object) ->
   if array.length == 0
     return false
@@ -60,7 +65,7 @@ exports.localPathToRemote = (localPath) ->
         # remote path appears to be a windows path, so replace any /'s with \'s'
         path = path.replace(/\//g, '\\')
       return path
-  return localPath
+  return localPath.replace('file:///','')
 
 exports.remotePathToLocal = (remotePath) ->
   pathMaps = atom.config.get('php-debug.PathMaps')
@@ -68,4 +73,4 @@ exports.remotePathToLocal = (remotePath) ->
     if remotePath.indexOf(pathMap.remote) == 0
       return remotePath.replace(pathMap.remote, pathMap.local)
       break
-  return remotePath
+  return remotePath.replace('file:///','')
