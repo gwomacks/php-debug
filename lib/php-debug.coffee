@@ -43,9 +43,9 @@ module.exports = PhpDebug =
       items:
         type: 'object'
         properties:
-          from:
+          remote:
             type: 'string'
-          to:
+          local:
             type: 'string'
     ServerPort:
       type: 'integer'
