@@ -8,7 +8,7 @@ class ContextVariableView extends View
     @li class: 'native-key-bindings', =>
       @div class: 'native-key-bindings', tabindex: -1, outlet: 'variableView'
 
-  initialize: (@variable) ->
+  initialize: ({@variable,@parent,@openpaths}) ->
     @render()
 
   renderScalar: ({label,value}) ->
@@ -17,6 +17,12 @@ class ContextVariableView extends View
   render: ->
     ContextVariableListView = require "./context-variable-list-view"
     label = @variable.label
+    openChildren = false
+    if @openpaths?
+      for open in @openpaths
+        if open.indexOf(@parent+'.'+label) == 0
+          openChildren = true
+          break
     switch @variable.type
       when 'string'
         @variableView.append(@renderScalar({label:label, value: "\""+@variable.value+"\""}))
@@ -30,10 +36,10 @@ class ContextVariableView extends View
         @variableView.append(@renderScalar({label: label, value: "null"}))
       when 'array'
         summary ="array["+@variable.length+"]"
-        @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: false}))
+        @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: openChildren,parent:@parent,openpaths:@openpaths}))
       when 'object'
         summary ="object"
         properties = @variable.value
-        @variableView.append(new ContextVariableListView({name:label, summary: summary, variables: properties, autoopen: false}))
+        @variableView.append(new ContextVariableListView({name:label, summary: summary, variables: properties, autoopen: openChildren, parent:@parent,openpaths:@openpaths}))
       else
         console.error "Unhandled variable type: " + @variable.type
