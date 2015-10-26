@@ -283,7 +283,17 @@ class DbgpInstance extends DebugContext
   evalWatchpoint: (watchpoint) ->
     p = @command("eval", null, watchpoint.getExpression())
     return p.then (data) =>
-      datum = @parseContextVariable({variable:data.response.property[0]})
+      datum = null
+      if data.response.error
+        datum = {
+          name : "Error"
+          fullname : "Error"
+          type: "error"
+          value: data.response.error[0].message[0]
+          label: ""
+        }
+      else
+        datum = @parseContextVariable({variable:data.response.property[0]})
       datum.label = watchpoint.getExpression()
       watchpoint.setValue(datum)
       @addWatchpoint(watchpoint)
@@ -354,6 +364,8 @@ class DbgpInstance extends DebugContext
       when "int"
         datum.type = "numeric"
         datum.value = variable._
+      when "error"
+            datum.value = ""
       when "uninitialized"
         datum.value = undefined
       when "null"
