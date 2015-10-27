@@ -170,12 +170,21 @@ class DbgpInstance extends DebugContext
           f: encodeURI('file://' + path)
           n: breakpoint.getLine()
         }
+        conditional = ""
+        idx = 0
+        data = null
+        for setting in breakpoint.getSettingsValues("condition")
+          if idx++ > 1
+            conditional += " && "
+          conditional += "(" + setting.value + ")"
+        if !!conditional
+          data = conditional
       when Breakpoint.TYPE_EXCEPTION
         options = {
           t: 'exception'
           x: breakpoint.getException()
         }
-    p =  @command("breakpoint_set", options)
+    p =  @command("breakpoint_set", options, data)
     return p.then (data) =>
       @breakpointMap[breakpoint.getId()] = data.response.$.id
 
@@ -197,7 +206,7 @@ class DbgpInstance extends DebugContext
             messages = response["xdebug:message"]
             message = messages[0]
             thing = message.$
-            console.dir data
+            #console.dir data
             filepath = decodeURI(thing['filename']).replace("file:///", "")
 
             if not filepath.match(/^[a-zA-Z]:/)

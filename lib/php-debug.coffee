@@ -101,6 +101,7 @@ module.exports = PhpDebug =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleBreakpoint': => @toggleBreakpoint()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:breakpointSettings': => @breakpointSettings()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleDebugging': => @toggleDebugging()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:addWatch': => @addWatch()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:run': => @run()
@@ -165,8 +166,22 @@ module.exports = PhpDebug =
             editor = atom.workspace.getActivePaneItem()
             expression = editor?.getSelectedText()
             if !!expression then return true else return false
+      },
+      {
+        label: 'Breakpoint settings'
+        command: 'php-debug:breakpointSettings'
+        shouldDisplay: =>
+          editor = atom.workspace.getActivePaneItem()
+          return false if !editor
+          range = editor.getSelectedBufferRange()
+          path = editor.getPath()
+          line = range.getRows()[0]+1
+          for breakpoint in @GlobalContext.getBreakpoints()
+            if breakpoint.getPath() == path && breakpoint.getLine() == line
+              return true
+          return false
       }]
-      
+
   createUnifiedView: (state) ->
     PhpDebugUnifiedView = require './unified/php-debug-unified-view'
     return new PhpDebugUnifiedView(state)
@@ -198,11 +213,25 @@ module.exports = PhpDebug =
         editor.scrollToBufferPosition([line-1,0])
       @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
-  addBreakpointMarker: (line, editor) =>
+  addBreakpointMarker: (line, editor) ->
     range = [[line-1, 0], [line-1, 0]]
     marker = editor.markBufferRange(range)
     decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'php-debug-breakpoint'})
     return marker
+
+  breakpointSettings: ->
+    BreakpointSettingsView = require './breakpoint/breakpoint-settings-view'
+    editor = atom.workspace.getActivePaneItem()
+    range = editor.getSelectedBufferRange()
+    path = editor.getPath()
+    line = range.getRows()[0]+1
+    breakpoint = null
+    for bp in @GlobalContext.getBreakpoints()
+      if bp.getPath() == path && bp.getLine() == line
+        breakpoint = bp
+        break
+    @settingsView = new BreakpointSettingsView({breakpoint:breakpoint,context:@GlobalContext})
+    @settingsView.attach()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
@@ -220,6 +249,9 @@ module.exports = PhpDebug =
       if !@dbgp.listening()
         @dbgp.listen()
     else
+      if @settingsView
+        @settingsView.close()
+        @settingsView.destroy()
       pane.destroy()
       delete @unifiedWindow
       @dbgp.close()
