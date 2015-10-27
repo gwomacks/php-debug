@@ -196,13 +196,14 @@ module.exports = PhpDebug =
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
+    return if !editor || !editor.getSelectedBufferRange
     range = editor.getSelectedBufferRange()
     marker = editor.markBufferRange(range)
 
   toggleDebugging: ->
     if @currentCodePointDecoration
       @currentCodePointDecoration.destroy()
-    
+
     pane = atom.workspace.paneForItem(@unifiedWindow)
     if !pane
       @showWindows()
@@ -246,6 +247,7 @@ module.exports = PhpDebug =
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()
+    return if !editor || !editor.getSelectedBufferRange
     range = editor.getSelectedBufferRange()
     path = editor.getPath()
     breakpoint = new Breakpoint({filepath:path, line:range.getRows()[0]+1})
