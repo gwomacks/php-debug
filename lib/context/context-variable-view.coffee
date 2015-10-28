@@ -26,6 +26,8 @@ class ContextVariableView extends View
         @variableView.append(@renderScalar({label: label, value:@variable.value}))
       when 'uninitialized'
         @variableView.append(@renderScalar({label:label, value:"?"}))
+      when 'error'
+          @variableView.append(@renderScalar({label:label, value:@variable.value}))
       when 'null'
         @variableView.append(@renderScalar({label: label, value: "null"}))
       when 'array'

@@ -102,6 +102,7 @@ module.exports = PhpDebug =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleBreakpoint': => @toggleBreakpoint()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleDebugging': => @toggleDebugging()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:addWatch': => @addWatch()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:run': => @run()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOver': => @stepOver()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepIn': => @stepIn()
@@ -157,6 +158,15 @@ module.exports = PhpDebug =
           marker = @addBreakpointMarker(breakpoint.getLine(), editor)
           breakpoint.setMarker(marker)
 
+    atom.contextMenu.add 'atom-text-editor': [{
+        label: 'Add to watch'
+        command: 'php-debug:addWatch'
+        shouldDisplay: =>
+            editor = atom.workspace.getActivePaneItem()
+            expression = editor?.getSelectedText()
+            if !!expression then return true else return false
+      }]
+      
   createUnifiedView: (state) ->
     PhpDebugUnifiedView = require './unified/php-debug-unified-view'
     return new PhpDebugUnifiedView(state)
@@ -202,7 +212,7 @@ module.exports = PhpDebug =
   toggleDebugging: ->
     if @currentCodePointDecoration
       @currentCodePointDecoration.destroy()
-    
+
     pane = atom.workspace.paneForItem(@unifiedWindow)
     if !pane
       @showWindows()
@@ -212,6 +222,12 @@ module.exports = PhpDebug =
       pane.destroy()
       delete @unifiedWindow
       @dbgp.close()
+
+  addWatch: ->
+    editor = atom.workspace.getActivePaneItem()
+    expression = editor.getSelectedText()
+    w = new Watchpoint(expression:expression)
+    @GlobalContext.addWatchpoint(w)
 
   run: ->
     if @GlobalContext.getCurrentDebugContext()
