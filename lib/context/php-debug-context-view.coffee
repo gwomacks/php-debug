@@ -32,9 +32,20 @@ class PhpDebugContextView extends ScrollView
 
   showContexts: =>
     if @contextViewList
+      @autoopen = []
+      @contextViewList.find("details[open]").each (_,el) =>
+        item = $(el)
+        added = false
+        for open,index in @autoopen
+          if item.data('name').indexOf(open) == 0
+            @autoopen[index] = item.data('name')
+            added = true
+            break
+        if !added
+          @autoopen.push(item.data('name'))
       @contextViewList.empty()
     contexts = @GlobalContext.getCurrentDebugContext()
-    for index, context of contexts.scopeList
+    for index,context of contexts.scopeList
       if context == undefined
         continue
-      @contextViewList.append(new ContextView(context))
+      @contextViewList.append(new ContextView(context,@autoopen))
