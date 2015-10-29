@@ -258,6 +258,7 @@ module.exports = PhpDebug =
 
   addWatch: ->
     editor = atom.workspace.getActivePaneItem()
+    return if !editor || !editor.getSelectedText
     expression = editor.getSelectedText()
     w = new Watchpoint(expression:expression)
     @GlobalContext.addWatchpoint(w)

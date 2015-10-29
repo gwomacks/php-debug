@@ -5,7 +5,7 @@ class Watchpoint
   constructor: (data) ->
     if (!data.expression)
       throw new Error("Invalid watchpoint")
-    @expression = data.expression
+    @expression = data.expression.trim()
 
   serialize: () ->
     return {

@@ -20,9 +20,14 @@ class ContextVariableView extends View
     openChildren = false
     if @openpaths?
       for open in @openpaths
-        if open.indexOf(@parent+'.'+label) == 0
-          openChildren = true
-          break
+        if !!@parent
+          if open.indexOf(@parent+'.'+label) == 0
+            openChildren = true
+            break
+        else
+          if open.indexOf(label) == 0
+            openChildren = true
+            break
     switch @variable.type
       when 'string'
         @variableView.append(@renderScalar({label:label, value: "\""+@variable.value+"\""}))

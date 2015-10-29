@@ -7,8 +7,7 @@ class WatchView extends View
     @div class: 'native-key-bindings', =>
       @div outlet: 'variable'
 
-  initialize: (watchpoint) ->
-    @watchpoint = watchpoint
+  initialize: (@watchpoint,@autoopen) ->
     @render()
 
   render: ->
@@ -18,4 +17,4 @@ class WatchView extends View
         label : @watchpoint.getExpression()
         type: 'uninitialized'
       }
-    @variable.append new ContextVariableView(datum)
+    @variable.append new ContextVariableView({variable:datum,parent:null,openpaths:@autoopen})
