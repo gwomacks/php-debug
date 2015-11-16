@@ -37,6 +37,58 @@
   }
 }
 
+.breakpoint-settings-view .setting-container atom-text-editor[mini] {
+  width: 100%;
+}
+.breakpoint-settings-view .setting-container .setting-action {
+  padding-left: .5em;
+  line-height: 2em;
+}
+
+atom-panel.modal .breakpoint-settings-view .setting-new atom-text-editor[mini] {
+  margin-bottom: .15em;
+}
+
+.breakpoint-settings-view .setting-container {
+  display:flex;
+  align-items: stretch;
+}
+
+.breakpoint-settings-view .close-icon {
+  position: absolute;
+  top: 1px;
+  right: 10px;
+  cursor: default;
+  top: -1.2em;
+  right: 0;
+  z-index: 2;
+  padding: 0 0.8em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  transform:scale(1);
+  transition:transform .08s;
+}
+
+.breakpoint-settings-view .close-icon:hover {
+  transform:scale(1.5);
+  transition:transform .08s;
+}
+
+.breakpoint-settings-view .close-icon:before {
+  font-family: 'Octicons Regular';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  content: "\f081";
+}
+
 .tabs-view {
 
     display: flex;
