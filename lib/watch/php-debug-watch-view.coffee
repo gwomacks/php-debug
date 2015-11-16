@@ -73,4 +73,4 @@ class PhpDebugWatchView extends ScrollView
     for watch in watches
       if watch == undefined
         continue
-      @watchpointViewList.append(new WatchView(watch,@autoopen))
+      @watchpointViewList.append(new WatchView({watchpoint:watch,autoopen:@autoopen,context:@GlobalContext}))

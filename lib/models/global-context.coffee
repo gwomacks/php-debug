@@ -64,6 +64,15 @@ class GlobalContext
     }
     @notifyWatchpointsChange()
 
+  removeWatchpoint: (watchpoint) ->
+    removed = helpers.arrayRemove(@watchpoints, watchpoint)
+    if removed
+      data = {
+        removed: [removed]
+      }
+      @notifyWatchpointsChange()
+      return removed
+
   getBreakpoints: ->
     return @breakpoints
 
