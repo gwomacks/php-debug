@@ -53,6 +53,18 @@ class PhpDebugWatchView extends ScrollView
     other instanceof PhpDebugWatchView
 
   showWatches: =>
+    if @watchpointViewList
+      @autoopen = []
+      @watchpointViewList.find("details[open]").each (_,el) =>
+        item = $(el)
+        added = false
+        for open,index in @autoopen
+          if item.data('name').indexOf(open) == 0
+            @autoopen[index] = item.data('name')
+            added = true
+            break
+        if !added
+          @autoopen.push(item.data('name'))
     @watchpointViewList.empty()
     if @GlobalContext.getCurrentDebugContext()
       watches = @GlobalContext.getCurrentDebugContext().getWatchpoints()
@@ -61,4 +73,4 @@ class PhpDebugWatchView extends ScrollView
     for watch in watches
       if watch == undefined
         continue
-      @watchpointViewList.append(new WatchView(watch))
+      @watchpointViewList.append(new WatchView({watchpoint:watch,autoopen:@autoopen,context:@GlobalContext}))

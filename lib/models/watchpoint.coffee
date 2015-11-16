@@ -5,7 +5,7 @@ class Watchpoint
   constructor: (data) ->
     if (!data.expression)
       throw new Error("Invalid watchpoint")
-    @expression = data.expression
+    @expression = data.expression.trim()
 
   serialize: () ->
     return {
@@ -36,8 +36,8 @@ class Watchpoint
     return true if other.getExpression() < @getExpression()
 
   isEqual: (other) ->
-    return false if !other instanceof Watch
-    return false if other.geExpression() != @getExpression()
+    return false if !other instanceof Watchpoint
+    return false if other.getExpression() != @getExpression()
     return true
 
   isGreaterThan: (other) ->
