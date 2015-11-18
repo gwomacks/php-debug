@@ -12,6 +12,14 @@
     "xml2js": ">= 0.4.6 < 0.5",
     "atom-space-pen-views": "^2.0.3",
     "event-kit": "^1.0.3",
-    "q": "^1.1.2"
+    "q": "^1.1.2",
+    "interact.js": "^1.2.5"
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
   }
 }
