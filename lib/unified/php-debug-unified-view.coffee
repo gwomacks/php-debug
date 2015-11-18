@@ -8,9 +8,8 @@ Interact = require('interact.js')
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-unified-view', style: 'overflow:auto;', tabindex: -1, =>
-      @div class: 'php-debug-resize-handle'
-      @div class: 'padded', =>
+    @div class: 'php-debug', tabindex: -1, =>
+      @div class: 'php-debug-unified-view', =>
         @div class: 'block', =>
           @button class: "btn octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', "Continue"
           @button class: "btn octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', "Step Over"
