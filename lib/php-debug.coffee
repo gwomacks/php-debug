@@ -137,10 +137,6 @@ module.exports = PhpDebug =
       if @currentCodePointDecoration
         @currentCodePointDecoration.destroy()
 
-    @GlobalContext.onRunning () =>
-      if @currentBreakDecoration
-        @currentBreakDecoration.destroy()
-
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(0)
@@ -256,9 +252,6 @@ module.exports = PhpDebug =
   toggleDebugging: ->
     if @currentCodePointDecoration
       @currentCodePointDecoration.destroy()
-
-    if @currentBreakDecoration
-      @currentBreakDecoration.destroy()
 
     if @settingsView
       @settingsView.close()
