@@ -46,6 +46,9 @@ class PhpDebugUnifiedView extends ScrollView
           target.style.width  = event.rect.width + 'px'
           target.style.height = event.rect.height + 'px'
       )
+      .on('resizeend', (event) ->
+        event.target.style.width = 'auto'
+      )
 
     @setConnected(false)
 
