@@ -7,6 +7,7 @@ Breakpoint    = require './models/breakpoint'
 Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
 helpers        = require './helpers'
+PhpDebugStatusView = require './status/php-debug-status-view'
 
 PhpDebugContextUri = "phpdebug://context"
 PhpDebugStackUri = "phpdebug://stack"
@@ -136,10 +137,6 @@ module.exports = PhpDebug =
       if @currentCodePointDecoration
         @currentCodePointDecoration.destroy()
 
-    @GlobalContext.onRunning () =>
-      if @currentBreakDecoration
-        @currentBreakDecoration.destroy()
-
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(0)
@@ -182,15 +179,28 @@ module.exports = PhpDebug =
           return false
       }]
 
-  createUnifiedView: (state) ->
-    PhpDebugUnifiedView = require './unified/php-debug-unified-view'
-    return new PhpDebugUnifiedView(state)
+    @GlobalContext.onSessionStart () =>
+      @getUnifiedView().setConnected(true)
+
+    @GlobalContext.onSessionEnd () =>
+      @getUnifiedView().setConnected(false)
+
+  consumeStatusBar: (statusBar) ->
+    @statusView = new PhpDebugStatusView(statusBar, this)
+
+  getUnifiedView: ->
+    unless @unifiedView
+      PhpDebugUnifiedView = require './unified/php-debug-unified-view'
+      @unifiedView = new PhpDebugUnifiedView(context: @GlobalContext)
+
+    return @unifiedView
 
   serialize: ->
     @GlobalContext.serialize()
 
   deactivate: ->
-    @modalPanel.destroy()
+    @statusView.destroy()
+    @unifiedView?.destroy()
     @subscriptions.dispose()
 
   updateDebugContext: (data) ->
@@ -243,17 +253,18 @@ module.exports = PhpDebug =
     if @currentCodePointDecoration
       @currentCodePointDecoration.destroy()
 
-    pane = atom.workspace.paneForItem(@unifiedWindow)
-    if !pane
-      @showWindows()
+    if @settingsView
+      @settingsView.close()
+      @settingsView.destroy()
+
+    if !@getUnifiedView().isVisible()
+      @getUnifiedView().setVisible(true)
+      @statusView.setActive(true)
       if !@dbgp.listening()
         @dbgp.listen()
     else
-      if @settingsView
-        @settingsView.close()
-        @settingsView.destroy()
-      pane.destroy()
-      delete @unifiedWindow
+      @getUnifiedView().setVisible(false)
+      @statusView.setActive(false)
       @dbgp.close()
 
   addWatch: ->
@@ -286,13 +297,6 @@ module.exports = PhpDebug =
 
   clearAllWatchpoints: ->
     @GlobalContext.setWatchpoints([])
-
-  showWindows: ->
-    editor = atom.workspace.getActivePane()
-    editor.splitDown()
-    atom.workspace.open(PhpDebugUnifiedUri)
-      .then (unifiedWindow) =>
-        @unifiedWindow = unifiedWindow
 
   toggleBreakpoint: ->
     editor = atom.workspace.getActivePaneItem()
