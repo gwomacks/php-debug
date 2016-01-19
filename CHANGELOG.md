@@ -1,3 +1,8 @@
+## 0.2.0
+* Bug fixes
+* Move unified panel into bottom panel
+* Change remote debugging configuration so it works
+
 ## 0.1.4
 * Bug fixes
 * Code cleanups
