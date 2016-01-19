@@ -62,8 +62,11 @@ class PhpDebugUnifiedView extends ScrollView
   getURI: -> @uri
 
   getTitle: -> "Debugging"
+  
+
 
   setConnected: (isConnected) =>
+    @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
     if isConnected
       @connectStatus.text('Connected')
     else

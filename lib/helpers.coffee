@@ -14,6 +14,18 @@ exports.escapeValue = (object) ->
   if (typeof object == "string")
     return "\"" + object.replace("\\","\\\\").replace("\"","\\\"") + "\""
   return object;
+  
+exports.escapeHtml = (string) ->
+  entityMap = {
+    "&": "&amp;"
+    "<": "&lt;"
+    ">": "&gt;"
+    '"': '&quot;'
+    "'": '&#39;'
+    "/": '&#x2F'
+  }
+  return String(string).replace /[&<>"'\/]/g, (s) ->
+    return entityMap[s]
 
 exports.arraySearch = (array, object) ->
   if array.length == 0
@@ -56,12 +68,14 @@ exports.deserializeArray = (array) ->
 exports.localPathToRemote = (localPath) ->
   pathMaps = atom.config.get('php-debug.PathMaps')
   for pathMap in pathMaps
-    if localPath.indexOf(pathMap.local) == 0
-      path = localPath.replace(pathMap.local, pathMap.remote)
-      if pathMap.remote.indexOf('/') != null
+    remote = pathMap.substring(0,pathMap.indexOf(";"))
+    local = pathMap.substring(pathMap.indexOf(";")+1)
+    if localPath.indexOf(local) == 0
+      path = localPath.replace(local, remote)
+      if remote.indexOf('/') != null
         # remote path appears to be a unix path, so replace any \'s with /'s'
         path = path.replace(/\\/g, '/')
-      else if pathMap.remote.indexOf('\\') != null
+      else if remote.indexOf('\\') != null
         # remote path appears to be a windows path, so replace any /'s with \'s'
         path = path.replace(/\//g, '\\')
       return path
@@ -71,7 +85,16 @@ exports.remotePathToLocal = (remotePath) ->
   pathMaps = atom.config.get('php-debug.PathMaps')
   remotePath = decodeURI(remotePath)
   for pathMap in pathMaps
-    if remotePath.indexOf(pathMap.remote) == 0
-      return remotePath.replace(pathMap.remote, pathMap.local)
-      break
+    remote = pathMap.substring(0,pathMap.indexOf(";"))
+    local = pathMap.substring(pathMap.indexOf(";")+1)
+    if remotePath.indexOf('/') != null && remotePath.indexOf('/') != 0
+      remotePath = '/' + remotePath
+      if remotePath.indexOf(remote) == 0
+        return remotePath.replace(remote, local)
+        break
+    else
+      if remotePath.indexOf(remote) == 0
+        return remotePath.replace(remote, local)
+        break
+    
   return remotePath.replace('file:///','')

@@ -59,14 +59,8 @@ Put the following in your config.cson
   {
     ServerPort: 9000
     PathMaps: [
-      {
-        local: "C:\\base\\path\\on\\local\\system"
-        remote: "/base/path/on/remote/system"
-      },
-      {
-        local: "C:\\another\\path\\map"
-        remote: "/home/yay/"
-      }
+      "remotepath;localpath"
+      "/base/path/on/remote/system;C:\\base\\path\\on\\local\\system"
     ]
   }
   ```

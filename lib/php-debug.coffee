@@ -42,12 +42,8 @@ module.exports = PhpDebug =
       type: 'array'
       default: []
       items:
-        type: 'object'
-        properties:
-          remote:
-            type: 'string'
-          local:
-            type: 'string'
+        type: 'string'
+      description: "Paths in the format of remote;local (eg \"/var/www/project;C:\\projects\\mycode\")"
     ServerPort:
       type: 'integer'
       default: 9000
@@ -130,6 +126,7 @@ module.exports = PhpDebug =
       @doCodePoint(codepoint)
 
     @GlobalContext.onSessionEnd () =>
+      @getUnifiedView().setConnected(false)
       if @currentCodePointDecoration
         @currentCodePointDecoration.destroy()
 
@@ -182,9 +179,6 @@ module.exports = PhpDebug =
     @GlobalContext.onSessionStart () =>
       @getUnifiedView().setConnected(true)
 
-    @GlobalContext.onSessionEnd () =>
-      @getUnifiedView().setConnected(false)
-
   consumeStatusBar: (statusBar) ->
     @statusView = new PhpDebugStatusView(statusBar, this)
 
@@ -199,6 +193,7 @@ module.exports = PhpDebug =
     @GlobalContext.serialize()
 
   deactivate: ->
+    @unifiedView?.setConnected(false)
     @statusView.destroy()
     @unifiedView?.destroy()
     @subscriptions.dispose()
@@ -210,7 +205,7 @@ module.exports = PhpDebug =
       filepath = point.getPath()
 
       filepath = helpers.remotePathToLocal(filepath)
-
+      
       atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
         if @currentCodePointDecoration
           @currentCodePointDecoration.destroy()

@@ -1,6 +1,6 @@
 {View} = require 'atom-space-pen-views'
 ContextVariableScalarView = require "./context-variable-scalar-view"
-
+helpers        = require '../helpers'
 
 module.exports =
 class ContextVariableView extends View
@@ -16,7 +16,7 @@ class ContextVariableView extends View
 
   render: ->
     ContextVariableListView = require "./context-variable-list-view"
-    label = @variable.label
+    label = helpers.escapeHtml(@variable.label)
     openChildren = false
     if @openpaths?
       for open in @openpaths
@@ -30,7 +30,7 @@ class ContextVariableView extends View
             break
     switch @variable.type
       when 'string'
-        @variableView.append(@renderScalar({label:label, value: "\""+@variable.value+"\""}))
+        @variableView.append(@renderScalar({label:label, value: "\""+helpers.escapeHtml(@variable.value)+"\""}))
       when 'numeric'
         @variableView.append(@renderScalar({label: label, value:@variable.value}))
       when 'bool'
@@ -38,7 +38,7 @@ class ContextVariableView extends View
       when 'uninitialized'
         @variableView.append(@renderScalar({label:label, value:"?"}))
       when 'error'
-          @variableView.append(@renderScalar({label:label, value:@variable.value}))
+          @variableView.append(@renderScalar({label:label, value:helpers.escapeHtml(@variable.value)}))
       when 'null'
         @variableView.append(@renderScalar({label: label, value: "null"}))
       when 'array'

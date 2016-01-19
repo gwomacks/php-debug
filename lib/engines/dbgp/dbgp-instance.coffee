@@ -91,7 +91,6 @@ class DbgpInstance extends DebugContext
     @command(command, options, data)
 
   command: (command, options, data) =>
-
     transactionId = @nextTransactionId()
     deferred = Q.defer();
     @promises[transactionId] = deferred
@@ -117,7 +116,7 @@ class DbgpInstance extends DebugContext
     return @command("feature_set", {n: feature_name, v: value})
 
   onInit: (data) =>
-    console.log "init"
+    console.log "init",data
     @setFeature('show_hidden', 1)
     .then () =>
       return @setFeature('max_depth', atom.config.get('php-debug.MaxDepth'))
