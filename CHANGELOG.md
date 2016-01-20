@@ -1,3 +1,6 @@
+## 0.2.1
+* Bug fixes
+
 ## 0.2.0
 * Bug fixes
 * Move unified panel into bottom panel
