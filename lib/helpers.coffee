@@ -17,15 +17,13 @@ exports.escapeValue = (object) ->
   
 exports.escapeHtml = (string) ->
   entityMap = {
-    "&": "&amp;"
     "<": "&lt;"
     ">": "&gt;"
-    '"': '&quot;'
-    "'": '&#39;'
-    "/": '&#x2F'
   }
-  return String(string).replace /[&<>"'\/]/g, (s) ->
+  result = String(string).replace /[<>]/g, (s) ->
     return entityMap[s]
+  #console.log string,result
+  return result
 
 exports.arraySearch = (array, object) ->
   if array.length == 0
@@ -88,9 +86,9 @@ exports.remotePathToLocal = (remotePath) ->
     remote = pathMap.substring(0,pathMap.indexOf(";"))
     local = pathMap.substring(pathMap.indexOf(";")+1)
     if remotePath.indexOf('/') != null && remotePath.indexOf('/') != 0
-      remotePath = '/' + remotePath
-      if remotePath.indexOf(remote) == 0
-        return remotePath.replace(remote, local)
+      adjustedPath = '/' + remotePath
+      if adjustedPath.indexOf(remote) == 0
+        return adjustedPath.replace(remote, local)
         break
     else
       if remotePath.indexOf(remote) == 0

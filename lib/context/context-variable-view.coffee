@@ -16,7 +16,7 @@ class ContextVariableView extends View
 
   render: ->
     ContextVariableListView = require "./context-variable-list-view"
-    label = helpers.escapeHtml(@variable.label)
+    label = @variable.label
     openChildren = false
     if @openpaths?
       for open in @openpaths

@@ -11,7 +11,7 @@ class ContextVariableListView extends View
     @li class: "context-variable-list-view", =>
       @details 'data-name': dataname, =>
         @summary =>
-          @span class: 'variable php', helpers.escapeHtml(params.name)
+          @span class: 'variable php', params.name
           @span class: 'type php', params.summary
         @ul outlet: "contextVariableList"
 
