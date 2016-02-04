@@ -28,7 +28,7 @@ class Dbgp
     console.log "Listening on Port " + @serverPort
     @server = net.createServer( (socket) =>
 
-      socket.setEncoding('utf8');
+      socket.setEncoding('ascii');
       if !@GlobalContext.getCurrentDebugContext()
         console.log "Session initiated"
         instance = new DbgpInstance(socket:socket, context:@GlobalContext)
