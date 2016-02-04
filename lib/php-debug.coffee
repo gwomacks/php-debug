@@ -249,8 +249,8 @@ module.exports = PhpDebug =
       @currentCodePointDecoration.destroy()
 
     if @settingsView
-      @settingsView.close()
-      @settingsView.destroy()
+      @settingsView?.close()
+      @settingsView?.destroy()
 
     if !@getUnifiedView().isVisible()
       @getUnifiedView().setVisible(true)
@@ -264,7 +264,7 @@ module.exports = PhpDebug =
 
   addWatch: ->
     editor = atom.workspace.getActivePaneItem()
-    return if !editor || !editor.getSelectedText
+    return if !editor || !editor.getSelectedText()
     expression = editor.getSelectedText()
     w = new Watchpoint(expression:expression)
     @GlobalContext.addWatchpoint(w)
