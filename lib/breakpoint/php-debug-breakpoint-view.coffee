@@ -1,6 +1,7 @@
 {Disposable} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
 BreakpointView = require './breakpoint-view'
+GutterContainer = require './breakpoint-view'
 
 GlobalContext = require '../models/global-context'
 
@@ -33,6 +34,7 @@ class PhpDebugBreakpointView extends ScrollView
     @GlobalContext = params.context
     @showBreakpoints()
     @GlobalContext.onBreakpointsChange @showBreakpoints
+
 
   showBreakpoints: =>
     if @breakpointViewList

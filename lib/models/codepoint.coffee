@@ -16,7 +16,10 @@ class Codepoint
   getStackDepth: ->
     return @stackdepth
 
-  setMarker: (@marker) ->
+  setMarker: (marker) ->
+    if @marker
+      @marker.destroy()
+    @marker = marker
     undefined
 
   syncLineFromMarker: () ->
