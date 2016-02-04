@@ -221,7 +221,8 @@ module.exports = PhpDebug =
 
   deactivate: ->
     @unifiedView?.setConnected(false)
-    @statusView.destroy()
+    @statusView?.destroy()
+    @statusView = null
     @unifiedView?.destroy()
     @subscriptions.dispose()
 
@@ -331,7 +332,7 @@ module.exports = PhpDebug =
 
     if !@getUnifiedView().isVisible()
       @getUnifiedView().setVisible(true)
-      @statusView.setActive(true)
+      @statusView?.setActive(true)
       if !@dbgp.listening()
         @dbgp.listen()
     
@@ -339,7 +340,7 @@ module.exports = PhpDebug =
       
     else
       @getUnifiedView().setVisible(false)
-      @statusView.setActive(false)
+      @statusView?.setActive(false)
       @dbgp.close()
 
   addWatch: ->
