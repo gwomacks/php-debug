@@ -21,6 +21,7 @@ class DbgpInstance extends DebugContext
     @GlobalContext.notifySessionStart()
     @breakpointMap = {}
     @socket.on "error", (error) =>
+      console.error "Socket Error:",error
       @GlobalContext.notifySessionEnd()
 
   stop: ->

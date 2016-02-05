@@ -136,6 +136,9 @@ module.exports = PhpDebug =
 
     @GlobalContext.onStackChange (codepoint) =>
       @doCodePoint(codepoint)
+    
+    @GlobalContext.onSocketError () =>
+      @toggleDebugging()
 
     @GlobalContext.onSessionEnd () =>
       @getUnifiedView().setConnected(false)
@@ -225,6 +228,7 @@ module.exports = PhpDebug =
     @statusView = null
     @unifiedView?.destroy()
     @subscriptions.dispose()
+    @dbgp?.close()
 
   updateDebugContext: (data) ->
     @contextView.setDebugContext(data)
@@ -334,14 +338,18 @@ module.exports = PhpDebug =
       @getUnifiedView().setVisible(true)
       @statusView?.setActive(true)
       if !@dbgp.listening()
-        @dbgp.listen()
+        if !@dbgp.listen()
+          console.log "failed"
+          @getUnifiedView().setVisible(false)
+          @statusView?.setActive(false)
+          return
     
       @createGutter()
       
     else
       @getUnifiedView().setVisible(false)
       @statusView?.setActive(false)
-      @dbgp.close()
+      @dbgp?.close()
 
   addWatch: ->
     editor = atom.workspace.getActivePaneItem()

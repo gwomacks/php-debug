@@ -133,6 +133,12 @@ class GlobalContext
 
   notifySessionEnd: (data) ->
     @emitter.emit 'php-debug.sessionEnd', data
+    
+  onSocketError: (callback) ->
+    @emitter.on 'php-debug.socketError', callback
+
+  notifySocketError: (data) ->
+    @emitter.emit 'php-debug.socketError', data
 
   onSessionStart: (callback) ->
     @emitter.on 'php-debug.sessionStart', callback

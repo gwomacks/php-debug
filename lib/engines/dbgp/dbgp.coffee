@@ -25,17 +25,34 @@ class Dbgp
     @debugContext = new DebugContext
     net = require "net"
     buffer = ''
-    console.log "Listening on Port " + @serverPort
-    @server = net.createServer( (socket) =>
+    try
+      console.log "Listening on Port " + @serverPort
+      @server = net.createServer( (socket) =>
 
-      socket.setEncoding('ascii');
-      if !@GlobalContext.getCurrentDebugContext()
-        console.log "Session initiated"
-        instance = new DbgpInstance(socket:socket, context:@GlobalContext)
-      else
-        console.log "New session rejected"
-        socket.end()
-    ).listen @serverPort
+        socket.setEncoding('ascii');
+        if !@GlobalContext.getCurrentDebugContext()
+          console.log "Session initiated"
+          instance = new DbgpInstance(socket:socket, context:@GlobalContext)
+        else
+          console.log "New session rejected"
+          socket.end()
+      )
+      @server?.on 'error', (err) =>
+        console.error "Socket Error:", err
+        atom.notifications.addWarning "Could not bind socket, do you already have an instance of the debugger open?"
+        @close()
+        @GlobalContext.notifySocketError()
+        return false
+        
+      @server?.listen @serverPort
+      return true
+    catch e
+      console.error "Socket Error:", e
+      atom.notifications.addWarning "Could not bind socket, do you already have an instance of the debugger open?"
+      @close()
+      @GlobalContext.notifySocketError()
+      return false
+      # body...
 
   close: (options) ->
     unless !@socket
