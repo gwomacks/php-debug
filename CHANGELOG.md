@@ -1,3 +1,11 @@
+## 0.2.2
+* Add ability to toggle breakpoints from editor gutter
+ * This can be enabled and configured via the settings
+* Attempt to resolve encoding issue by switching socket parsing to ASCII instead of UTF8
+* Fix paths bug
+* Better handling of socket in use errors
+* Bug fixes
+
 ## 0.2.1
 * Bug fixes
 
