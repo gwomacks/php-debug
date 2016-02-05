@@ -76,8 +76,8 @@ exports.localPathToRemote = (localPath) ->
       else if remote.indexOf('\\') != null
         # remote path appears to be a windows path, so replace any /'s with \'s'
         path = path.replace(/\//g, '\\')
-      return path
-  return localPath.replace('file:///','')
+      return path.replace('file://','')
+  return localPath.replace('file://','')
 
 exports.remotePathToLocal = (remotePath) ->
   pathMaps = atom.config.get('php-debug.PathMaps')
@@ -95,4 +95,4 @@ exports.remotePathToLocal = (remotePath) ->
         return remotePath.replace(remote, local)
         break
     
-  return remotePath.replace('file:///','')
+  return remotePath.replace('file://','')
