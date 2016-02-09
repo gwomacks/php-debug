@@ -46,6 +46,8 @@ class ContextVariableView extends View
         @variableView.append(new ContextVariableListView({name: label, summary: summary, variables: @variable.value, autoopen: openChildren,parent:@parent,openpaths:@openpaths}))
       when 'object'
         summary ="object"
+        if @variable.className
+          summary += " ["+@variable.className+"]"
         properties = @variable.value
         @variableView.append(new ContextVariableListView({name:label, summary: summary, variables: properties, autoopen: openChildren, parent:@parent,openpaths:@openpaths}))
       when 'resource'
