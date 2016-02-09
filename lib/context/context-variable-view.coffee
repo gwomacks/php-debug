@@ -48,5 +48,7 @@ class ContextVariableView extends View
         summary ="object"
         properties = @variable.value
         @variableView.append(new ContextVariableListView({name:label, summary: summary, variables: properties, autoopen: openChildren, parent:@parent,openpaths:@openpaths}))
+      when 'resource'
+        @variableView.append(@renderScalar({label:label, value: "\""+helpers.escapeHtml(@variable.value)+"\""}))
       else
         console.error "Unhandled variable type: " + @variable.type
