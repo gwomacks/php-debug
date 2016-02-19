@@ -1,10 +1,13 @@
-{Disposable} = require 'atom'
 {$, ScrollView} = require 'atom-space-pen-views'
+Disposable = require 'atom'
+Interact = require 'interact.js'
+
 PhpDebugContextView = require '../context/php-debug-context-view'
 PhpDebugStackView = require '../stack/php-debug-stack-view'
 PhpDebugWatchView = require '../watch/php-debug-watch-view'
 PhpDebugBreakpointView = require '../breakpoint/php-debug-breakpoint-view'
-Interact = require('interact.js')
+PhpDebugErrormessageView = require '../error/php-debug-errormessage-view'
+
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
   @content: ->
@@ -22,6 +25,7 @@ class PhpDebugUnifiedView extends ScrollView
           @div outlet: 'contextView', class:'php-debug-tab'
           @div outlet: 'watchpointView', class:'php-debug-tab'
           @div outlet: 'breakpointView', class:'php-debug-tab'
+          @div outlet: 'errormessageView', class:'php-debug-tab'
 
   constructor: (params) ->
     super
@@ -88,6 +92,7 @@ class PhpDebugUnifiedView extends ScrollView
     @contextView.append(new PhpDebugContextView(context: params.context))
     @watchpointView.append(new PhpDebugWatchView(context: params.context))
     @breakpointView.append(new PhpDebugBreakpointView(context: params.context))
+    @errormessageView.append(new PhpDebugErrormessageView(context: params.context))
 
     @on 'click', '[data-action]', (e) =>
       action = e.target.getAttribute('data-action')

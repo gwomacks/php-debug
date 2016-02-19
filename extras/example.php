@@ -8,6 +8,10 @@
   ##    - if you have debug.remote_autostart set to true, it should just work
   ##    - otherwise, use an xdebug browser extension to start the script with xdebug enabled
   ##    - or,
+
+  trigger_error("Error Test", E_USER_NOTICE);
+  trigger_error("Error Test", E_USER_WARNING);
+
   xdebug_break();
   $i = 1;
 
