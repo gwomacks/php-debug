@@ -25,5 +25,3 @@ class ContextVariableListView extends View
     if @variables
       for variable in @variables
         @contextVariableList.append(new ContextVariableView({variable:variable, parent: path,openpaths:@openpaths}))
-
-    

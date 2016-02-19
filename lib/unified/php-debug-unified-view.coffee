@@ -62,7 +62,7 @@ class PhpDebugUnifiedView extends ScrollView
   getURI: -> @uri
 
   getTitle: -> "Debugging"
-  
+
 
 
   setConnected: (isConnected) =>
