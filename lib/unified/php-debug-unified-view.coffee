@@ -18,7 +18,8 @@ class PhpDebugUnifiedView extends ScrollView
           @button class: "btn octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', "Step Over"
           @button class: "btn octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', "Step In"
           @button class: "btn octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', "Step Out"
-          @button class: "btn octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', "Stop"
+          @button class: "btn octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', "Abort"
+          @button class: "btn octicon icon-star inline-block-tight", disabled: 'disabled', 'data-action':'detach', "Finish"
           @span outlet: 'connectStatus'
         @div class: 'tabs-view', =>
           @div outlet: 'stackView', class:'php-debug-tab'
@@ -105,8 +106,10 @@ class PhpDebugUnifiedView extends ScrollView
           @GlobalContext.getCurrentDebugContext().continue "step_into"
         when 'out'
           @GlobalContext.getCurrentDebugContext().continue "step_out"
-        when 'stop'
+        when 'detach'
           @GlobalContext.getCurrentDebugContext().executeDetach()
+        when 'stop'
+          @GlobalContext.getCurrentDebugContext().executeStop()
 
         else
           console.error "unknown action"
