@@ -117,7 +117,6 @@ class DbgpInstance extends DebugContext
     return @command("feature_set", {n: feature_name, v: value})
 
   onInit: (data) =>
-    console.log "init",data
     @setFeature('show_hidden', 1)
     .then () =>
       return @setFeature('max_depth', atom.config.get('php-debug.MaxDepth'))
@@ -206,7 +205,6 @@ class DbgpInstance extends DebugContext
             messages = response["xdebug:message"]
             message = messages[0]
             thing = message.$
-            #console.dir data
             filepath = decodeURI(thing['filename']).replace("file:///", "")
 
             if not filepath.match(/^[a-zA-Z]:/)
@@ -216,7 +214,7 @@ class DbgpInstance extends DebugContext
             type = 'break'
             if thing.exception
               type = "error"
-            breakpoint = new Breakpoint(filepath: filepath, line:lineno, type: type)
+            breakpoint = new Breakpoint(filepath: filepath, line:lineno, type: type, exception: thing.exception, message: message._)
             @GlobalContext.notifyBreak(breakpoint)
           when 'stopping'
             @executeStop()
@@ -264,19 +262,16 @@ class DbgpInstance extends DebugContext
     return Q.all(commands)
 
   executeDetach: () =>
-    @command('status').then (data) =>
-      if data.response.$.status == 'break'
-        breakpoints = @GlobalContext.getBreakpoints()
-        for breakpoint in breakpoints
-          @executeBreakpointRemove(breakpoint)
-        @command('run').then (data) =>
-          @command('detach').then (data) =>
-              @executeStop()
-      else if data.response.$.status == 'stopped'
-        @executeStop()
-      else
-        @command('detach').then (data) =>
-            @executeStop()
+    @command('detach').then (data) =>
+      @command('run')
+      @stop()
+
+  executeRun: () =>
+    return @continue("run")
+
+  executeStop: () =>
+    @command("stop")
+    @stop()
 
   updateWatchpoints: (data) =>
     @clearWatchpoints()
@@ -284,7 +279,6 @@ class DbgpInstance extends DebugContext
     for watch in @GlobalContext.getWatchpoints()
       commands.push @evalWatchpoint(watch)
     return Q.all(commands)
-
 
   executeEval: (expression) ->
     return @command("eval", null, expression)
@@ -329,13 +323,6 @@ class DbgpInstance extends DebugContext
         v = @parseContextVariable({variable:property})
         data.variables.push v
       return data
-
-  executeRun: () =>
-    return @continue("run")
-
-  executeStop: () =>
-    @command("stop")
-    @stop()
 
   parseContextVariable: ({variable}) ->
     datum = {

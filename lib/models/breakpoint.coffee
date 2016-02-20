@@ -16,7 +16,7 @@ class Breakpoint extends Codepoint
   @getNextBreakpointSettingId: () ->
     return @breakpointSettingId++
 
-  constructor: ({filepath, marker, line, @type, @exception, @settings}) ->
+  constructor: ({filepath, marker, line, @type, @exception, @message, @settings}) ->
     super
     if !@type
       @type =  Breakpoint.TYPE_LINE

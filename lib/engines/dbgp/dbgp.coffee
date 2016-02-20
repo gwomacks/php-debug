@@ -43,7 +43,7 @@ class Dbgp
         @close()
         @GlobalContext.notifySocketError()
         return false
-        
+
       @server?.listen @serverPort
       return true
     catch e
