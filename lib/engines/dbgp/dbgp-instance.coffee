@@ -2,13 +2,13 @@ parseString = require('xml2js').parseString
 Q = require 'q'
 {Emitter, Disposable} = require 'event-kit'
 helpers = require '../../helpers.coffee'
-
 DebugContext = require '../../models/debug-context'
 Watchpoint = require '../../models/watchpoint'
 Breakpoint = require '../../models/breakpoint'
 
 module.exports =
 class DbgpInstance extends DebugContext
+
   constructor: (params) ->
     super
     @socket = params.socket
@@ -30,8 +30,6 @@ class DbgpInstance extends DebugContext
 
   syncStack: (depth) ->
     options = {}
-    #if depth >= 0
-    #  options.d = depth;
     if depth < 0
       depth = 0
     return @executeCommand('stack_get', options).then (data) =>
@@ -84,7 +82,6 @@ class DbgpInstance extends DebugContext
     else
       console.warn "Could not find promise for transaction " + transactionId
 
-
   stuff: (data) =>
     @buffer = message = @parse(@buffer + data)
 
@@ -131,7 +128,6 @@ class DbgpInstance extends DebugContext
       return @sendAllBreakpoints()
     .then () =>
       return @executeRun()
-
 
   sendAllBreakpoints: =>
     breakpoints = @GlobalContext.getBreakpoints()
@@ -206,7 +202,6 @@ class DbgpInstance extends DebugContext
             messages = response["xdebug:message"]
             message = messages[0]
             thing = message.$
-            #console.dir data
             filepath = decodeURI(thing['filename']).replace("file:///", "")
 
             if not filepath.match(/^[a-zA-Z]:/)
@@ -284,7 +279,6 @@ class DbgpInstance extends DebugContext
     for watch in @GlobalContext.getWatchpoints()
       commands.push @evalWatchpoint(watch)
     return Q.all(commands)
-
 
   executeEval: (expression) ->
     return @command("eval", null, expression)

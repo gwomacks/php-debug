@@ -14,7 +14,7 @@ exports.escapeValue = (object) ->
   if (typeof object == "string")
     return "\"" + object.replace("\\","\\\\").replace("\"","\\\"") + "\""
   return object;
-  
+
 exports.escapeHtml = (string) ->
   entityMap = {
     "<": "&lt;"
@@ -94,5 +94,5 @@ exports.remotePathToLocal = (remotePath) ->
       if remotePath.indexOf(remote) == 0
         return remotePath.replace(remote, local)
         break
-    
+
   return remotePath.replace('file://','')

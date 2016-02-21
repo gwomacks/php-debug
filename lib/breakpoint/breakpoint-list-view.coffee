@@ -1,13 +1,13 @@
 {$, View} = require 'atom-space-pen-views'
 BreakpointItemView = require './breakpoint-item-view'
-helpers        = require '../helpers'
+helpers = require '../helpers'
 
 module.exports =
 class BreakpointListView extends View
 
   @content: =>
-      @ul class: "breakpoint-list-view", =>
-        @div outlet: "breakpointItemList"
+    @ul class: "breakpoint-list-view", =>
+      @div outlet: "breakpointItemList"
 
   initialize: (breakpoints) ->
     @breakpointItemList.on 'mousedown', 'li', (e) =>

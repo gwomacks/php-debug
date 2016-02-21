@@ -2,11 +2,11 @@
 {$, ScrollView} = require 'atom-space-pen-views'
 BreakpointView = require './breakpoint-view'
 GutterContainer = require './breakpoint-view'
-
 GlobalContext = require '../models/global-context'
 
 module.exports =
 class PhpDebugBreakpointView extends ScrollView
+
   @content: ->
     @div class: 'php-debug php-debug-breakpoint-view pane-item', tabindex: -1, =>
       @div class: "panel-heading", "Breakpoints"
@@ -25,6 +25,7 @@ class PhpDebugBreakpointView extends ScrollView
   getTitle: -> "Breakpoints"
 
   onDidChangeTitle: -> new Disposable ->
+
   onDidChangeModified: -> new Disposable ->
 
   isEqual: (other) ->
@@ -34,7 +35,6 @@ class PhpDebugBreakpointView extends ScrollView
     @GlobalContext = params.context
     @showBreakpoints()
     @GlobalContext.onBreakpointsChange @showBreakpoints
-
 
   showBreakpoints: =>
     if @breakpointViewList

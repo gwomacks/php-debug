@@ -5,8 +5,10 @@ PhpDebugStackView = require '../stack/php-debug-stack-view'
 PhpDebugWatchView = require '../watch/php-debug-watch-view'
 PhpDebugBreakpointView = require '../breakpoint/php-debug-breakpoint-view'
 Interact = require('interact.js')
+
 module.exports =
 class PhpDebugUnifiedView extends ScrollView
+
   @content: ->
     @div class: 'php-debug', tabindex: -1, =>
       @div class: 'php-debug-unified-view', =>
@@ -62,8 +64,6 @@ class PhpDebugUnifiedView extends ScrollView
   getURI: -> @uri
 
   getTitle: -> "Debugging"
-  
-
 
   setConnected: (isConnected) =>
     @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'

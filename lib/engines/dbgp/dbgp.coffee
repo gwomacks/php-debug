@@ -1,13 +1,13 @@
 parseString = require('xml2js').parseString
 Q = require 'q'
 {Emitter, Disposable} = require 'event-kit'
-
 DebugContext = require '../../models/debug-context'
 Watchpoint = require '../../models/watchpoint'
 DbgpInstance = require './dbgp-instance'
 
 module.exports =
 class Dbgp
+
   constructor: (params) ->
     @emitter = new Emitter
     @buffer = ''
@@ -21,7 +21,6 @@ class Dbgp
     return @socket && @socket.readyState == 1
 
   listen: (options) ->
-
     @debugContext = new DebugContext
     net = require "net"
     buffer = ''
@@ -43,7 +42,7 @@ class Dbgp
         @close()
         @GlobalContext.notifySocketError()
         return false
-        
+
       @server?.listen @serverPort
       return true
     catch e
@@ -52,7 +51,6 @@ class Dbgp
       @close()
       @GlobalContext.notifySocketError()
       return false
-      # body...
 
   close: (options) ->
     unless !@socket

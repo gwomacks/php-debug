@@ -1,7 +1,6 @@
 helpers = require '../helpers.coffee'
 
 module.exports =
-
 class DebugContext
 
   constructor: () ->
