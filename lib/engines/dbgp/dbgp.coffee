@@ -55,6 +55,7 @@ class Dbgp
       # body...
 
   close: (options) ->
+    @GlobalContext.getCurrentDebugContext()?.stop()
     unless !@socket
       @socket.end()
       delete @socket

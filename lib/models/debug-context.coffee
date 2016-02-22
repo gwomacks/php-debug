@@ -36,3 +36,6 @@ class DebugContext
 
   getScopes: ->
     return @scopeList
+    
+  stop: ->
+    
