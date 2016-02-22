@@ -293,7 +293,8 @@ module.exports = PhpDebug =
   createGutter: (editor) ->
     if (!editor)
       editor = atom.workspace.getActivePaneItem()
-    if (!editor)
+
+    if (!editor || !editor.gutterWithName)
       return
       
     gutterEnabled = atom.config.get('php-debug.GutterBreakpointToggle')
