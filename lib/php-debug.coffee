@@ -11,25 +11,6 @@ GlobalContext = require './models/global-context'
 helpers        = require './helpers'
 PhpDebugStatusView = require './status/php-debug-status-view'
 
-PhpDebugContextUri = "phpdebug://context"
-PhpDebugStackUri = "phpdebug://stack"
-PhpDebugBreakpointsUri = "phpdebug://breakpoints"
-PhpDebugWatchUri = "phpdebug://watch"
-PhpDebugUnifiedUri = "phpdebug://unified"
-
-createContextView =  (state) ->
-  PhpDebugContextView = require './context/php-debug-context-view'
-  @contextView = new PhpDebugContextView(state)
-
-createBreakpointsView =  (state) ->
-  PhpDebugBreakpointView = require './breakpoint/php-debug-breakpoint-view'
-  @breakpointView = new PhpDebugBreakpointView(state)
-
-createWatchView =  (state) ->
-  PhpDebugWatchView = require './watch/php-debug-watch-view'
-  @watchView = new PhpDebugWatchView(state)
-
-
 module.exports = PhpDebug =
   subscriptions: null
 
@@ -119,16 +100,7 @@ module.exports = PhpDebug =
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOut': => @stepOut()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllBreakpoints': => @clearAllBreakpoints()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllWatchpoints': => @clearAllWatchpoints()
-    @subscriptions.add atom.workspace.addOpener (filePath) =>
-      switch filePath
-        when PhpDebugContextUri
-          createContextView(uri: PhpDebugContextUri)
-        when PhpDebugBreakpointsUri
-          createBreakpointsView(uri: PhpDebugBreakpointsUri)
-        when PhpDebugWatchUri
-          createWatchView(uri: PhpDebugWatchUri)
-        when PhpDebugUnifiedUri
-          @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
+
     Dbgp = require './engines/dbgp/dbgp'
     @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
     @GlobalContext.onBreak (breakpoint) =>
