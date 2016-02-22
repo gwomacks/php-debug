@@ -1,6 +1,6 @@
 {View} = require 'atom-space-pen-views'
 ContextVariableView = require './context-variable-view'
-helpers        = require '../helpers'
+helpers = require '../helpers'
 
 module.exports =
 class ContextVariableListView extends View
@@ -25,5 +25,3 @@ class ContextVariableListView extends View
     if @variables
       for variable in @variables
         @contextVariableList.append(new ContextVariableView({variable:variable, parent: path,openpaths:@openpaths}))
-
-    
