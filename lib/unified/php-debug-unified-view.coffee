@@ -120,6 +120,7 @@ class PhpDebugUnifiedView extends ScrollView
   destroy: =>
     if @GlobalContext.getCurrentDebugContext()
       @GlobalContext.getCurrentDebugContext().executeDetach()
+    @panel.destroy()
 
   isEqual: (other) ->
     other instanceof PhpDebugUnifiedView

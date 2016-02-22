@@ -224,8 +224,7 @@ module.exports = PhpDebug =
 
   deactivate: ->
     @unifiedView?.setConnected(false)
-    @statusView?.destroy()
-    @statusView = null
+    @statusView?.remove()
     @unifiedView?.destroy()
     @subscriptions.dispose()
     @dbgp?.close()
