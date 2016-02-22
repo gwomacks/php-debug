@@ -66,7 +66,9 @@ class PhpDebugUnifiedView extends ScrollView
 
 
   setConnected: (isConnected) =>
-    @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
+    if (@panel?.item?.clientHeight > 0)
+      @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
+      
     if isConnected
       @connectStatus.text('Connected')
     else
