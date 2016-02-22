@@ -2,6 +2,7 @@
 
 module.exports =
 class BreakpointItemView extends View
+
   @content: =>
     @li class: 'meow', =>
       @div class: 'meow', =>

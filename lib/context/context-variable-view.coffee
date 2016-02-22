@@ -1,9 +1,10 @@
 {View} = require 'atom-space-pen-views'
 ContextVariableScalarView = require "./context-variable-scalar-view"
-helpers        = require '../helpers'
+helpers = require '../helpers'
 
 module.exports =
 class ContextVariableView extends View
+
   @content: =>
     @li class: 'native-key-bindings', =>
       @div class: 'native-key-bindings', tabindex: -1, outlet: 'variableView'

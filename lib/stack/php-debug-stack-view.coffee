@@ -1,10 +1,11 @@
 {$, ScrollView} = require 'atom-space-pen-views'
-
 StackFrameView = require('./stack-frame-view')
 GlobalContext = require '../models/global-context'
 Codepoint = require '../models/codepoint'
+
 module.exports =
 class PhpDebugStackView extends ScrollView
+
   @content: ->
     @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
       @div class: "panel-heading", "Stack"

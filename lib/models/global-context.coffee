@@ -3,14 +3,15 @@ helpers = require '../helpers.coffee'
 
 module.exports =
 class GlobalContext
+
   atom.deserializers.add(this)
   # @version = '1a'
+
   constructor: ->
     @emitter = new Emitter
     @breakpoints = []
     @watchpoints = []
     @debugContexts = []
-
     @onSessionEnd () =>
       delete @debugContexts[0]
       @debugContexts = []
@@ -97,7 +98,6 @@ class GlobalContext
 
   clearContext: ->
 
-
   onBreakpointsChange: (callback) ->
     @emitter.on 'php-debug.breakpointsChange', callback
 
@@ -133,7 +133,7 @@ class GlobalContext
 
   notifySessionEnd: (data) ->
     @emitter.emit 'php-debug.sessionEnd', data
-    
+
   onSocketError: (callback) ->
     @emitter.on 'php-debug.socketError', callback
 

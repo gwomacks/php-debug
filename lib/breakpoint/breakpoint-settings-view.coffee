@@ -5,6 +5,7 @@ GlobalContext = require '../models/global-context'
 
 module.exports =
 class BreakpoinSettingsView extends View
+  
   @content: =>
     @div class: 'breakpoint-settings-view', =>
       @span click: 'close', class: 'atom-pair-exit-view close-icon'

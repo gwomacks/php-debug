@@ -3,6 +3,7 @@
 
 module.exports =
 class BreakpointSettingsConditionView extends View
+
   @content: (params) ->
     @div class: 'breakpoint-setting setting-condition setting-existing', =>
       @span class: 'setting-label', "Condition:"

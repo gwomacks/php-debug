@@ -1,7 +1,9 @@
 module.exports =
 class Watchpoint
+
   atom.deserializers.add(this)
   @version: '1b'
+
   constructor: (data) ->
     if (!data.expression)
       throw new Error("Invalid watchpoint")
