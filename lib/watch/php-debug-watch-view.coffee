@@ -5,8 +5,10 @@
 WatchView = require './watch-view'
 GlobalContext = require '../models/global-context'
 Watchpoint = require '../models/watchpoint'
+
 module.exports =
 class PhpDebugWatchView extends ScrollView
+
   @content: ->
     @div class: "panel", =>
       @div class: "panel-heading", "Watchpoints"
@@ -27,8 +29,8 @@ class PhpDebugWatchView extends ScrollView
   getTitle: -> "Watch"
 
   onDidChangeTitle: -> new Disposable ->
-  onDidChangeModified: -> new Disposable ->
 
+  onDidChangeModified: -> new Disposable ->
 
   initialize: (params) ->
     @GlobalContext = params.context

@@ -1,6 +1,8 @@
 {$, View} = require 'atom-space-pen-views'
+
 module.exports =
 class PhpDebugStatusView extends View
+
   @content: ->
     @div click: 'toggleDebugging', class: 'php-debug-status-view', =>
       @span class: 'icon icon-bug'

@@ -4,6 +4,7 @@ ContextView = require './context-view'
 
 module.exports =
 class PhpDebugContextView extends ScrollView
+
   @content: ->
     @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
       @div class: "panel-heading", "Context"
@@ -24,7 +25,9 @@ class PhpDebugContextView extends ScrollView
     @GlobalContext.onSessionEnd () =>
       if @contextViewList
         @contextViewList.empty()
+
   onDidChangeTitle: -> new Disposable ->
+    
   onDidChangeModified: -> new Disposable ->
 
   isEqual: (other) ->
