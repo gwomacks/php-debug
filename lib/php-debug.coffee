@@ -44,6 +44,11 @@ module.exports = PhpDebug =
       default: "Right"
       description: "Display breakpoint gutter to the left or right of the line numbers"
       enum: ["Left","Right"]
+    AutoExpandLocals:
+      title: "Auto expand the locals section of the context"
+      type: 'boolean'
+      default: false
+      description: "Will cause locals to auto open when starting a new debugging session"
     CustomExceptions:
       type: 'array'
       default: []

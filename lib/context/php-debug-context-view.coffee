@@ -33,6 +33,10 @@ class PhpDebugContextView extends ScrollView
   showContexts: =>
     if @contextViewList
       @autoopen = []
+      if (atom.config.get('php-debug.AutoExpandLocals'))
+        @autoopen.push('locals')
+        @autoopen.push('Locals')
+        
       @contextViewList.find("details[open]").each (_,el) =>
         item = $(el)
         added = false
