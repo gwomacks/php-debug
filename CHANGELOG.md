@@ -1,3 +1,11 @@
+## 0.2.3
+* Change the way that scrolling works within the panel
+* Add ability to auto expand locals in the context
+* Support for resource data types from PHP
+* Classnames for objects in the context view
+* Allow port to be adjusted after php-debug has already been enabled once
+* Bug fixes
+
 ## 0.2.2
 * Add ability to toggle breakpoints from editor gutter
  * This can be enabled and configured via the settings
