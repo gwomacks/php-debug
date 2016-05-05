@@ -17,11 +17,12 @@ class PhpDebugUnifiedView extends ScrollView
           @button class: "btn octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', "Step Out"
           @button class: "btn octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', "Stop"
           @span outlet: 'connectStatus'
-        @div class: 'tabs-view', =>
-          @div outlet: 'stackView', class:'php-debug-tab'
-          @div outlet: 'contextView', class:'php-debug-tab'
-          @div outlet: 'watchpointView', class:'php-debug-tab'
-          @div outlet: 'breakpointView', class:'php-debug-tab'
+        @div class: 'tabs-wrapper', outlet:'tabsWrapper', =>
+          @div class: 'tabs-view', =>
+            @div outlet: 'stackView', class:'php-debug-tab'
+            @div outlet: 'contextView', class:'php-debug-tab'
+            @div outlet: 'watchpointView', class:'php-debug-tab'
+            @div outlet: 'breakpointView', class:'php-debug-tab'
 
   constructor: (params) ->
     super
@@ -35,7 +36,7 @@ class PhpDebugUnifiedView extends ScrollView
       @find('button').disable()
 
     Interact(this.element).resizable({edges: { top: true }})
-      .on('resizemove', (event) ->
+      .on('resizemove', (event) =>
         target = event.target
         if event.rect.height < 25
           if event.rect.height < 1
@@ -45,6 +46,7 @@ class PhpDebugUnifiedView extends ScrollView
         else
           target.style.width  = event.rect.width + 'px'
           target.style.height = event.rect.height + 'px'
+          @find('.tabs-wrapper').css('height',event.rect.height + 'px')
       )
       .on('resizeend', (event) ->
         event.target.style.width = 'auto'
@@ -68,6 +70,7 @@ class PhpDebugUnifiedView extends ScrollView
   setConnected: (isConnected) =>
     if (@panel?.item?.clientHeight > 0)
       @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
+      @find('.tabs-wrapper').css('height',@panel?.item?.clientHeight + 'px')
       
     if isConnected
       @connectStatus.text('Connected')

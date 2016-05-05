@@ -5,11 +5,14 @@
 @import "ui-variables";
 
 .php-debug {
-  overflow-y: scroll;
+  overflow-y: hidden;
   .php-debug-tab
   {
     flex:1;
     overflow-y: scroll;
+  }
+  .tabs-wrapper {
+    
   }
   .breakpoint-line
   {
@@ -106,7 +109,8 @@ atom-panel.modal .breakpoint-settings-view .setting-new atom-text-editor[mini] {
 .tabs-view {
 
     display: flex;
-    height: 100%
+    height: 100%;
+    padding-bottom: 75px;
 }
 
 .tabs-view:nth-child(1) {
