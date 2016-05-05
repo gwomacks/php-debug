@@ -339,6 +339,7 @@ module.exports = PhpDebug =
       @getUnifiedView().setVisible(true)
       @statusView?.setActive(true)
       if !@dbgp.listening()
+        @dbgp.setPort atom.config.get('php-debug.ServerPort')
         if !@dbgp.listen()
           console.log "failed"
           @getUnifiedView().setVisible(false)

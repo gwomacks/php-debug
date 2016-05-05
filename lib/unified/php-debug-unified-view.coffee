@@ -76,8 +76,11 @@ class PhpDebugUnifiedView extends ScrollView
       @connectStatus.text("Listening on port #{serverPort}...")
 
   setVisible: (@visible) =>
+
     if @visible
       @panel.show()
+      serverPort = atom.config.get('php-debug.ServerPort')
+      @connectStatus.text("Listening on port #{serverPort}...")
     else
       @panel.hide()
 

@@ -14,6 +14,9 @@ class Dbgp
     @GlobalContext = params.context
     @serverPort = params.serverPort
 
+  setPort: (port) ->
+    @serverPort = port
+
   listening: ->
     return @server != undefined
 
