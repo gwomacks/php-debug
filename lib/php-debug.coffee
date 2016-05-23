@@ -61,6 +61,9 @@ module.exports = PhpDebug =
       items:
         type: 'string'
       description: "Paths in the format of remote;local (eg \"/var/www/project;C:\\projects\\mycode\")"
+    ServerAddress:
+      type: 'string'
+      default: '127.0.0.1'
     ServerPort:
       type: 'integer'
       default: 9000
@@ -141,7 +144,7 @@ module.exports = PhpDebug =
 
     @GlobalContext.onStackChange (codepoint) =>
       @doCodePoint(codepoint)
-    
+
     @GlobalContext.onSocketError () =>
       @toggleDebugging()
 
@@ -172,19 +175,19 @@ module.exports = PhpDebug =
         for breakpoint in event.removed
           if breakpoint.getMarker()
             breakpoint.getMarker().destroy()
-            
+
     atom.workspace.observeTextEditors (editor) =>
       if (atom.config.get('php-debug.GutterBreakpointToggle'))
         @createGutter editor
-      else 
+      else
         for breakpoint in @GlobalContext.getBreakpoints()
           if breakpoint.getPath() == editor.getPath()
             marker = @addBreakpointMarker(breakpoint.getLine(), editor)
             breakpoint.setMarker(marker)
-            
+
     atom.config.observe "php-debug.GutterBreakpointToggle", (newValue) =>
-      @createGutters newValue    
-        
+      @createGutters newValue
+
     atom.config.observe "php-debug.GutterPosition", (newValue) =>
       @createGutters atom.config.get('php-debug.GutterBreakpointToggle'),true
 
@@ -242,7 +245,7 @@ module.exports = PhpDebug =
       filepath = point.getPath()
 
       filepath = helpers.remotePathToLocal(filepath)
-      
+
       atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
         if @currentCodePointDecoration
           @currentCodePointDecoration.destroy()
@@ -258,12 +261,12 @@ module.exports = PhpDebug =
   addBreakpointMarker: (line, editor) ->
     gutter = editor.gutterWithName("php-debug-gutter")
     range = [[line-1, 0], [line-1, 0]]
-    
+
     marker = new BreakpointMarker(editor,range,gutter)
     marker.decorate()
 
     return marker
-    
+
 
   breakpointSettings: ->
     BreakpointSettingsView = require './breakpoint/breakpoint-settings-view'
@@ -278,7 +281,7 @@ module.exports = PhpDebug =
         break
     @settingsView = new BreakpointSettingsView({breakpoint:breakpoint,context:@GlobalContext})
     @settingsView.attach()
-  
+
   createGutters: (create,recreate) ->
     editors = atom.workspace.getTextEditors()
     for editor in editors
@@ -294,30 +297,30 @@ module.exports = PhpDebug =
               gutter?.destroy()
           if (editor?.gutterWithName('php-debug-gutter') == null)
             @createGutter(editor)
-  
+
   createGutter: (editor) ->
     if (!editor)
       editor = atom.workspace.getActivePaneItem()
 
     if (!editor || !editor.gutterWithName)
       return
-      
+
     gutterEnabled = atom.config.get('php-debug.GutterBreakpointToggle')
     if (!gutterEnabled)
       return
-      
+
     gutterPosition = atom.config.get('php-debug.GutterPosition')
     if gutterPosition == "Left"
       priority = -200
     else
       priority = 200
-      
+
     if (editor.gutterWithName('php-debug-gutter') != null)
       @gutter = editor.gutterWithName('php-debug-gutter')
       return
     else
       @gutter = editor?.gutterContainer.addGutter {name:'php-debug-gutter', priority: priority}
-    
+
     view = atom.views.getView editor
     domNode = atom.views.getView @gutter
     $(domNode).unbind 'click.phpDebug'
@@ -325,7 +328,7 @@ module.exports = PhpDebug =
       clickedScreenRow = view.component.screenPositionForMouseEvent(event).row
       clickedBufferRow  = editor.bufferRowForScreenRow(clickedScreenRow)+1
       @toggleBreakpoint clickedBufferRow
-      
+
     if @gutter
       for breakpoint in @GlobalContext.getBreakpoints()
         if breakpoint.getPath() == editor.getPath()
@@ -350,9 +353,9 @@ module.exports = PhpDebug =
           @getUnifiedView().setVisible(false)
           @statusView?.setActive(false)
           return
-    
+
       @createGutter()
-      
+
     else
       @getUnifiedView().setVisible(false)
       @statusView?.setActive(false)

@@ -57,6 +57,7 @@ Put the following in your config.cson
 ```cson
 "php-debug":
   {
+    ServerAddress: 127.0.0.1
     ServerPort: 9000
     PathMaps: [
       "remotepath;localpath"
@@ -64,6 +65,10 @@ Put the following in your config.cson
     ]
   }
   ```
+
+### Server Address ###
+This is the address that the atom client will listen on.
+Defaults to 127.0.0.1
 
 ### Server Port ###
 This is the port that the atom client will listen on.
