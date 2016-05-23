@@ -13,9 +13,13 @@ class Dbgp
     @buffer = ''
     @GlobalContext = params.context
     @serverPort = params.serverPort
+    @serverAddress = params.serverAddress
 
   setPort: (port) ->
     @serverPort = port
+
+  setAddress: (address) ->
+    @serverAddress = address
 
   listening: ->
     return @server != undefined
@@ -29,7 +33,7 @@ class Dbgp
     net = require "net"
     buffer = ''
     try
-      console.log "Listening on Port " + @serverPort
+      console.log "Listening on Address:Port " + @serverAddress + ":" + @serverPort
       @server = net.createServer( (socket) =>
 
         socket.setEncoding('ascii');
@@ -46,8 +50,8 @@ class Dbgp
         @close()
         @GlobalContext.notifySocketError()
         return false
-        
-      @server?.listen @serverPort
+
+      @server?.listen @serverPort, @serverAddress
       return true
     catch e
       console.error "Socket Error:", e

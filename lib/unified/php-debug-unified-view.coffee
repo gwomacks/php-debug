@@ -64,26 +64,28 @@ class PhpDebugUnifiedView extends ScrollView
   getURI: -> @uri
 
   getTitle: -> "Debugging"
-  
+
 
 
   setConnected: (isConnected) =>
     if (@panel?.item?.clientHeight > 0)
       @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
       @find('.tabs-wrapper').css('height',@panel?.item?.clientHeight + 'px')
-      
+
     if isConnected
       @connectStatus.text('Connected')
     else
       serverPort = atom.config.get('php-debug.ServerPort')
-      @connectStatus.text("Listening on port #{serverPort}...")
+      serverAddress = atom.config.get('php-debug.ServerAddress')
+      @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
 
   setVisible: (@visible) =>
 
     if @visible
       @panel.show()
       serverPort = atom.config.get('php-debug.ServerPort')
-      @connectStatus.text("Listening on port #{serverPort}...")
+      serverAddress = atom.config.get('php-debug.ServerAddress')
+      @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
     else
       @panel.hide()
 
