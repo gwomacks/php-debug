@@ -75,16 +75,16 @@ class PhpDebugUnifiedView extends ScrollView
     if isConnected
       @connectStatus.text('Connected')
     else
-      serverAddress = atom.config.get('php-debug.ServerAddress')
       serverPort = atom.config.get('php-debug.ServerPort')
+      serverAddress = atom.config.get('php-debug.ServerAddress')
       @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
 
   setVisible: (@visible) =>
 
     if @visible
       @panel.show()
-      serverAddress = atom.config.get('php-debug.ServerAddress')
       serverPort = atom.config.get('php-debug.ServerPort')
+      serverAddress = atom.config.get('php-debug.ServerAddress')
       @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
     else
       @panel.hide()

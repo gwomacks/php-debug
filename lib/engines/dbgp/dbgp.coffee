@@ -12,14 +12,14 @@ class Dbgp
     @emitter = new Emitter
     @buffer = ''
     @GlobalContext = params.context
-    @serverAddress = params.serverAddress
     @serverPort = params.serverPort
-
-  setAddress: (address) ->
-    @serverAddress = address
+    @serverAddress = params.serverAddress
 
   setPort: (port) ->
     @serverPort = port
+
+  setAddress: (address) ->
+    @serverAddress = address
 
   listening: ->
     return @server != undefined
