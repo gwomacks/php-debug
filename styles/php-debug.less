@@ -3,16 +3,50 @@
 // See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
 // for a full listing of what's available.
 @import "ui-variables";
+@import (inline) "../iconsets/materialdesignicons.css";
+
+.panel-right,
+.panel-left {
+  .php-debug {
+    overflow-y: scroll;
+    .action-bar {
+      min-height: 56px;
+
+    }
+
+    .tabs-view {
+      flex-wrap: wrap;
+      flex-direction:row;
+    }
+    .php-debug-tab
+    {
+      flex:initial;
+      overflow-y: scroll;
+      width:100%;
+    }
+  }
+  .php-debug.narrow {
+    .btn-text {
+      display:none;
+    }
+  }
+}
 
 .php-debug {
   overflow-y: hidden;
+
   .php-debug-tab
   {
     flex:1;
     overflow-y: scroll;
   }
+  .view-mode-btn {
+    width: 32px;
+    height:32px;
+    float: right;
+  }
   .tabs-wrapper {
-    
+
   }
   .breakpoint-line
   {

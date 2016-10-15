@@ -18,3 +18,6 @@ class PhpDebugStatusView extends View
       @element.className = 'php-debug-status-view active'
     else
       @element.className = 'php-debug-status-view'
+
+  destroy: =>
+    

@@ -5,9 +5,9 @@ ContextView = require './context-view'
 module.exports =
 class PhpDebugContextView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
+    @div class: 'php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
       @div class: "panel-heading", "Context"
-      @div outlet: 'contextViewList', class:'php-debug-contexts'
+      @div outlet: 'contextViewList', class:'php-debug-contexts php-debug-contents native-key-bindings'
 
   serialize: ->
     deserializer: @constructor.name
@@ -36,7 +36,7 @@ class PhpDebugContextView extends ScrollView
       if (atom.config.get('php-debug.AutoExpandLocals'))
         @autoopen.push('locals')
         @autoopen.push('Locals')
-        
+
       @contextViewList.find("details[open]").each (_,el) =>
         item = $(el)
         added = false
