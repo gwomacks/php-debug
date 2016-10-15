@@ -13,7 +13,15 @@
       min-height: 56px;
 
     }
-
+    .close-icon {
+      display:none;
+    }
+    .restore-btn {
+      display:none;
+    }
+    .php-debug-contents {
+      margin-bottom: 8.5px;
+    }
     .tabs-view {
       flex-wrap: wrap;
       flex-direction:row;
@@ -44,6 +52,9 @@
     width: 32px;
     height:32px;
     float: right;
+  }
+  .restore-btn {
+    float: right
   }
   .tabs-wrapper {
 
@@ -92,6 +103,7 @@ atom-panel.modal .breakpoint-settings-view .setting-new atom-text-editor[mini] {
 }
 
 .breakpoint-settings-view .close-icon,
+.panel-heading .close-icon,
 .php-debug-watchpoints .close-icon {
   position: absolute;
   top: 1px;
@@ -108,12 +120,23 @@ atom-panel.modal .breakpoint-settings-view .setting-new atom-text-editor[mini] {
   transition:transform .08s;
 }
 
+.panel-heading .close-icon {
+  position:relative;
+  float:right;
+}
+
+.panel-heading .close-icon:hover {
+  transform:scale(1.5);
+  transition:transform .08s;
+}
+
 .breakpoint-settings-view .close-icon:hover {
   transform:scale(1.5);
   transition:transform .08s;
 }
 
 .breakpoint-settings-view .close-icon:before,
+.panel-heading .close-icon:before,
 .php-debug-watchpoints .close-icon:before {
   font-family: 'Octicons Regular';
   font-weight: normal;

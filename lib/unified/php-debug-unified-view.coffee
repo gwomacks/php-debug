@@ -22,6 +22,7 @@ class PhpDebugUnifiedView extends ScrollView
           @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', =>
             @span class: "btn-text",  "Stop"
           @span outlet: 'connectStatus'
+          @button class: "btn restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
           @button class: "btn view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
           @button class: "btn view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
         @div class: 'tabs-wrapper', outlet:'tabsWrapper', =>
@@ -41,6 +42,22 @@ class PhpDebugUnifiedView extends ScrollView
       @find('button').disable()
     @GlobalContext.onSessionEnd () =>
       @find('button').disable()
+
+    @find('.php-debug-tab .panel-heading').on 'click', (e) =>
+      @handlePanelClick($(e.target))
+      e.preventDefault()
+      false
+
+    @find('.php-debug-tab .panel-heading .heading-label').on 'click', (e) =>
+      @handlePanelClick($(e.target).parent())
+      e.preventDefault()
+      false
+
+    @find('.php-debug-tab .panel-heading .close-icon').on 'click', (e) =>
+      @handlePanelCloseClick($(e.target))
+      e.preventDefault()
+      false
+
 
     @panelMode = atom.config.get('php-debug.currentPanelMode')
     @resizeType = { top: true, left:false }
@@ -110,11 +127,12 @@ class PhpDebugUnifiedView extends ScrollView
     @resizeType = { top: true, left:false }
     switch type
       when "side"
+        @find('.php-debug-tab').show()
         if (@panel)
           @panel.destroy()
         width = atom.config.get('php-debug.currentPanelWidth')
         if (!width)
-          width = '140px'
+          width = '262px'
         @find('.view-mode-btn-side').attr({disabled:true});
         @find('.view-mode-btn-bottom').attr({disabled:false});
         @find('.tabs-wrapper').css('width',width)
@@ -165,6 +183,13 @@ class PhpDebugUnifiedView extends ScrollView
   isVisible: () =>
     @visible
 
+  handlePanelClick: (target) =>
+    if (@panelMode == "side")
+      target.parent().find('.php-debug-contents').toggle()
+
+  handlePanelCloseClick: (target) =>
+      target.parents('.php-debug-tab').css('display','none');
+
   initialize: (params) =>
     super
     @stackView.append(new PhpDebugStackView(context: params.context))
@@ -185,6 +210,8 @@ class PhpDebugUnifiedView extends ScrollView
           @GlobalContext.getCurrentDebugContext().continue "step_out"
         when 'stop'
           @GlobalContext.getCurrentDebugContext().executeDetach()
+        when 'restore'
+          @find('.php-debug-tab').css('display','block')
         when 'setmode-bottom'
           @setPanelMode('bottom')
         when 'setmode-side'
