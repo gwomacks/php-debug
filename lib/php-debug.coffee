@@ -193,6 +193,8 @@ module.exports = PhpDebug =
         command: 'php-debug:addWatch'
         shouldDisplay: =>
             editor = atom.workspace.getActivePaneItem()
+            if (!editor || !editor.getSelectedText)
+              return false
             expression = editor?.getSelectedText()
             if !!expression then return true else return false
       },
@@ -202,6 +204,7 @@ module.exports = PhpDebug =
         shouldDisplay: =>
           editor = atom.workspace.getActivePaneItem()
           return false if !editor
+          return false if !editor.getSelectedBufferRange
           range = editor.getSelectedBufferRange()
           path = editor.getPath()
           line = range.getRows()[0]+1
