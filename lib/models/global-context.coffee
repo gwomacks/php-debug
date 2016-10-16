@@ -9,6 +9,7 @@ class GlobalContext
     @emitter = new Emitter
     @breakpoints = []
     @watchpoints = []
+    @consoleMessages = []
     @debugContexts = []
 
     @onSessionEnd () =>
@@ -89,6 +90,18 @@ class GlobalContext
   getWatchpoints: ->
     return @watchpoints
 
+  addConsoleMessage: (message) ->
+    @consoleMessages.push message
+
+  getConsoleMessages: (idx) ->
+    result =
+      lines: @consoleMessages[idx...]
+      total: @consoleMessages.length
+    return result
+
+  clearConsoleMessages: ->
+    @consoleMessages = []
+
   setContext: (context) ->
     @context = context
 
@@ -97,6 +110,12 @@ class GlobalContext
 
   clearContext: ->
 
+  onConsoleMessage: (callback) ->
+    @emitter.on 'php-debug.consoleMessage', callback
+
+  notifyConsoleMessage: (data) ->
+    @addConsoleMessage(data)
+    @emitter.emit 'php-debug.consoleMessage', data
 
   onBreakpointsChange: (callback) ->
     @emitter.on 'php-debug.breakpointsChange', callback
@@ -133,7 +152,7 @@ class GlobalContext
 
   notifySessionEnd: (data) ->
     @emitter.emit 'php-debug.sessionEnd', data
-    
+
   onSocketError: (callback) ->
     @emitter.on 'php-debug.socketError', callback
 

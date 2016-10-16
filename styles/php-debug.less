@@ -12,7 +12,7 @@
     overflow-y: scroll;
   }
   .tabs-wrapper {
-    
+
   }
   .breakpoint-line
   {
@@ -37,6 +37,53 @@
   .php-debug-watchpoints .type,
   .context-variable-list-view .type {
     padding-left: 1em;
+  }
+
+}
+.php-debug-console {
+  .console-list-view {
+    list-style:none;
+    margin-left: 0;
+    padding-left:1em;
+    margin-bottom:2.5px;
+    max-height:75%;
+  }
+  .panel-title {
+    padding-right: 1em;
+    padding-left: 1em;
+  }
+  .console-item {
+    list-style:none;
+    border-bottom: 1px solid #383232;
+    padding-bottom: 2px;
+    padding-top: 2px;
+    .line {
+      white-space: pre-wrap;
+    }
+  }
+  .console-panel {
+    min-height: 100%;
+    display:flex;
+    flex-direction:column;
+  }
+  .php-debug-console {
+    flex:1;
+    flex-direction: column;
+    overflow-y: scroll;
+    height:100%
+  }
+  .editor-container {
+    flex:1;
+    flex-direction:column;
+    max-height:58px;
+  }
+  .editor-container .editor::shadow {
+    .line-numbers {
+      text-indent: 999em;
+      width: 3px;
+      overflow: hidden;
+      position: relative;
+    }
   }
 }
 
