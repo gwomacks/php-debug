@@ -187,6 +187,27 @@ class DbgpInstance extends DebugContext
     p =  @command("breakpoint_set", options, data)
     return p.then (data) =>
       @breakpointMap[breakpoint.getId()] = data.response.$.id
+      #attempt to source a single line from the corresponding file where the breakpoint was made
+      #if we're not successful then the user has probably screwed up their config and/or PathMaps
+      if breakpoint.getType() == Breakpoint.TYPE_LINE
+        options = {
+          f : encodeURI('file://' + path)
+          #beginnng line
+          b : 1
+          #end line
+          e : 1
+        }
+        #command documentation available at https://xdebug.org/docs-dbgp.php
+        @command("source", options, null).then (data) =>
+          if data.response.hasOwnProperty("error")
+            for error in data.response.error
+              #handle other codes as appropriate, for now we have a generic handler
+              if error.$.code == "100"
+                atom.notifications.addError("Breakpoints were set but the corresponding server side file #{path} couldn't be opened.
+                Did you properly configure your PathMaps? Server message: #{error.message}, Code: #{error.$.code}")
+              else
+                atom.notifications.addError("A server side error occured. Please report this to https://github.com/gwomacks/php-debug. Server message: #{error.message}, Code: #{error.$.code}")
+
 
   executeBreakpointRemove: (breakpoint) =>
     path = breakpoint.getPath()
