@@ -64,6 +64,7 @@ Put the following in your config.cson
     ]
   }
   ```
+Be sure to indent it under "*"
 
 ### Server Port ###
 This is the port that the atom client will listen on.
