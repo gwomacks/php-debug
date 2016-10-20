@@ -275,7 +275,6 @@ module.exports = PhpDebug =
           type = point.getType?() ? 'generic'
           @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
           editor.scrollToBufferPosition([line-1,0])
-        atom.focus()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
   addBreakpointMarker: (line, editor) ->
