@@ -98,7 +98,6 @@ class PhpDebugUnifiedView extends ScrollView
             @find('.tabs-wrapper').css('width',event.rect.width + 'px')
       )
     @resizer = @resizer.on('resizeend', (event) =>
-        console.log('caled')
         if (@panelMode == "bottom")
           event.target.style.width = 'auto'
           atom.config.set('php-debug.currentPanelHeight',event.target.style.height);

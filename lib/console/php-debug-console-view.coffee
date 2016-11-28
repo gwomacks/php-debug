@@ -7,14 +7,16 @@ Interact = require('interact.js')
 module.exports =
 class PhpDebugConsoleView extends ScrollView
   @content: ->
-    @div class: "php-debug-console", =>
-      @div class: "block actions", =>
-        @span class: "panel-title", "PHP Console"
-        @button class: "btn octicon icon-circle-slash inline-block-tight",  'data-action':'clear', "Clear Console"
-      @section class: 'console-panel section', =>
-        @div outlet: 'consoleViewList', class:'php-debug-console php-debug-contents native-key-bindings',tabindex: -1
-        @div class: 'editor-container', =>
-          @subview 'consoleCommandLine', new TextEditorView()
+    @div class: "php-debug-console", tabindex: -1, =>
+      @div class: 'php-debug-debug-console-view', =>
+        @div class: "block actions", =>
+          @span class: "panel-title", "PHP Console"
+          @button class: "btn octicon icon-circle-slash inline-block-tight", 'data-action':'clear', =>
+            @span class: "btn-text", "Clear Console"
+        @section class: 'console-panel section', =>
+          @div outlet: 'consoleViewList', class:'php-debug-console-contents php-debug-contents native-key-bindings',tabindex: -1
+          @div class: 'editor-container', =>
+            @subview 'consoleCommandLine', new TextEditorView()
 
 
   constructor: (params) ->
@@ -47,7 +49,7 @@ class PhpDebugConsoleView extends ScrollView
         atom.config.set('php-debug.currentConsoleHeight',event.target.style.height)
       )
 
-    @panel = atom.workspace.addBottomPanel({item: this.element, visible: @visible, priority: 400})
+    @panel = atom.workspace.addBottomPanel({item: this.element, visible: @visible, priority: 399})
 
   serialize: ->
     deserializer: @constructor.name
