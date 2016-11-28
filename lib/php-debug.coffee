@@ -313,6 +313,7 @@ module.exports = PhpDebug =
         if (editor?.gutterWithName('php-debug-gutter') == null)
           @createGutter(editor)
 
+
   createGutter: (editor) ->
     if (!editor)
       editor = atom.workspace.getActivePaneItem()

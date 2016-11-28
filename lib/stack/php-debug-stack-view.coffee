@@ -6,9 +6,11 @@ Codepoint = require '../models/codepoint'
 module.exports =
 class PhpDebugStackView extends ScrollView
   @content: ->
-    @div class: 'php-debug php-debug-context-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
-      @div class: "panel-heading", "Stack"
-      @ul outlet: 'stackFrameViewList', class:'php-debug-contexts'
+    @div class: 'php-debug-stack-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
+      @div class: "panel-heading", =>
+        @span class: "heading-label", "Stack"
+        @span class: 'close-icon'
+      @ul outlet: 'stackFrameViewList', class:'php-debug-stacks php-debug-contents native-key-bindings'
 
   initialize: (params) ->
     super
