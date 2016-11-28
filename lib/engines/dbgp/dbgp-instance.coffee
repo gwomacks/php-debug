@@ -61,6 +61,8 @@ class DbgpInstance extends DebugContext
         message = buffer.slice(n+1, n+1+len)
         buffer = buffer.slice(n+2+len)
         if message != ""
+          if atom.config.get("php-debug.DebugXDebugMessages")
+            console.log("Received",message)
           o = parseString message, (err, result) =>
             if err
               console.error err
@@ -105,6 +107,8 @@ class DbgpInstance extends DebugContext
     if data
       payload += " -- " + new Buffer(data, 'ascii').toString('base64')
     if @socket
+      if atom.config.get("php-debug.DebugXDebugMessages")
+        console.log("Sending",payload)
       @socket.write(payload + "\0")
     else
       console.error "No socket found"
@@ -303,7 +307,7 @@ class DbgpInstance extends DebugContext
         else
           datum = @parseVariableExpression({variable:data.response.property[0]})
         if (typeof datum is "object" && datum.type == "error")
-          datum = "{0}: {1}".format(datum.name,datum.value)
+          datum = datum.name + ": " + datum.value
         #else
         #  datum = datum.replace(/\\"/mg, "\"").replace(/\\'/mg, "'").replace(/\\n/mg, "\n");
         @GlobalContext.notifyConsoleMessage(datum)

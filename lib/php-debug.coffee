@@ -51,6 +51,11 @@ module.exports = PhpDebug =
       type: 'boolean'
       default: false
       description: "Will cause locals to auto open when starting a new debugging session"
+    DebugXDebugMessages:
+      title: "Output raw xdebug messages to the Atom debugger"
+      type: 'boolean'
+      default: false
+      description: "Will output the xdebug xml to the Atom debugger"
     CustomExceptions:
       type: 'array'
       default: []
