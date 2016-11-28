@@ -198,6 +198,9 @@ class PhpDebugUnifiedView extends ScrollView
 
     @on 'click', '[data-action]', (e) =>
       action = e.target.getAttribute('data-action')
+      if e.target.tagName.toLowerCase() == "span"
+        action = e.target.parentNode.getAttribute('data-action')
+      
       switch action
         when 'continue'
           @GlobalContext.getCurrentDebugContext().continue "run"
