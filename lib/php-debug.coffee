@@ -148,11 +148,11 @@ module.exports = PhpDebug =
     @GlobalContext.onSessionEnd () =>
       @getUnifiedView().setConnected(false)
       if @currentCodePointDecoration
-        @currentCodePointDecoration.destroy()
+        @currentCodePointDecoration.destroy?()
 
     @GlobalContext.onRunning () =>
       if @currentCodePointDecoration
-        @currentCodePointDecoration.destroy()
+        @currentCodePointDecoration.destroy?()
 
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
@@ -164,14 +164,14 @@ module.exports = PhpDebug =
           for breakpoint in event.removed
             @GlobalContext.getCurrentDebugContext().executeBreakpointRemove(breakpoint)
             if breakpoint.getMarker()
-              breakpoint.getMarker().destroy()
+              breakpoint.getMarker().destroy?()
         if event.added
           for breakpoint in event.added
             @GlobalContext.getCurrentDebugContext().executeBreakpoint(breakpoint)
       if event.removed
         for breakpoint in event.removed
           if breakpoint.getMarker()
-            breakpoint.getMarker().destroy()
+            breakpoint.getMarker().destroy?()
 
     atom.workspace.observeTextEditors (editor) =>
       if (atom.config.get('php-debug.GutterBreakpointToggle'))
@@ -232,9 +232,9 @@ module.exports = PhpDebug =
 
   deactivate: ->
     @unifiedView?.setConnected(false)
-    @statusView?.destroy()
+    @statusView?.destroy?()
     @statusView = null
-    @unifiedView?.destroy()
+    @unifiedView?.destroy?()
     @subscriptions.dispose()
     @dbgp?.close()
 
@@ -248,7 +248,7 @@ module.exports = PhpDebug =
 
       atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
         if @currentCodePointDecoration
-          @currentCodePointDecoration.destroy()
+          @currentCodePointDecoration.destroy?()
         line = point.getLine()
         range = [[line-1, 0], [line-1, 0]]
         marker = editor.markBufferRange(range, {invalidate: 'surround'})
@@ -290,12 +290,12 @@ module.exports = PhpDebug =
       if create == false
         if (editor?.gutterWithName('php-debug-gutter') != null)
           gutter = editor?.gutterWithName('php-debug-gutter')
-          gutter?.destroy()
+          gutter?.destroy?()
       else
         if recreate
           if (editor?.gutterWithName('php-debug-gutter') != null)
             gutter = editor?.gutterWithName('php-debug-gutter')
-            gutter?.destroy()
+            gutter?.destroy?()
         if (editor?.gutterWithName('php-debug-gutter') == null)
           @createGutter(editor)
 
@@ -338,11 +338,11 @@ module.exports = PhpDebug =
 
   toggleDebugging: ->
     if @currentCodePointDecoration
-      @currentCodePointDecoration.destroy()
+      @currentCodePointDecoration.destroy?()
 
     if @settingsView
       @settingsView?.close()
-      @settingsView?.destroy()
+      @settingsView?.destroy?()
 
     if !@getUnifiedView().isVisible()
       @getUnifiedView().setVisible(true)
@@ -404,7 +404,7 @@ module.exports = PhpDebug =
     removed = @GlobalContext.removeBreakpoint breakpoint
     if removed
       if removed.getMarker()
-        removed.getMarker().destroy()
+        removed.getMarker().destroy?()
     else
       marker = @addBreakpointMarker(line, editor)
       breakpoint.setMarker(marker)
