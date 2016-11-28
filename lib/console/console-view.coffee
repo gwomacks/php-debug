@@ -25,3 +25,8 @@ class ConsoleView extends View
     for line in lines
       line = line
       @consoleItemList?.append(new ConsoleItemView(line))
+    if this.element.parentElement?
+      if this.element.parentElement.scrollHeight
+        this.element.parentElement.scrollTop = this.element.parentElement.scrollHeight - this.element.parentElement.clientHeight
+  
+    
