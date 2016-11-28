@@ -215,6 +215,8 @@ class DbgpInstance extends DebugContext
             lineno = thing['lineno']
             type = 'break'
             if thing.exception
+              if (message._)
+                @GlobalContext.notifyConsoleMessage(message._)
               type = "error"
             breakpoint = new Breakpoint(filepath: filepath, line:lineno, type: type)
             @GlobalContext.notifyBreak(breakpoint)
@@ -286,8 +288,25 @@ class DbgpInstance extends DebugContext
     return Q.all(commands)
 
 
-  executeEval: (expression) ->
-    return @command("eval", null, expression)
+  evalExpression: (expression) ->
+      p = @command("eval", null, expression)
+      return p.then (data) =>
+        datum = null
+        if data.response.error
+          datum = {
+            name : "Error"
+            fullname : "Error"
+            type: "error"
+            value: data.response.error[0].message[0]
+            label: ""
+          }
+        else
+          datum = @parseVariableExpression({variable:data.response.property[0]})
+        if (typeof datum is "object" && datum.type == "error")
+          datum = "{0}: {1}".format(datum.name,datum.value)
+        #else
+        #  datum = datum.replace(/\\"/mg, "\"").replace(/\\'/mg, "'").replace(/\\n/mg, "\n");
+        @GlobalContext.notifyConsoleMessage(datum)
 
   evalWatchpoint: (watchpoint) ->
     p = @command("eval", null, watchpoint.getExpression())
@@ -336,6 +355,61 @@ class DbgpInstance extends DebugContext
   executeStop: () =>
     @command("stop")
     @stop()
+
+  parseVariableExpression: ({variable}) ->
+    result = ""
+    if variable.$.fullname?
+      result = "\"" + variable.$.fullname + "\" => "
+    else if variable.$.name?
+      result = "\"" + variable.$.name  + "\" => "
+
+
+
+    switch variable.$.type
+      when "string"
+        switch variable.$.encoding
+          when "base64"
+            if not variable._?
+              return result + '(string)""'
+            else
+              return result + '(string)"' + new Buffer(variable._, 'base64').toString('ascii') + '"'
+          else
+            console.error "Unhandled context variable encoding: " + variable.$.encoding
+      when "array"
+        values = ""
+        if variable.property
+          for property in variable.property
+            values += @parseVariableExpression({variable:property}) + ",\n"
+          values = values.substring(0,values.length-2)
+        return result + "(array)[" + values + "] size("+variable.$.numchildren+")"
+      when "object"
+        values = ""
+        className = "stdClass"
+        if variable.$.classname
+          className = variable.$.classname
+        if variable.property
+          for property in variable.property
+            values += @parseVariableExpression({variable:property}) + ",\n"
+          values = values.substring(0,values.length-2)
+        return result + "(object["+className+"])" + values
+      when "resource"
+        return result + "(resource)" + variable._
+      when "int"
+        return result + "(numeric)" + variable._
+      when "error"
+        return result + ""
+      when "uninitialized"
+        return result + "(undefined)null"
+      when "null"
+        return result + "(null)null"
+      when "bool"
+        return result + "(bool)" + variable._
+      when "float"
+        return result + "(numeric)" + variable._
+      else
+        console.dir variable
+        console.error "Unhandled context variable type: " + variable.$.type
+    return datum
 
   parseContextVariable: ({variable}) ->
     datum = {

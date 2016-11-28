@@ -9,6 +9,10 @@
           'command': 'php-debug:toggleDebugging'
         },
         {
+          'label': 'Toggle Console'
+          'command': 'php-debug:toggleConsole'
+        },
+        {
           'label': 'Toggle Breakpoint'
           'command': 'php-debug:toggleBreakpoint'
         }

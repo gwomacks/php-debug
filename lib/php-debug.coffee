@@ -9,9 +9,11 @@ BreakpointMarker    = require './models/breakpoint-marker'
 Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
 helpers        = require './helpers'
-PhpDebugStatusView = require './status/php-debug-status-view'
+PhpDebugDebugView = require './status/php-debug-debug-view'
+PhpDebugConsoleStatusView = require './status/php-debug-console-status-view'
 
 PhpDebugContextUri = "phpdebug://context"
+PhpDebugConsoleUri = "phpdebug://console"
 PhpDebugStackUri = "phpdebug://stack"
 PhpDebugBreakpointsUri = "phpdebug://breakpoints"
 PhpDebugWatchUri = "phpdebug://watch"
@@ -218,7 +220,9 @@ module.exports = PhpDebug =
       @getUnifiedView().setConnected(true)
 
   consumeStatusBar: (statusBar) ->
-    @statusView = new PhpDebugStatusView(statusBar, this)
+    @debugView = new PhpDebugDebugView(statusBar, this)
+    @consoleStatusView = new PhpDebugConsoleStatusView(statusBar, this)
+
 
   getUnifiedView: ->
     unless @unifiedView
@@ -227,14 +231,24 @@ module.exports = PhpDebug =
 
     return @unifiedView
 
+  getConsoleView: ->
+    unless @consoleView
+      PhpDebugConsoleView = require './console/php-debug-console-view'
+      @consoleView = new PhpDebugConsoleView(context: @GlobalContext)
+
+    return @consoleView
+
   serialize: ->
     @GlobalContext.serialize()
 
   deactivate: ->
     @unifiedView?.setConnected(false)
-    @statusView?.destroy?()
-    @statusView = null
+    @debugView?.destroy?()
+    @debugView = null
+    @consoleStatusView?.destroy?()
+    @consoleStatusView = null
     @unifiedView?.destroy?()
+    @consoleView?.destroy?()
     @subscriptions.dispose()
     @dbgp?.close()
 
@@ -346,21 +360,30 @@ module.exports = PhpDebug =
 
     if !@getUnifiedView().isVisible()
       @getUnifiedView().setVisible(true)
-      @statusView?.setActive(true)
+      @debugView?.setActive(true)
       if !@dbgp.listening()
         @dbgp.setPort atom.config.get('php-debug.ServerPort')
         if !@dbgp.listen()
           console.log "failed"
           @getUnifiedView().setVisible(false)
-          @statusView?.setActive(false)
+          @debugView?.setActive(false)
           return
 
       @createGutter()
 
     else
       @getUnifiedView().setVisible(false)
-      @statusView?.setActive(false)
+      @debugView?.setActive(false)
       @dbgp?.close()
+
+  toggleConsole: ->
+    if !@getConsoleView().isVisible()
+      @consoleStatusView?.setActive(true)
+      @getConsoleView().setVisible(true)
+    else
+      @getConsoleView().setVisible(false)
+      @consoleStatusView?.setActive(false)
+
 
   addWatch: ->
     editor = atom.workspace.getActivePaneItem()
