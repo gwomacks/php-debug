@@ -9,9 +9,11 @@ BreakpointMarker    = require './models/breakpoint-marker'
 Watchpoint    = require './models/watchpoint'
 GlobalContext = require './models/global-context'
 helpers        = require './helpers'
-PhpDebugStatusView = require './status/php-debug-status-view'
+PhpDebugDebugView = require './status/php-debug-debug-view'
+PhpDebugConsoleStatusView = require './status/php-debug-console-status-view'
 
 PhpDebugContextUri = "phpdebug://context"
+PhpDebugConsoleUri = "phpdebug://console"
 PhpDebugStackUri = "phpdebug://stack"
 PhpDebugBreakpointsUri = "phpdebug://breakpoints"
 PhpDebugWatchUri = "phpdebug://watch"
@@ -53,6 +55,11 @@ module.exports = PhpDebug =
         title: "Activate Atom window after break is hit."
         type: 'boolean'
         default: true
+    DebugXDebugMessages:
+      title: "Output raw xdebug messages to the Atom debugger"
+      type: 'boolean'
+      default: false
+      description: "Will output the xdebug xml to the Atom debugger"
     CustomExceptions:
       type: 'array'
       default: []
@@ -152,11 +159,11 @@ module.exports = PhpDebug =
     @GlobalContext.onSessionEnd () =>
       @getUnifiedView().setConnected(false)
       if @currentCodePointDecoration
-        @currentCodePointDecoration.destroy()
+        @currentCodePointDecoration.destroy?()
 
     @GlobalContext.onRunning () =>
       if @currentCodePointDecoration
-        @currentCodePointDecoration.destroy()
+        @currentCodePointDecoration.destroy?()
 
     @GlobalContext.onWatchpointsChange () =>
       if @GlobalContext.getCurrentDebugContext()
@@ -168,14 +175,14 @@ module.exports = PhpDebug =
           for breakpoint in event.removed
             @GlobalContext.getCurrentDebugContext().executeBreakpointRemove(breakpoint)
             if breakpoint.getMarker()
-              breakpoint.getMarker().destroy()
+              breakpoint.getMarker().destroy?()
         if event.added
           for breakpoint in event.added
             @GlobalContext.getCurrentDebugContext().executeBreakpoint(breakpoint)
       if event.removed
         for breakpoint in event.removed
           if breakpoint.getMarker()
-            breakpoint.getMarker().destroy()
+            breakpoint.getMarker().destroy?()
 
     atom.workspace.observeTextEditors (editor) =>
       if (atom.config.get('php-debug.GutterBreakpointToggle'))
@@ -222,7 +229,9 @@ module.exports = PhpDebug =
       @getUnifiedView().setConnected(true)
 
   consumeStatusBar: (statusBar) ->
-    @statusView = new PhpDebugStatusView(statusBar, this)
+    @debugView = new PhpDebugDebugView(statusBar, this)
+    @consoleStatusView = new PhpDebugConsoleStatusView(statusBar, this)
+
 
   getUnifiedView: ->
     unless @unifiedView
@@ -231,14 +240,24 @@ module.exports = PhpDebug =
 
     return @unifiedView
 
+  getConsoleView: ->
+    unless @consoleView
+      PhpDebugConsoleView = require './console/php-debug-console-view'
+      @consoleView = new PhpDebugConsoleView(context: @GlobalContext)
+
+    return @consoleView
+
   serialize: ->
     @GlobalContext.serialize()
 
   deactivate: ->
     @unifiedView?.setConnected(false)
-    @statusView?.destroy()
-    @statusView = null
-    @unifiedView?.destroy()
+    @debugView?.destroy?()
+    @debugView = null
+    @consoleStatusView?.destroy?()
+    @consoleStatusView = null
+    @unifiedView?.destroy?()
+    @consoleView?.destroy?()
     @subscriptions.dispose()
     @dbgp?.close()
 
@@ -252,7 +271,7 @@ module.exports = PhpDebug =
 
       atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
         if @currentCodePointDecoration
-          @currentCodePointDecoration.destroy()
+          @currentCodePointDecoration.destroy?()
         line = point.getLine()
         range = [[line-1, 0], [line-1, 0]]
         marker = editor.markBufferRange(range, {invalidate: 'surround'})
@@ -296,14 +315,15 @@ module.exports = PhpDebug =
       if create == false
         if (editor?.gutterWithName('php-debug-gutter') != null)
           gutter = editor?.gutterWithName('php-debug-gutter')
-          gutter?.destroy()
+          gutter?.destroy?()
       else
         if recreate
           if (editor?.gutterWithName('php-debug-gutter') != null)
             gutter = editor?.gutterWithName('php-debug-gutter')
-            gutter?.destroy()
+            gutter?.destroy?()
         if (editor?.gutterWithName('php-debug-gutter') == null)
           @createGutter(editor)
+
 
   createGutter: (editor) ->
     if (!editor)
@@ -344,29 +364,38 @@ module.exports = PhpDebug =
 
   toggleDebugging: ->
     if @currentCodePointDecoration
-      @currentCodePointDecoration.destroy()
+      @currentCodePointDecoration.destroy?()
 
     if @settingsView
       @settingsView?.close()
-      @settingsView?.destroy()
+      @settingsView?.destroy?()
 
     if !@getUnifiedView().isVisible()
       @getUnifiedView().setVisible(true)
-      @statusView?.setActive(true)
+      @debugView?.setActive(true)
       if !@dbgp.listening()
         @dbgp.setPort atom.config.get('php-debug.ServerPort')
         if !@dbgp.listen()
           console.log "failed"
           @getUnifiedView().setVisible(false)
-          @statusView?.setActive(false)
+          @debugView?.setActive(false)
           return
 
       @createGutter()
 
     else
       @getUnifiedView().setVisible(false)
-      @statusView?.setActive(false)
+      @debugView?.setActive(false)
       @dbgp?.close()
+
+  toggleConsole: ->
+    if !@getConsoleView().isVisible()
+      @consoleStatusView?.setActive(true)
+      @getConsoleView().setVisible(true)
+    else
+      @getConsoleView().setVisible(false)
+      @consoleStatusView?.setActive(false)
+
 
   addWatch: ->
     editor = atom.workspace.getActivePaneItem()
@@ -410,7 +439,7 @@ module.exports = PhpDebug =
     removed = @GlobalContext.removeBreakpoint breakpoint
     if removed
       if removed.getMarker()
-        removed.getMarker().destroy()
+        removed.getMarker().destroy?()
     else
       marker = @addBreakpointMarker(line, editor)
       breakpoint.setMarker(marker)
