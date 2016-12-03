@@ -5,7 +5,8 @@ class BreakpointMarker
   constructor: (@editor,@range,@gutter) ->
     @markers = {}
     enableGutters = atom.config.get('php-debug.GutterBreakpointToggle')
-    if enableGutters && gutter
+
+    if enableGutters && @gutter
       gutterMarker = @editor.markBufferRange(@range, {invalidate: 'inside'})
       @markers.gutter = gutterMarker
     

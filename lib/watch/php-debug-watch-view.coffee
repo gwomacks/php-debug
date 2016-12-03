@@ -8,9 +8,11 @@ Watchpoint = require '../models/watchpoint'
 module.exports =
 class PhpDebugWatchView extends ScrollView
   @content: ->
-    @div class: "panel", =>
-      @div class: "panel-heading", "Watchpoints"
-      @section class: 'watchpoint-panel section', =>
+    @div class: 'php-debug-watch-view pane-item native-key-bindings', style: "overflow:auto;", tabindex: -1, =>
+      @div class: "panel-heading", =>
+        @span class: "heading-label", "Watchpoints"
+        @span class: 'close-icon'
+      @section class: 'php-debug-watches php-debug-contents section native-key-bindings', =>
         @div class: 'editor-container', =>
           @subview 'newWatchpointEditor', new TextEditorView()
         @div outlet: 'watchpointViewList', class:'php-debug-watchpoints'

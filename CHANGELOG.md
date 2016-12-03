@@ -1,3 +1,9 @@
+## 0.2.4
+* Allow main panel to be docked to the side or the bottom
+* Add an interactive console
+* Allow different views to be closed and restored
+* Many bug fixes
+
 ## 0.2.3
 * Change the way that scrolling works within the panel
 * Add ability to auto expand locals in the context
