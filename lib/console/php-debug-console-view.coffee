@@ -23,6 +23,8 @@ class PhpDebugConsoleView extends ScrollView
     super
     @GlobalContext = params.context
     @visible = false
+    @stack = []
+    @curCommand = -1
     curHeight = atom.config.get('php-debug.currentConsoleHeight')
     if (curHeight)
       this.element.style.height = curHeight
@@ -86,7 +88,6 @@ class PhpDebugConsoleView extends ScrollView
     @visible
 
   setVisible: (@visible) =>
-
     if @visible
       @panel.show()
     else
@@ -97,9 +98,12 @@ class PhpDebugConsoleView extends ScrollView
     expression = @consoleCommandLine
       .getModel()
       .getText()
+    # enqueue entered command, limit stack size and update index
+    @stack.push expression
+    @stack.shift() if @stack.length > 20
+    @curCommand = @stack.length
     @GlobalContext.notifyConsoleMessage(">" + expression)
     @GlobalContext.getCurrentDebugContext()?.evalExpression(expression)
-
     @consoleCommandLine
       .getModel()
       .setText('')
@@ -107,3 +111,14 @@ class PhpDebugConsoleView extends ScrollView
 
   isEqual: (other) ->
     other instanceof PhpDebugConsoleView
+
+  prevCommand: () ->
+    return unless @stack.length
+    @curCommand -= 1 if @curCommand > 0
+    @consoleCommandLine.getModel().setText(@stack[@curCommand])
+
+  nextCommand: () ->
+    return unless @stack.length
+    len = @stack.length
+    @curCommand += 1 if @curCommand < len
+    @consoleCommandLine.getModel().setText(if @curCommand < len then @stack[@curCommand] else '')

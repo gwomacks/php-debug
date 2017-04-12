@@ -422,10 +422,10 @@ class DbgpInstance extends DebugContext
       type: variable.$.type
     }
 
-    if variable.$.fullname?
-      datum.label = variable.$.fullname
-    else if variable.$.name?
+    if variable.$.name?
       datum.label = variable.$.name
+    else if variable.$.fullname?
+      datum.label = variable.$.fullname
 
     switch variable.$.type
       when "string"
