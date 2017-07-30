@@ -11,21 +11,25 @@ class PhpDebugUnifiedView extends ScrollView
     @div class: 'php-debug', tabindex: -1, =>
       @div class: 'php-debug-unified-view', =>
         @div class: 'block action-bar', =>
-          @button class: "btn btn-action octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', =>
-            @span class: "btn-text", "Continue"
-          @button class: "btn btn-action octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', =>
-            @span class: "btn-text", "Step Over"
-          @button class: "btn btn-action octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', =>
-            @span class: "btn-text", "Step In"
-          @button class: "btn btn-action octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', =>
-            @span class: "btn-text", "Step Out"
-          @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', =>
-            @span class: "btn-text",  "Stop"
-          @span outlet: 'connectStatus'
-          @button class: "btn restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
-          @button class: "btn view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
-          @button class: "btn view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
+          @div class: 'php-debug-view-buttons', =>
+            @button class: "btn restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
+            @button class: "btn view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
+            @button class: "btn view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
+          @div class: 'php-debug-action-buttons', =>
+            @button class: "btn btn-action octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', =>
+              @span class: "btn-text", "Continue"
+            @button class: "btn btn-action octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', =>
+              @span class: "btn-text", "Step Over"
+            @button class: "btn btn-action octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', =>
+              @span class: "btn-text", "Step In"
+            @button class: "btn btn-action octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', =>
+              @span class: "btn-text", "Step Out"
+            @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', =>
+              @span class: "btn-text",  "Stop"
+
+
         @div class: 'tabs-wrapper', outlet:'tabsWrapper', =>
+          @span outlet: 'connectStatus'
           @div class: 'tabs-view', =>
             @div outlet: 'stackView', class:'php-debug-tab'
             @div outlet: 'contextView', class:'php-debug-tab'
