@@ -1,3 +1,12 @@
+## 0.2.5
+* Implemented host specific listening [thanks lfarkas]
+* Add support for filtering file paths during debugging [thanks StAmourD]
+* Add support for activating the Atom window after a breakpoint triggers [thanks StAmourD]
+* Make adjustments to readme [thanks surfer190]
+* Add check on xdebug server for file to match breakpoints [thanks QwertyZW]
+* Adjustments to action bar button styling [thanks CraigGardener]
+* Many bug fixes
+
 ## 0.2.4
 * Allow main panel to be docked to the side or the bottom
 * Add an interactive console
