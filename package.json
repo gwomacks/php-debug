@@ -9,11 +9,12 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
-    "xml2js": ">= 0.4.6 < 0.5",
     "atom-space-pen-views": "^2.0.3",
     "event-kit": "^1.0.3",
+    "interact.js": "^1.2.5",
+    "multimatch": "^2.1.0",
     "q": "^1.1.2",
-    "interact.js": "^1.2.5"
+    "xml2js": ">= 0.4.6 < 0.5"
   },
   "consumedServices": {
     "status-bar": {
