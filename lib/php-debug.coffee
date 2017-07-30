@@ -2,6 +2,7 @@
 {Emitter} = require 'event-kit'
 {$} = require 'atom-space-pen-views'
 events = require 'events'
+multimatch = require 'multimatch'
 
 Codepoint    = require './models/codepoint'
 Breakpoint    = require './models/breakpoint'
@@ -31,6 +32,14 @@ createWatchView =  (state) ->
   PhpDebugWatchView = require './watch/php-debug-watch-view'
   @watchView = new PhpDebugWatchView(state)
 
+checkIgnoreFile =  (filepath) ->
+  WhiteList = atom.config.get('php-debug.SteppingFilter').split("\\").join("/")
+  WhiteList = WhiteList.split(";")
+  IgnoreThisFile = multimatch(filepath, WhiteList, { matchBase: true })
+  if IgnoreThisFile.length > 0
+    return false
+  else
+    return true
 
 module.exports = PhpDebug =
   subscriptions: null
@@ -55,6 +64,10 @@ module.exports = PhpDebug =
         title: "Activate Atom window after break is hit."
         type: 'boolean'
         default: true
+    SteppingFilter:
+      type: 'string'
+      default: "**"
+      description: "Prevents stopping in library files while stepping through.  White list everything with ``**``, then remove glob matches using ``!`` (eg ``**;!C:\\projects\\thislib\\**``) or whitelist only project files. (eg ``C:\\projects\\project1\\**;!C:\\projects\\project1\\frame-work.php;C:\\projects\\project2\\**;!C:\\projects\\project2\\frame-work\\**``)"
     DebugXDebugMessages:
       title: "Output raw xdebug messages to the Atom debugger"
       type: 'boolean'
@@ -72,6 +85,9 @@ module.exports = PhpDebug =
       items:
         type: 'string'
       description: "Paths in the format of remote;local (eg \"/var/www/project;C:\\projects\\mycode\")"
+    ServerAddress:
+      type: 'string'
+      default: '127.0.0.1'
     ServerPort:
       type: 'integer'
       default: 9000
@@ -146,7 +162,7 @@ module.exports = PhpDebug =
         when PhpDebugUnifiedUri
           @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
-    @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
+    @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'), serverAddress: atom.config.get('php-debug.ServerAddress'))
     @GlobalContext.onBreak (breakpoint) =>
       @doCodePoint(breakpoint)
 
@@ -269,20 +285,27 @@ module.exports = PhpDebug =
 
       filepath = helpers.remotePathToLocal(filepath)
 
-      atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
+      if checkIgnoreFile(filepath)
         if @currentCodePointDecoration
           @currentCodePointDecoration.destroy?()
-        line = point.getLine()
-        range = [[line-1, 0], [line-1, 0]]
-        marker = editor.markBufferRange(range, {invalidate: 'surround'})
+        if @GlobalContext.getCurrentDebugContext()
+          @GlobalContext.getCurrentDebugContext().continue "step_out"
+      else
+        atom.workspace.open(filepath,{searchAllPanes: true, activatePane:true}).then (editor) =>
+          if @currentCodePointDecoration
+            @currentCodePointDecoration.destroy?()
+          line = point.getLine()
+          range = [[line-1, 0], [line-1, 0]]
+          marker = editor.markBufferRange(range, {invalidate: 'surround'})
 
-        type = point.getType?() ? 'generic'
-        @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
-        editor.scrollToBufferPosition([line-1,0])
-      if (atom.config.get('php-debug.ActivateWindow'))
-        atom.focus()
-      @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
+          type = point.getType?() ? 'generic'
+          @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
+          editor.scrollToBufferPosition([line-1,0])
+          if (atom.config.get('php-debug.ActivateWindow'))
+            atom.focus()
+        @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
+        
   addBreakpointMarker: (line, editor) ->
     gutter = editor.gutterWithName("php-debug-gutter")
     range = [[line-1, 0], [line-1, 0]]
