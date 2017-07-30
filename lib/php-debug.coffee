@@ -68,6 +68,9 @@ module.exports = PhpDebug =
       items:
         type: 'string'
       description: "Paths in the format of remote;local (eg \"/var/www/project;C:\\projects\\mycode\")"
+    ServerAddress:
+      type: 'string'
+      default: '127.0.0.1'
     ServerPort:
       type: 'integer'
       default: 9000
@@ -142,7 +145,7 @@ module.exports = PhpDebug =
         when PhpDebugUnifiedUri
           @createUnifiedView(uri: PhpDebugUnifiedUri, context: @GlobalContext)
     Dbgp = require './engines/dbgp/dbgp'
-    @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'))
+    @dbgp = new Dbgp(context: @GlobalContext, serverPort: atom.config.get('php-debug.ServerPort'), serverAddress: atom.config.get('php-debug.ServerAddress'))
     @GlobalContext.onBreak (breakpoint) =>
       @doCodePoint(breakpoint)
 

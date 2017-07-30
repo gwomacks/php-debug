@@ -168,14 +168,16 @@ class PhpDebugUnifiedView extends ScrollView
       @connectStatus.text('Connected')
     else
       serverPort = atom.config.get('php-debug.ServerPort')
-      @connectStatus.text("Listening on port #{serverPort}...")
+      serverAddress = atom.config.get('php-debug.ServerAddress')
+      @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
 
   setVisible: (@visible) =>
 
     if @visible
       @panel.show()
       serverPort = atom.config.get('php-debug.ServerPort')
-      @connectStatus.text("Listening on port #{serverPort}...")
+      serverAddress = atom.config.get('php-debug.ServerAddress')
+      @connectStatus.text("Listening on address:port #{serverAddress}:#{serverPort}...")
     else
       @panel.hide()
 
@@ -200,7 +202,7 @@ class PhpDebugUnifiedView extends ScrollView
       action = e.target.getAttribute('data-action')
       if e.target.tagName.toLowerCase() == "span"
         action = e.target.parentNode.getAttribute('data-action')
-      
+
       switch action
         when 'continue'
           @GlobalContext.getCurrentDebugContext().continue "run"
