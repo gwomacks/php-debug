@@ -45,6 +45,11 @@ module.exports = PhpDebug =
   subscriptions: null
 
   config:
+    EnableStatusbarButtons:
+      title: "Enable buttons on status bar"
+      type: 'boolean'
+      default: true
+      description: "Enable buttons on status bar"
     GutterBreakpointToggle:
       title: "Enable breakpoint markers in the gutter"
       type: 'boolean'
@@ -144,6 +149,7 @@ module.exports = PhpDebug =
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleBreakpoint': => @toggleBreakpoint()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:breakpointSettings': => @breakpointSettings()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleDebugging': => @toggleDebugging()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:toggleConsole': => @toggleConsole()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:addWatch': => @addWatch()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:run': => @run()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOver': => @stepOver()
@@ -245,8 +251,15 @@ module.exports = PhpDebug =
       @getUnifiedView().setConnected(true)
 
   consumeStatusBar: (statusBar) ->
-    @debugView = new PhpDebugDebugView(statusBar, this)
-    @consoleStatusView = new PhpDebugConsoleStatusView(statusBar, this)
+    atom.config.observe "php-debug.EnableStatusbarButtons", (enable) =>
+      if enable
+        @debugView = new PhpDebugDebugView(statusBar, this)
+        @consoleStatusView = new PhpDebugConsoleStatusView(statusBar, this)
+      else
+        @consoleStatusView?.destroy?()
+        @consoleStatusView = null
+        @debugView?.destroy?()
+        @debugView = null
 
 
   getUnifiedView: ->

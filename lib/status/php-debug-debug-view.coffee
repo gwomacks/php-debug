@@ -9,7 +9,7 @@ class PhpDebugDebugView extends View
 
   constructor: (statusBar, @phpDebug) ->
     super
-    statusBar.addLeftTile(item: @element, priority: -100)
+    @tile = statusBar.addLeftTile(item: @element, priority: -100)
 
   toggleDebugging: ->
     @phpDebug.toggleDebugging()
@@ -20,4 +20,5 @@ class PhpDebugDebugView extends View
     else
       @element.className = 'php-debug-debug-view'
 
-  destroy: =>
+  destroy: ->
+    @tile?.destroy?()
