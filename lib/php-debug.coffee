@@ -60,6 +60,10 @@ module.exports = PhpDebug =
       type: 'boolean'
       default: false
       description: "Will cause locals to auto open when starting a new debugging session"
+    ActivateWindow:
+        title: "Activate Atom window after break is hit."
+        type: 'boolean'
+        default: true
     SteppingFilter:
       type: 'string'
       default: "**"
@@ -297,8 +301,11 @@ module.exports = PhpDebug =
           type = point.getType?() ? 'generic'
           @currentCodePointDecoration = editor.decorateMarker(marker, {type: 'line', class: 'debug-break-'+type})
           editor.scrollToBufferPosition([line-1,0])
+          if (atom.config.get('php-debug.ActivateWindow'))
+            atom.focus()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
+        
   addBreakpointMarker: (line, editor) ->
     gutter = editor.gutterWithName("php-debug-gutter")
     range = [[line-1, 0], [line-1, 0]]
