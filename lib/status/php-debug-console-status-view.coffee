@@ -9,8 +9,7 @@ class PhpDebugConsoleStatusView extends View
 
   constructor: (statusBar, @phpDebug) ->
     super
-    statusBar.addLeftTile(item: @element, priority: -99)
-
+    @tile = statusBar.addLeftTile(item: @element, priority: -99)
 
   toggleConsole: ->
     @phpDebug.toggleConsole()
@@ -20,3 +19,6 @@ class PhpDebugConsoleStatusView extends View
       @element.className = 'php-debug-console-view active'
     else
       @element.className = 'php-debug-console-view'
+
+  destroy: ->
+    @tile?.destroy?()
