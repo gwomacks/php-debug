@@ -83,7 +83,7 @@ class PhpDebugUnifiedView extends ScrollView
             target.style.width = target.style.height = null
           else
             return # No-Op
-        if event.rect.width < 262
+        else if event.rect.width < 262
           if event.rect.width < 1
             target.style.width = target.style.height = null
           else
@@ -104,7 +104,10 @@ class PhpDebugUnifiedView extends ScrollView
     @resizer = @resizer.on('resizeend', (event) =>
         if (@panelMode == "bottom")
           event.target.style.width = 'auto'
-          atom.config.set('php-debug.currentPanelHeight',event.target.style.height);
+          if event.target.style.height == '0px'
+            atom.config.set('php-debug.currentPanelHeight','25px');
+          else
+            atom.config.set('php-debug.currentPanelHeight',event.target.style.height);
         else
           event.target.style.height = 'auto'
           atom.config.set('php-debug.currentPanelWidth',event.target.style.width);
