@@ -44,9 +44,14 @@ See can find a complete list and explanation of Xdebug settings [here](http://xd
 ## Start Debugging ##
 
 To begin debugging:
+
 1. Open up your PHP file in atom
-2. Move the cursor to a line you want to break on, and set a breakpoint by pressing Alt+F9 or selecting Toggle Breakpoint from the Command Palette (ctrl+shift+p) or the php-debug menu (Packages -> php-debug->Toggle Breakpoint). This will highlight the line number green, to indicate the presence of a breakpoint.
-3. Open up the debug view by pressing ctrl+alt+d, or selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
+2. Add a breakpoint:
+
+    Move the cursor to a line you want to break on and set a breakpoint by pressing `Alt+F9`, selecting Toggle Breakpoint from the Command Palette (`ctrl+shift+p`)or with the php-debug menu (`Packages -> php-debug->Toggle Breakpoint`).
+    This will highlight the line number green, to indicate the presence of a breakpoint.
+
+3. Open the debug view by pressing `ctrl+alt+d`, selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
 4. Start the script with Xdebug enabled. If everything is setup correctly, the entire line of the breakpoint will be highlighted in green, indicating the current line of the script.
 
 If everything worked correctly, you can now use the various buttons/commands to step through the script.
@@ -65,10 +70,10 @@ Put the following in your config.cson
   }
   ```
 
-### Server Port ###
+### Server Port
 This is the port that the atom client will listen on.
 Defaults to 9000
 
-### Path Maps ###
+### Path Maps
 If debugging code that resides on a remote machine, use pathmaps to map a path
 on the remote machine to a path on the local machine.
