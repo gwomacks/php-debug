@@ -15,7 +15,7 @@ This is currently an alpha release, and still in active development.
 # Getting Started
 
 ## Install Xdebug ##
-You may already have Xdebug installed. Check the results of the [phpinfo function](http://php.net/manual/en/function.phpinfo.php) for xdebug information.  
+You may already have Xdebug installed. Check the results of the [phpinfo function](http://php.net/manual/en/function.phpinfo.php) for xdebug information.
 If no xdebug section exists, you likely need to install this. *nix users can likely find it within their package manager of choice.
 Alternative installation or compiling instructions are available [here](http://xdebug.org/docs/install).
 
@@ -36,7 +36,8 @@ The alternative is to switch xdebug.remote_autostart to false, and install an Xd
  - [The easiest Xdebug](https://addons.mozilla.org/en-US/firefox/addon/the-easiest-xdebug/) for Mozilla Firefox
  - [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) for Google Chrome
 
-These browser extensions will give you a button within your browser to enable/disable Xdebug.
+These browser extensions will give you a button within your browser to enable/disable Xdebug. The extensions might have configuration options for an "IDE key" (which is used for an XDEBUG_SESSION cookie). The IDE key for Atom with PHP Debug is "xdebug-atom".
+
 It is also possible to run a php script from the command line with Xdebug enabled.
 You can find more information on this at the Xdebug documentation for [Starting The Debugger](http://xdebug.org/docs/remote#starting).
 See can find a complete list and explanation of Xdebug settings [here](http://xdebug.org/docs/all_settings).
