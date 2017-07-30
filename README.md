@@ -57,7 +57,7 @@ If everything worked correctly, you can now use the various buttons/commands to 
 
 # Settings
 
-Put the following in your config.cson
+Put the following in your config.cson from File -> Config...
 ```cson
 "php-debug":
   {
@@ -69,6 +69,7 @@ Put the following in your config.cson
     ]
   }
   ```
+Be sure to indent it under "*"
 
 ### Server Port ###
 This is the port that the atom client will listen on.
