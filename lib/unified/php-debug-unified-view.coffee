@@ -12,9 +12,9 @@ class PhpDebugUnifiedView extends ScrollView
       @div class: 'php-debug-unified-view', =>
         @div class: 'block action-bar', =>
           @div class: 'php-debug-view-buttons', =>
-            @button class: "btn restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
-            @button class: "btn view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
-            @button class: "btn view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
+            @button class: "btn btn-no-deactive restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
+            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
+            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
           @div class: 'php-debug-action-buttons', =>
             @button class: "btn btn-action octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', =>
               @span class: "btn-text", "Continue"
@@ -41,11 +41,11 @@ class PhpDebugUnifiedView extends ScrollView
     @GlobalContext = params.context
     @contextList = []
     @GlobalContext.onBreak () =>
-      @find('button').enable()
+      @find('button:not(.btn-no-deactive)').enable()
     @GlobalContext.onRunning () =>
-      @find('button').disable()
+      @find('button:not(.btn-no-deactive)').disable()
     @GlobalContext.onSessionEnd () =>
-      @find('button').disable()
+      @find('button:not(.btn-no-deactive)').disable()
 
     @find('.php-debug-tab .panel-heading').on 'click', (e) =>
       @handlePanelClick($(e.target))
