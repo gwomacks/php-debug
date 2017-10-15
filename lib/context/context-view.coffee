@@ -37,6 +37,6 @@ class ContextView extends View
             if Array.isArray(item.value)
               fnWalkVar(item.value)
           contextVar.sort(cbDeepNaturalSort)
-
-      fnWalkVar(@context.context.variables)
+      if (atom.config.get('php-debug.SortArray'))
+        fnWalkVar(@context.context.variables)
       @contextListView.append(new ContextVariableListView( {name: @context.name, summary: null, variables: @context.context.variables, autoopen: openChildren, openpaths:@autoopen, parent:null}))
