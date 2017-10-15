@@ -34,3 +34,7 @@
   'alt-f6': 'php-debug:stepOver'
   'alt-f7': 'php-debug:stepIn'
   'alt-f8': 'php-debug:stepOut'
+
+'atom-workspace .php-debug-console atom-text-editor':
+  'alt-up': 'php-debug:navigatePreviousConsoleCommand'
+  'alt-down': 'php-debug:navigateNextConsoleCommand'

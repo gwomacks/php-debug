@@ -157,6 +157,8 @@ module.exports = PhpDebug =
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:stepOut': => @stepOut()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllBreakpoints': => @clearAllBreakpoints()
     @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:clearAllWatchpoints': => @clearAllWatchpoints()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:navigatePreviousConsoleCommand': => @navigatePreviousConsoleCommand()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'php-debug:navigateNextConsoleCommand': => @navigateNextConsoleCommand()
     @subscriptions.add atom.workspace.addOpener (filePath) =>
       switch filePath
         when PhpDebugContextUri
@@ -480,3 +482,9 @@ module.exports = PhpDebug =
       marker = @addBreakpointMarker(line, editor)
       breakpoint.setMarker(marker)
       @GlobalContext.addBreakpoint breakpoint
+
+  navigatePreviousConsoleCommand: ->
+    @consoleView.prevCommand()
+
+  navigateNextConsoleCommand: ->
+    @consoleView.nextCommand()
