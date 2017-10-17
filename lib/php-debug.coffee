@@ -94,6 +94,10 @@ module.exports = PhpDebug =
       items:
         type: 'string'
       description: "Paths in the format of remote;local (eg \"/var/www/project;C:\\projects\\mycode\")"
+    PathMapsEnabled:
+      title: 'Enable Path Map'
+      type: 'boolean'
+      default: true
     ServerAddress:
       type: 'string'
       default: '127.0.0.1'

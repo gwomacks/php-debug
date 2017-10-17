@@ -26,6 +26,10 @@ class PhpDebugUnifiedView extends ScrollView
               @span class: "btn-text", "Step Out"
             @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', =>
               @span class: "btn-text",  "Stop"
+            @button
+              class: "btn btn-action btn-no-deactive mdi mdi-folder-multiple inline-block-tight action-path-map"
+              title: "Toggle Path Map"
+              'data-action': 'togglePathMap'
 
 
         @div class: 'tabs-wrapper', outlet:'tabsWrapper', =>
@@ -46,6 +50,11 @@ class PhpDebugUnifiedView extends ScrollView
       @find('button:not(.btn-no-deactive)').disable()
     @GlobalContext.onSessionEnd () =>
       @find('button:not(.btn-no-deactive)').disable()
+
+    @setEnablePathMaps atom.config.get('php-debug.PathMapsEnabled')
+    
+    atom.config.onDidChange 'php-debug.PathMapsEnabled', ({newValue, oldValue}) =>
+      @setEnablePathMaps newValue
 
     @find('.php-debug-tab .panel-heading').on 'click', (e) =>
       @handlePanelClick($(e.target))
@@ -166,6 +175,18 @@ class PhpDebugUnifiedView extends ScrollView
     @find('.php-debug').addClass('panel-mode-'+@panelMode)
     @resizer = @resizer.resizable({edges: @resizeType})
 
+  setEnablePathMaps: (value) ->
+    atom.config.set('php-debug.PathMapsEnabled', value)
+    if value
+      @find('.action-path-map').addClass('mdi-folder-multiple')
+      @find('.action-path-map').removeClass('mdi-folder-multiple-outline');
+    else
+      @find('.action-path-map').addClass('mdi-folder-multiple-outline');
+      @find('.action-path-map').removeClass('mdi-folder-multiple')
+
+  togglePathMap: ->
+    @setEnablePathMaps not atom.config.get('php-debug.PathMapsEnabled')
+
   setConnected: (isConnected) =>
     if (@panel?.item?.clientHeight > 0)
       @panel?.item?.style.height = @panel?.item?.clientHeight + 'px'
@@ -221,6 +242,8 @@ class PhpDebugUnifiedView extends ScrollView
           @GlobalContext.getCurrentDebugContext().continue "step_out"
         when 'stop'
           @GlobalContext.getCurrentDebugContext().executeDetach()
+        when 'togglePathMap'
+          @togglePathMap()
         when 'restore'
           @find('.php-debug-tab').css('display','block')
         when 'setmode-bottom'

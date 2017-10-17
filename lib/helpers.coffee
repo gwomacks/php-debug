@@ -64,36 +64,40 @@ exports.deserializeArray = (array) ->
   return ret
 
 exports.localPathToRemote = (localPath) ->
-  pathMaps = atom.config.get('php-debug.PathMaps')
-  for pathMap in pathMaps
-    remote = pathMap.substring(0,pathMap.indexOf(";"))
-    local = pathMap.substring(pathMap.indexOf(";")+1)
-    if localPath.indexOf(local) == 0
-      path = localPath.replace(local, remote)
-      if remote.indexOf('/') != null
-        # remote path appears to be a unix path, so replace any \'s with /'s'
-        path = path.replace(/\\/g, '/')
-      else if remote.indexOf('\\') != null
-        # remote path appears to be a windows path, so replace any /'s with \'s'
-        path = path.replace(/\//g, '\\')
-      return path.replace('file://','')
+  pathMapsEnabled = atom.config.get('php-debug.PathMapsEnabled')
+  if pathMapsEnabled
+    pathMaps = atom.config.get('php-debug.PathMaps')
+    for pathMap in pathMaps
+      remote = pathMap.substring(0,pathMap.indexOf(";"))
+      local = pathMap.substring(pathMap.indexOf(";")+1)
+      if localPath.indexOf(local) == 0
+        path = localPath.replace(local, remote)
+        if remote.indexOf('/') != null
+          # remote path appears to be a unix path, so replace any \'s with /'s'
+          path = path.replace(/\\/g, '/')
+        else if remote.indexOf('\\') != null
+          # remote path appears to be a windows path, so replace any /'s with \'s'
+          path = path.replace(/\//g, '\\')
+        return path.replace('file://','')
   return localPath.replace('file://','')
 
 exports.remotePathToLocal = (remotePath) ->
-  pathMaps = atom.config.get('php-debug.PathMaps')
   remotePath = decodeURI(remotePath)
-  for pathMap in pathMaps
-    remote = pathMap.substring(0,pathMap.indexOf(";"))
-    local = pathMap.substring(pathMap.indexOf(";")+1)
-    if remotePath.indexOf('/') != null && remotePath.indexOf('/') != 0
-      adjustedPath = '/' + remotePath
-      if adjustedPath.indexOf(remote) == 0
-        return adjustedPath.replace(remote, local)
-        break
-    else
-      if remotePath.indexOf(remote) == 0
-        return remotePath.replace(remote, local)
-        break
+  pathMapsEnabled = atom.config.get('php-debug.PathMapsEnabled')
+  if pathMapsEnabled
+    pathMaps = atom.config.get('php-debug.PathMaps')
+    for pathMap in pathMaps
+      remote = pathMap.substring(0,pathMap.indexOf(";"))
+      local = pathMap.substring(pathMap.indexOf(";")+1)
+      if remotePath.indexOf('/') != null && remotePath.indexOf('/') != 0
+        adjustedPath = '/' + remotePath
+        if adjustedPath.indexOf(remote) == 0
+          return adjustedPath.replace(remote, local)
+          break
+      else
+        if remotePath.indexOf(remote) == 0
+          return remotePath.replace(remote, local)
+          break
   adjustedPath = remotePath.replace('file://','')
   if (/^\/[a-zA-Z]:\//.test(adjustedPath))
     return adjustedPath.substr(1);
