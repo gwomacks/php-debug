@@ -63,7 +63,7 @@ Put the following in your config.cson from File -> Config...
 "php-debug":
   {
     ServerPort: 9000
-    ServerAddress: 127.0.0.1
+    ServerAddress: "127.0.0.1"
     PathMaps: [
       "remotepath;localpath"
       "/base/path/on/remote/system;C:\\base\\path\\on\\local\\system"
