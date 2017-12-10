@@ -51,6 +51,7 @@ To begin debugging:
 
   Move the cursor to a line you want to break on and set a breakpoint by pressing `Alt+F9`, selecting Toggle Breakpoint from the Command Palette (`ctrl+shift+p`)or with the php-debug menu (`Packages -> php-debug->Toggle Breakpoint`).
   This will highlight the line number green, to indicate the presence of a breakpoint.
+  
 3. Open the debug view by pressing `ctrl+alt+d`, selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
 4. Start the script with Xdebug enabled. If everything is setup correctly, the entire line of the breakpoint will be highlighted in green, indicating the current line of the script.
 
@@ -63,7 +64,7 @@ Put the following in your config.cson from File -> Config...
 "php-debug":
   {
     ServerPort: 9000
-    ServerAddress: 127.0.0.1
+    ServerAddress: "127.0.0.1"
     PathMaps: [
       "remotepath;localpath"
       "/base/path/on/remote/system;C:\\base\\path\\on\\local\\system"
