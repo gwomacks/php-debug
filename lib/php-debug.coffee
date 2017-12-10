@@ -486,6 +486,7 @@ module.exports = PhpDebug =
       return if !editor || !editor.getSelectedBufferRange
       range = editor.getSelectedBufferRange()
       line = range.getRows()[0]+1
+    return if !editor || !editor.getPath
     path = editor.getPath()
     breakpoint = new Breakpoint({filepath:path, line:line})
     removed = @GlobalContext.removeBreakpoint breakpoint
