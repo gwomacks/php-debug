@@ -97,6 +97,7 @@ class Breakpoint extends Codepoint
     return true
 
   isGreaterThan: (other) ->
+    return false if !other instanceof Breakpoint
     return !@isLessThan(other) && !@isEqual(other)
 
   @fromMarker: (marker) ->

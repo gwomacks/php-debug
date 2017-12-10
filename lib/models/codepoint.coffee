@@ -42,6 +42,7 @@ class Codepoint
     return true
 
   isGreaterThan: (other) ->
+    return false if !other instanceof Codepoint
     return !@isLessThan(other) && !@isEqual(other)
 
   @fromMarker: (marker) ->

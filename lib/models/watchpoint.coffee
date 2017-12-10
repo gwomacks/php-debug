@@ -41,4 +41,5 @@ class Watchpoint
     return true
 
   isGreaterThan: (other) ->
+    return false if !other instanceof Watchpoint
     return !@isLessThan(other) && !@isEqual(other)
