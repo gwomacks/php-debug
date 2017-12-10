@@ -65,6 +65,10 @@ module.exports = PhpDebug =
       type: 'boolean'
       default: false
       description: "Will cause locals to auto open when starting a new debugging session"
+    SortArray:
+      title: "Sort Array/Object Elements Alphabetically"
+      type: 'boolean'
+      default: false
     ActivateWindow:
         title: "Activate Atom window after break is hit."
         type: 'boolean'
@@ -135,10 +139,6 @@ module.exports = PhpDebug =
         UnknownError:
           type: 'boolean'
           default: true
-    SortArray:
-      title: "Sort Array/Object Elements Alphabetically"
-      type: 'boolean'
-      default: true
 
   activate: (state) ->
     if state
