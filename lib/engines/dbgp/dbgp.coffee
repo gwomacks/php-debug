@@ -17,9 +17,23 @@ class Dbgp
 
   setPort: (port) ->
     @serverPort = port
+    if @listening
+      @close()
+      @listen()
+
 
   setAddress: (address) ->
     @serverAddress = address
+    if @listening
+      @close()
+      @listen()
+
+  setAddressPort: (address,port) ->
+    @serverPort = port
+    @serverAddress = address
+    if @listening
+      @close()
+      @listen()
 
   listening: ->
     return @server != undefined
@@ -33,6 +47,7 @@ class Dbgp
     net = require "net"
     buffer = ''
     try
+      @close()
       @GlobalContext?.notifyConsoleMessage "Listening on Address:Port " + @serverAddress + ":" + @serverPort
       console.log "Listening on Address:Port " + @serverAddress + ":" + @serverPort
       @server = net.createServer( (socket) =>
@@ -54,8 +69,10 @@ class Dbgp
         @close()
         @GlobalContext.notifySocketError()
         return false
-
-      @server?.listen @serverPort, @serverAddress
+      if @serverAddress == "*"
+        @server?.listen @serverPort
+      else
+        @server?.listen @serverPort, @serverAddress
       return true
     catch e
       @GlobalContext?.notifyConsoleMessage "Error: " + "Socket Error:", e

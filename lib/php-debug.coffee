@@ -176,7 +176,7 @@ module.exports = PhpDebug =
       @doCodePoint(codepoint)
 
     @GlobalContext.onSocketError () =>
-      @toggleDebugging()
+      @toggleDebugging(false)
 
     @GlobalContext.onSessionEnd () =>
       @getUnifiedView().setConnected(false)
@@ -220,6 +220,14 @@ module.exports = PhpDebug =
 
     atom.config.observe "php-debug.GutterPosition", (newValue) =>
       @createGutters atom.config.get('php-debug.GutterBreakpointToggle'),true
+
+    atom.config.observe "php-debug.ServerAddress", (newValue) =>
+      if @dbgp
+        @dbgp.setAddress newValue
+
+    atom.config.observe "php-debug.ServerPort", (newValue) =>
+      if @dbgp
+        @dbgp.setPort newValue
 
     atom.contextMenu.add 'atom-text-editor': [{
         label: 'Add to watch'
@@ -318,7 +326,7 @@ module.exports = PhpDebug =
             atom.focus()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
-        
+
   addBreakpointMarker: (line, editor) ->
     gutter = editor.gutterWithName("php-debug-gutter")
     range = [[line-1, 0], [line-1, 0]]
@@ -398,7 +406,8 @@ module.exports = PhpDebug =
           marker = @addBreakpointMarker(breakpoint.getLine(), editor)
           breakpoint.setMarker(marker)
 
-  toggleDebugging: ->
+  toggleDebugging: (allowOpen) ->
+
     if @currentCodePointDecoration
       @currentCodePointDecoration.destroy?()
 
@@ -406,11 +415,11 @@ module.exports = PhpDebug =
       @settingsView?.close()
       @settingsView?.destroy?()
 
-    if !@getUnifiedView().isVisible()
+    if !@getUnifiedView().isVisible() && (allowOpen == undefined || allowOpen == true)
       @getUnifiedView().setVisible(true)
       @debugView?.setActive(true)
       if !@dbgp.listening()
-        @dbgp.setPort atom.config.get('php-debug.ServerPort')
+        @dbgp.setAddressPort(atom.config.get('php-debug.ServerAddress'),atom.config.get('php-debug.ServerPort'))
         if !@dbgp.listen()
           console.log "failed"
           @getUnifiedView().setVisible(false)
