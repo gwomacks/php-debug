@@ -1,3 +1,13 @@
+## 0.2.6
+* Fix bug(s) with new socket binding code, should fix Atom freezes
+* Fix for scrollbar styling [thanks pictus]
+* Add console history/log [thanks StAmourD and cgalvarez]
+* Add theming to panel php data [thanks StAmourD and cgalvarez]
+* Add better display/styling of object/arrays [thanks StAmourD and cgalvarez]
+* Sorting for objects/arrays [thanks StAmourD and cgalvarez]
+* Bug fixes [with thanks StAmourD and cgalvarez]
+* Documentation fix for ServerAddress [thanks ptrm04]
+
 ## 0.2.5
 * Implemented host specific listening [thanks lfarkas]
 * Add support for filtering file paths during debugging [thanks StAmourD]
