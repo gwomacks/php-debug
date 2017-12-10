@@ -346,6 +346,7 @@ module.exports = PhpDebug =
       if bp.getPath() == path && bp.getLine() == line
         breakpoint = bp
         break
+    return if !breakpoint
     @settingsView = new BreakpointSettingsView({breakpoint:breakpoint,context:@GlobalContext})
     @settingsView.attach()
 
