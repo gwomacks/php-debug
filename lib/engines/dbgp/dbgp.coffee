@@ -16,24 +16,27 @@ class Dbgp
     @serverAddress = params.serverAddress
 
   setPort: (port) ->
-    @serverPort = port
-    if @listening
-      @close()
-      @listen()
+    if port != @serverPort
+      @serverPort = port
+      if @listening()
+        @close()
+        @listen()
 
 
   setAddress: (address) ->
-    @serverAddress = address
-    if @listening
-      @close()
-      @listen()
+    if address != @serverAddress
+      @serverAddress = address
+      if @listening()
+        @close()
+        @listen()
 
   setAddressPort: (address,port) ->
-    @serverPort = port
-    @serverAddress = address
-    if @listening
-      @close()
-      @listen()
+    if port != @serverPort || address != @serverAddress
+      @serverPort = port
+      @serverAddress = address
+      if @listening()
+        @close()
+        @listen()
 
   listening: ->
     return @server != undefined
@@ -47,11 +50,10 @@ class Dbgp
     net = require "net"
     buffer = ''
     try
-      @close()
-      @GlobalContext?.notifyConsoleMessage "Listening on Address:Port " + @serverAddress + ":" + @serverPort
-      console.log "Listening on Address:Port " + @serverAddress + ":" + @serverPort
+      console.log "Attempting to setup server"
+      if @listening()
+        @close()
       @server = net.createServer( (socket) =>
-
         socket.setEncoding('ascii');
         if !@GlobalContext.getCurrentDebugContext()
           @GlobalContext?.notifyConsoleMessage "Session initiated"
@@ -69,10 +71,14 @@ class Dbgp
         @close()
         @GlobalContext.notifySocketError()
         return false
-      if @serverAddress == "*"
-        @server?.listen @serverPort
-      else
-        @server?.listen @serverPort, @serverAddress
+      serverOptions = {}
+      serverOptions.port = @serverPort
+      if @serverAddress != "*"
+        serverOptions.host = @serverAddress
+
+      @server?.listen serverOptions, () =>
+          @GlobalContext?.notifyConsoleMessage "Listening on Address:Port " + @serverAddress + ":" + @serverPort
+          console.log "Listening on Address:Port " + @serverAddress + ":" + @serverPort
       return true
     catch e
       @GlobalContext?.notifyConsoleMessage "Error: " + "Socket Error:", e
@@ -91,5 +97,5 @@ class Dbgp
     unless !@server
       @server.close()
       delete @server
-    @GlobalContext?.notifyConsoleMessage "Closed"
-    console.log("closed")
+      @GlobalContext?.notifyConsoleMessage "Closed"
+      console.log("closed")
