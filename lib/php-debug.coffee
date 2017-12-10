@@ -135,6 +135,10 @@ module.exports = PhpDebug =
         UnknownError:
           type: 'boolean'
           default: true
+    SortArray:
+      title: "Sort Array/Object Elements Alphabetically"
+      type: 'boolean'
+      default: true
 
   activate: (state) ->
     if state
@@ -320,7 +324,7 @@ module.exports = PhpDebug =
             atom.focus()
         @GlobalContext.getCurrentDebugContext().syncCurrentContext(point.getStackDepth())
 
-        
+
   addBreakpointMarker: (line, editor) ->
     gutter = editor.gutterWithName("php-debug-gutter")
     range = [[line-1, 0], [line-1, 0]]
