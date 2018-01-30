@@ -13,19 +13,15 @@ class PhpDebugUnifiedView extends ScrollView
         @div class: 'block action-bar', =>
           @div class: 'php-debug-view-buttons', =>
             @button class: "btn btn-no-deactive restore-btn mdi mdi-window-restore inline-block-tight", 'data-action':'restore', "Restore Panels"
-            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', ""
-            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', ""
+            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-side mdi mdi-rotate-right-variant inline-block-tight", 'data-action':'setmode-side', "Move to Side Panel"
+            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-bottom mdi mdi-rotate-left-variant inline-block-tight", style: 'transform: rotate(-90deg)', 'data-action':'setmode-bottom', "Move to Bottom Panel"
+            @button class: "btn btn-no-deactive view-mode-btn view-mode-btn-close mdi mdi-close inline-block-tight", 'data-action':'close', 'data-tooltip-command':'php-debug:toggleDebugging', "Close"
           @div class: 'php-debug-action-buttons', =>
-            @button class: "btn btn-action octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', =>
-              @span class: "btn-text", "Continue"
-            @button class: "btn btn-action octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', =>
-              @span class: "btn-text", "Step Over"
-            @button class: "btn btn-action octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', =>
-              @span class: "btn-text", "Step In"
-            @button class: "btn btn-action octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', =>
-              @span class: "btn-text", "Step Out"
-            @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', =>
-              @span class: "btn-text",  "Stop"
+            @button class: "btn btn-action octicon icon-playback-play inline-block-tight",    disabled: 'disabled', 'data-action':'continue', 'data-tooltip-command':'php-debug:run', "Continue"
+            @button class: "btn btn-action octicon icon-steps inline-block-tight",            disabled: 'disabled', 'data-action':'step', 'data-tooltip-command':'php-debug:stepOver', "Step Over"
+            @button class: "btn btn-action octicon icon-sign-in inline-block-tight",          disabled: 'disabled', 'data-action':'in', 'data-tooltip-command':'php-debug:stepIn', "Step In"
+            @button class: "btn btn-action octicon icon-sign-out inline-block-tight",         disabled: 'disabled', 'data-action':'out', 'data-tooltip-command':'php-debug:stepOut', "Step Out"
+            @button class: "btn btn-action octicon icon-primitive-square inline-block-tight", disabled: 'disabled', 'data-action':'stop', "Stop"
 
 
         @div class: 'tabs-wrapper', outlet:'tabsWrapper', =>
@@ -62,6 +58,15 @@ class PhpDebugUnifiedView extends ScrollView
       e.preventDefault()
       false
 
+    @find('.action-bar button').each ->
+      btn = $(this)
+      text = btn.text()
+      btn.text("")
+      if text
+        tooltip = title: text
+        tooltip.keyBindingCommand = btn.data().tooltipCommand
+
+        atom.tooltips.add this, tooltip
 
     @panelMode = atom.config.get('php-debug.currentPanelMode')
     @resizeType = { top: true, left:false }
@@ -76,43 +81,43 @@ class PhpDebugUnifiedView extends ScrollView
     @resizer = @resizer.resizable({edges: @resizeType})
 
     @resizer = @resizer.on('resizemove', (event) =>
-
-        target = event.target
-        if event.rect.height < 25
-          if event.rect.height < 1
-            target.style.width = target.style.height = null
-          else
-            return # No-Op
-        else if event.rect.width < 262
-          if event.rect.width < 1
-            target.style.width = target.style.height = null
-          else
-            return # No-Op
+      target = event.target
+      if event.rect.height < 25
+        if event.rect.height < 1
+          target.style.width = target.style.height = null
         else
-          $(@.element).removeClass('narrow')
-          if (@panelMode == "side")
-            if (event.rect.width < 408)
-              $(@.element).addClass('narrow')
+          return # No-Op
+      else if event.rect.width < 262
+        if event.rect.width < 1
+          target.style.width = target.style.height = null
+        else
+          return # No-Op
+      else
+        $(@.element).removeClass('narrow')
+        if (@panelMode == "side")
+          if (event.rect.width < 408)
+            $(@.element).addClass('narrow')
 
-          target.style.width  = event.rect.width + 'px'
-          target.style.height = event.rect.height + 'px'
-          if (@panelMode == "bottom")
-            @find('.tabs-wrapper').css('height',event.rect.height + 'px')
-          else
-            @find('.tabs-wrapper').css('width',event.rect.width + 'px')
-      )
-    @resizer = @resizer.on('resizeend', (event) =>
+        target.style.width  = event.rect.width + 'px'
+        target.style.height = event.rect.height + 'px'
         if (@panelMode == "bottom")
-          event.target.style.width = 'auto'
-          if event.target.style.height == '0px'
-            atom.config.set('php-debug.currentPanelHeight','25px');
-          else
-            atom.config.set('php-debug.currentPanelHeight',event.target.style.height);
+          @find('.tabs-wrapper').css('height',event.rect.height + 'px')
         else
-          event.target.style.height = 'auto'
-          atom.config.set('php-debug.currentPanelWidth',event.target.style.width);
+          @find('.tabs-wrapper').css('width',event.rect.width + 'px')
+    )
 
-      )
+    @resizer = @resizer.on('resizeend', (event) =>
+      if (@panelMode == "bottom")
+        event.target.style.width = 'auto'
+        if event.target.style.height == '0px'
+          atom.config.set('php-debug.currentPanelHeight','25px')
+        else
+          atom.config.set('php-debug.currentPanelHeight',event.target.style.height)
+      else
+        event.target.style.height = 'auto'
+        atom.config.set('php-debug.currentPanelWidth',event.target.style.width)
+
+    )
 
 
     @visible = false
@@ -139,8 +144,8 @@ class PhpDebugUnifiedView extends ScrollView
         width = atom.config.get('php-debug.currentPanelWidth')
         if (!width)
           width = '262px'
-        @find('.view-mode-btn-side').attr({disabled:true});
-        @find('.view-mode-btn-bottom').attr({disabled:false});
+        @find('.view-mode-btn-side').addClass("hide")
+        @find('.view-mode-btn-bottom').removeClass("hide")
         @find('.tabs-wrapper').css('width',width)
         $(this.element).css('width',width)
         @find('.tabs-wrapper').css('height','auto')
@@ -153,9 +158,9 @@ class PhpDebugUnifiedView extends ScrollView
           @panel.destroy()
         height = atom.config.get('php-debug.currentPanelHeight')
         if (!height)
-          height = '250px';
-        @find('.view-mode-btn-bottom').attr({disabled:true});
-        @find('.view-mode-btn-side').attr({disabled:false});
+          height = '250px'
+        @find('.view-mode-btn-bottom').addClass("hide")
+        @find('.view-mode-btn-side').removeClass("hide")
         @find('.tabs-wrapper').css('height',height)
         $(this.element).css('height',height)
         @find('.tabs-wrapper').css('width','auto')
@@ -195,8 +200,8 @@ class PhpDebugUnifiedView extends ScrollView
     if (@panelMode == "side")
       target.parent().find('.php-debug-contents').toggle()
 
-  handlePanelCloseClick: (target) =>
-      target.parents('.php-debug-tab').css('display','none');
+  handlePanelCloseClick: (target) ->
+    target.parents('.php-debug-tab').css('display','none')
 
   initialize: (params) =>
     super
@@ -227,6 +232,8 @@ class PhpDebugUnifiedView extends ScrollView
           @setPanelMode('bottom')
         when 'setmode-side'
           @setPanelMode('side')
+        when 'close'
+          atom.commands.dispatch atom.views.getView(atom.workspace), 'php-debug:toggleDebugging'
 
         else
           console.error "unknown action"
