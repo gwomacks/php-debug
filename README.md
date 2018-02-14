@@ -59,7 +59,7 @@ If everything worked correctly, you can now use the various buttons/commands to 
 
 # Settings
 
-Put the following in your config.cson from File -> Config...
+Put the following in your config.cson from Edit -> Config...
 ```cson
 "php-debug":
   {
