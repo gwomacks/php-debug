@@ -8,9 +8,6 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 'atom-workspace':
-  'ctrl-alt-d': 'php-debug:toggleDebugging'
-  'ctrl-alt-w': 'php-debug:addWatch'
-  'alt-f9': 'php-debug:toggleBreakpoint'
   'alt-f5': 'php-debug:run'
   'alt-f6': 'php-debug:stepOver'
   'alt-f7': 'php-debug:stepIn'
@@ -18,25 +15,21 @@
 
 # Add more specific keymap overrides for php files
 "atom-text-editor[data-grammar='text html php']":
-  'ctrl-alt-d': 'php-debug:toggleDebugging'
-  'ctrl-alt-w': 'php-debug:addWatch'
-  'alt-f9': 'php-debug:toggleBreakpoint'
+  'ctrl-alt-d': 'atom-debug-ui:toggleDebugging'
+  'ctrl-alt-f': 'atom-debug-ui:addWatch'
+  'ctrl-alt-w': 'atom-debug-ui:addWatchpoint'
+  'alt-f9': 'atom-debug-ui:toggleBreakpoint'
   'alt-f5': 'php-debug:run'
   'alt-f6': 'php-debug:stepOver'
   'alt-f7': 'php-debug:stepIn'
   'alt-f8': 'php-debug:stepOut'
 
 '.php-debug':
-  'ctrl-alt-d': 'php-debug:toggleDebugging'
-  'ctrl-alt-w': 'php-debug:addWatch'
-  'alt-f9': 'php-debug:toggleBreakpoint'
+  'ctrl-alt-d': 'atom-debug-ui:toggleDebugging'
+  'ctrl-alt-f': 'atom-debug-ui:addWatch'
+  'ctrl-alt-w': 'atom-debug-ui:addWatchpoint'
+  'alt-f9': 'atom-debug-ui:toggleBreakpoint'
   'alt-f5': 'php-debug:run'
   'alt-f6': 'php-debug:stepOver'
   'alt-f7': 'php-debug:stepIn'
   'alt-f8': 'php-debug:stepOut'
-
-'atom-workspace .php-debug-console atom-text-editor':
-  'alt-up': 'php-debug:navigatePreviousConsoleCommand'
-  'alt-down': 'php-debug:navigateNextConsoleCommand'
-  'up': 'php-debug:navigatePreviousConsoleCommand'
-  'down': 'php-debug:navigateNextConsoleCommand'

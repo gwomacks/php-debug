@@ -1,3 +1,20 @@
+## 0.3.0
+* Almost a complete rewrite
+* Utilize atom-debug-ui package
+* UTF-8 Support for member names and data
+* Support for multiple debug sessions/instances
+* New pathmaps functionality, old style is replaced
+* Better status messages
+* More options for UI tweeks
+
+* Via atom-debug-ui: A huge number of UI cleanups
+* Via atom-debug-ui: Support for Atom dock functionality
+* Via atom-debug-ui: Floating/Overlay Actionbar
+* Via atom-debug-ui: Better access to settings for breakpoints
+* Via atom-debug-ui: Better highlighting for variables
+* Via atom-debug-ui: Better status messages
+* Via atom-debug-ui: Better console support
+
 ## 0.2.6
 * Fix bug(s) with new socket binding code, should fix Atom freezes
 * Fix for scrollbar styling [thanks pictus]

@@ -5,241 +5,29 @@
 @import "ui-variables";
 @import (inline) "../iconsets/materialdesignicons.css";
 
-.panel-right,
-.panel-left {
-  .php-debug {
-    overflow-y: scroll;
-
-    .panel-heading .close-icon {
-      display:none;
-    }
-    .restore-btn {
-      display:none;
-    }
-    .php-debug-contents {
-      margin-bottom: 8.5px;
-    }
-    .tabs-view {
-      flex-wrap: wrap;
-      flex-direction:row;
-    }
-    .php-debug-tab
-    {
-      flex:initial;
-      overflow-y: scroll;
-      width:100%;
+.atom-debug-ui {
+  .action-bar {
+    .pathmaps-btn {
+     float:left;
     }
   }
-  .php-debug.narrow {
-    .btn-text {
-      display:none;
+  .default-breakpoints-view {
+    .breakpoint-enabled {
+      margin-right: 1em;
+    }
+    .default-breakpoints-header {
+      display:block;
+      font-weight:bold;
+      margin-left: 1em;
+      margin-bottom: 0.5em;
     }
   }
 }
-
-.php-debug {
-  overflow-y: hidden;
-  .php-debug-view-buttons {
-    float: right;
+.atom-debug-ui-console {
+  .redirect-stderr-btn.btn-active,
+  .redirect-stdout-btn.btn-active {
+    background-color: @background-color-info;
+    background-image: -webkit-linear-gradient(@background-color-info, darken(@background-color-info, 8%));
+    color: #FFF;
   }
-  .syntax--variable:after {
-    content: "=";
-    padding-left: 8px;
-  }
-  .syntax--property:after {
-    content: ":";
-    padding-left: 8px;
-  }
-  .php-debug-tab
-  {
-    flex:1;
-    overflow-y: scroll;
-    padding-bottom: 10px;
-  }
-  .view-mode-btn {
-    width: 26px;
-    height: 26px;
-    padding: 0;
-  }
-  .tabs-view {
-    margin-top: 8.5px;
-  }
-  .breakpoint-line
-  {
-    padding-left: 5px;
-  }
-  .stack-frame-label
-  {
-
-  }
-  .stack-frame-filepath
-  {
-
-  }
-
-  li {
-    list-style-type: none;
-  }
-
-  ul {
-    padding-left: 15px;
-  }
-  .php-debug-watchpoints .type,
-  .context-variable-list-view .type {
-    padding-left: 1em;
-  }
-
-}
-.php-debug-console {
-  .console-list-view {
-    list-style:none;
-    margin-left: 0;
-    padding-left:1em;
-    margin-bottom:2.5px;
-    max-height:75%;
-  }
-  .panel-title {
-    padding-right: 1em;
-    padding-left: 1em;
-  }
-  .console-item {
-    list-style:none;
-    border-bottom: 1px solid #383232;
-    padding-bottom: 2px;
-    padding-top: 2px;
-    .line {
-      white-space: pre-wrap;
-    }
-  }
-  .console-panel {
-    min-height: 100%;
-    display:flex;
-    flex-direction:column;
-    margin-top:-10px;
-  }
-  .php-debug-console-contents {
-    flex:1;
-    flex-direction: column;
-    overflow-y: scroll;
-    height:100%
-  }
-  .editor-container {
-    flex:1;
-    flex-direction:column;
-    max-height:58px;
-  }
-  .editor-container .editor::shadow {
-    .line-numbers {
-      text-indent: 999em;
-      width: 3px;
-      overflow: hidden;
-      position: relative;
-    }
-  }
-}
-
-.breakpoint-settings-view .setting-container atom-text-editor[mini] {
-  width: 100%;
-}
-.breakpoint-settings-view .setting-container .setting-action {
-  padding-left: .5em;
-  line-height: 2em;
-}
-
-atom-panel.modal .breakpoint-settings-view .setting-new atom-text-editor[mini] {
-  margin-bottom: .15em;
-}
-
-.breakpoint-settings-view .setting-container {
-  display:flex;
-  align-items: stretch;
-}
-
-.breakpoint-settings-view .close-icon,
-.panel-heading .close-icon,
-.php-debug-watchpoints .close-icon {
-  position: absolute;
-  top: 1px;
-  right: 10px;
-  cursor: default;
-  top: -1.2em;
-  right: 0;
-  z-index: 2;
-  padding: 0 0.8em;
-  height: 3em;
-  line-height: 3em;
-  text-align: center;
-  transform:scale(1);
-  transition:transform .08s;
-}
-
-.panel-heading .close-icon {
-  position:relative;
-  float:right;
-}
-
-.panel-heading .close-icon:hover {
-  transform:scale(1.5);
-  transition:transform .08s;
-}
-
-.breakpoint-settings-view .close-icon:hover {
-  transform:scale(1.5);
-  transition:transform .08s;
-}
-
-.breakpoint-settings-view .close-icon:before,
-.panel-heading .close-icon:before,
-.php-debug-watchpoints .close-icon:before {
-  font-family: 'Octicons Regular';
-  font-weight: normal;
-  font-style: normal;
-  display: inline-block;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  text-decoration: none;
-  font-size: 12px;
-  width: 12px;
-  height: 12px;
-  content: "\f081";
-}
-
-.php-debug-watches .editor-container {
-  padding-bottom: 2px;
-}
-
-.php-debug-watchpoints .close-icon {
-  top: 0em;
-  right: 0;
-  height: 1em;
-  line-height: 1em;
-}
-
-.php-debug-watchpoints .close-icon:hover {
-  transform:scale(1.1);
-  transition:transform .08s;
-}
-
-.tabs-view {
-
-    display: flex;
-    height: 100%;
-    padding-bottom: 75px;
-}
-
-.tabs-view:nth-child(1) {
-  order: 0;
-}
-.tabs-view:nth-child(2) {
-  order: 1;
-}
-.tabs-view:nth-child(3) {
-  order: 2;
-}
-.tabs-view:nth-child(3) {
-  order: 3;
-}
-
-.php-debug-watchpoints .watch-item {
-  position:relative;
 }
