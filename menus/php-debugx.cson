@@ -1,0 +1,27 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'PHP-Debug'
+      'submenu': [
+        {
+          'label': 'Run'
+          'command': 'php-debug:run'
+        },
+        {
+          'label': 'Step Over'
+          'command': 'php-debug:stepOver'
+        },
+        {
+          'label': 'Step In'
+          'command': 'php-debug:stepIn'
+        },
+        {
+          'label': 'Step Out'
+          'command': 'php-debug:stepOut'
+        },
+      ]
+    ]
+  }
+]

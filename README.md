@@ -3,14 +3,19 @@
 Debug PHP code using the [Xdebug PHP Extension](http://xdebug.org/).
 
 # Features
-- Add Breakpoints
+- Interactive Console
+- Breakpoints
+- Watches
+- Multiple Debug Sessions
+- Path Mappings
 - Step through debugging (Over, In, Out)
 - Stack and Context views
-- Add Watchpoints to inspect current values of variables
+- UTF8 Support
+- Uses atom-debug-ui
 
 This is currently an alpha release, and still in active development.
 
-![](https://raw.githubusercontent.com/gwomacks/php-debug/master/screenshot.png)
+![](https://raw.githubusercontent.com/gwomacks/php-debug/master/screenshot.gif)
 
 # Getting Started
 
@@ -51,27 +56,13 @@ To begin debugging:
 
   Move the cursor to a line you want to break on and set a breakpoint by pressing `Alt+F9`, selecting Toggle Breakpoint from the Command Palette (`ctrl+shift+p`)or with the php-debug menu (`Packages -> php-debug->Toggle Breakpoint`).
   This will highlight the line number green, to indicate the presence of a breakpoint.
-  
+
 3. Open the debug view by pressing `ctrl+alt+d`, selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
 4. Start the script with Xdebug enabled. If everything is setup correctly, the entire line of the breakpoint will be highlighted in green, indicating the current line of the script.
 
 If everything worked correctly, you can now use the various buttons/commands to step through the script.
 
 # Settings
-
-Put the following in your config.cson from File -> Config...
-```cson
-"php-debug":
-  {
-    ServerPort: 9000
-    ServerAddress: "127.0.0.1"
-    PathMaps: [
-      "remotepath;localpath"
-      "/base/path/on/remote/system;C:\\base\\path\\on\\local\\system"
-    ]
-  }
-  ```
-Be sure to indent it under "*"
 
 ### Server Port ###
 This is the port that the atom client will listen on.
@@ -81,6 +72,26 @@ Defaults to 9000
 This is the address that the atom client will listen on.
 Defaults to 127.0.0.1
 
+### Xdebug DBGP Protocol Debugging ###
+Outputs protocol debugging messages to the atom debug console
+
+### Xdebug: Max Depth ###
+Max depth for variable scopes
+
+### Xdebug: Max children ###
+Maximum number of array elements to show in variables
+
+### Xdebug: Max Data ###
+Maximum data for variables
+
+### Display: Sort Arrays/Object alphabetically ###
+Sort Arrays/Object alphabetically instead of by php default
+
+### Display: Status Bar ###
+Allow PHP Debug to be opened from the status bar
+
+### Exceptions ###
+Default exceptions and errors for PHP-Debug to break on
+
 ### Path Maps ###
-If debugging code that resides on a remote machine, use pathmaps to map a path
-on the remote machine to a path on the local machine.
+Pathmaps are now configured for each project folder during connection

@@ -1,65 +1,18 @@
 @import "ui-variables";
 
 
-.gutter .php-debug-gutter {
-  height: 7px !important;
-  width: 7px;
-  display: block;
-  margin-left: 2px;
-  margin-top: 6px;
-  border-radius: 50%;
-}
-// Styling Error Types
-.gutter .php-debug-gutter.highlight {
-
-  background-color: @background-color-info;
-  color: white;
-
-}
-
-.gutter>.line-numbers>.php-debug-breakpoint,
-.gutter>.line-numbers>div>.php-debug-breakpoint,
-.gutter>.line-numbers>.tile>.php-debug-breakpoint {
-    color: #fff;
-    background-color: #0F0 !important;
-}
-
-.debug-break-break {
-  background-color: fade(@background-color-success,25%) !important;
-}
-.debug-break-generic {
-  background-color: fade(@background-color-success,25%) !important;
-}
-
-.debug-break-error {
-  background-color: fade(@background-color-error,15%) !important;
-}
-
-.php-debug {
-  overflow: auto;
-}
-
-.php-debug-console {
-  padding-top: 10px;
-}
-.php-debug-debug-console-view {
-  margin: 0 10px 10px 10px;
-}
-.php-debug-unified-view {
-  margin: 10px;
-}
-
-.php-debug-debug-view,
-.php-debug-console-view {
+.php-debug-debug-view-toggle,
+.php-debug-console-view-toggle {
   display: inline-block;
   color: @text-color-subtle;
   border: 1px solid @button-border-color;
   background: fade(@button-background-color, 33%);
   cursor: pointer;
-  vertical-align: middle;
+  vertical-align: top;
+  height:100%;
   position: relative;
   padding: 0 .6em;
-  line-height: 1.8em;
+  line-height: 2.0em;
   margin-right: 0.6em;
 
   &:active {
@@ -69,4 +22,8 @@
     color: @text-color-highlight;
     background: @button-background-color;
   }
+}
+
+.php-debug-pathmaps-view .pathmaps-settings-actions {
+  margin-top: 1.5em;
 }
