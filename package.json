@@ -165,21 +165,21 @@
               "title" : "Watches",
               "default" : true,
               "type" : "boolean",
-              "description" : "Show breakpoints panel",
+              "description" : "Show watches panel",
               "order": 2
             },
             "context" : {
               "title" : "Context",
               "default" : true,
               "type" : "boolean",
-              "description" : "Show breakpoints panel",
+              "description" : "Show context panel",
               "order": 3
             },
             "scope" : {
               "title" : "Scope",
               "default" : true,
               "type" : "boolean",
-              "description" : "Show breakpoints panel",
+              "description" : "Show scope panel",
               "order": 5
             }
           }
