@@ -1,3 +1,8 @@
+## 0.3.1
+* Fix multiple issues with the parser
+* Fix typo for notifications
+* Fix check for notification installation prompt
+
 ## 0.3.0
 * Almost a complete rewrite
 * Utilize atom-debug-ui package
