@@ -1,3 +1,6 @@
+## 0.3.2
+* Fix typo in fix for 0.3.1 parser
+
 ## 0.3.1
 * Fix multiple issues with the parser
 * Fix typo for notifications
