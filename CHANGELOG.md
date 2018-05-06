@@ -1,3 +1,7 @@
+## 0.3.3
+* Additional parser fixes
+* Additional debugging functionality to the parser
+
 ## 0.3.2
 * Fix typo in fix for 0.3.1 parser
 
