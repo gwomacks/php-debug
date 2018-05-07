@@ -29,7 +29,8 @@
     "auto-bind-inheritance" : "^1.0.6",
     "promise" : "^8.0.1",
     "fast-glob": "^2.2.1",
-    "fuzzaldrin": "^2.1.0"
+    "fuzzaldrin": "^2.1.0",
+    "compare-versions": "^3.1.0"
   },
   "providedServices" : {
     "debug-engine" : {
