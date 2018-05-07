@@ -74,26 +74,33 @@
           "description" : "The port for the debug server to listen on",
           "order": 2
         },
+        "keepAlive" : {
+          "title" : "Continue to listen for debug sessions even if the debugger windows are closed",
+          "default" : false,
+          "type" : "boolean",
+          "description" : "Allow PHP-Debug to continue to handle sessions after closing the windows. They will be reopened on new connections",
+          "order": 4
+        },
         "protocolDebugging" : {
           "title" : "Xdebug DBGP Protocol Debugging",
           "default" : false,
           "type" : "boolean",
           "description" : "Output received DBGP messsages to the Atom console",
-          "order": 3
+          "order": 5
         },
         "redirectStdout" : {
           "title" : "Automatically redirect Stdout to the console",
           "default" : false,
           "type" : "boolean",
           "description" : "Output all PHP Stdout data to the console",
-          "order": 4
+          "order": 6
         },
         "redirectStderr" : {
           "title" : "Automatically redirect Stderr to the console",
           "default" : false,
           "type" : "boolean",
           "description" : "Output all PHP Stderr data to the console",
-          "order": 5
+          "order": 7
         }
       }
     },
