@@ -136,6 +136,13 @@
           "type" : "boolean",
           "description" : "When a project has no path map set automatically look through all the projects in Atom to try and find a match",
           "order": 5
+        },
+        "multipleSessions" : {
+          "title" : "Allow for multiple debug sessions at once",
+          "default" : true,
+          "type" : "boolean",
+          "description" : "Allows PHP-Debug to handle multiple debug sessions at the same time",
+          "order": 6
         }
       }
     },
