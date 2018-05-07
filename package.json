@@ -127,7 +127,15 @@
           "title" : "Path Mappings",
           "type" : "string",
           "default" : "",
-          "description" : "JSON Object of Path Mappings"
+          "description" : "JSON Object of Path Mappings",
+          "order": 4
+        },
+        "projectScan" : {
+          "title" : "Automatically scan projects in Atom to try and find path maps",
+          "default" : true,
+          "type" : "boolean",
+          "description" : "When a project has no path map set automatically look through all the projects in Atom to try and find a match",
+          "order": 5
         }
       }
     },
