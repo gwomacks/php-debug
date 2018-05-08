@@ -1,7 +1,7 @@
 {
   "name": "php-debug",
   "main": "./lib/php-debug",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A package for the Atom Text Editor for debugging PHP code using the XDebug extension",
   "repository": "https://github.com/gwomacks/php-debug",
   "bugs": {
@@ -76,7 +76,7 @@
           "order": 2
         },
         "keepAlive" : {
-          "title" : "Continue to listen for debug sessions even if the debugger windows are closed",
+          "title" : "Continue to listen for debug sessions even if the debugger windows are all closed",
           "default" : false,
           "type" : "boolean",
           "description" : "Allow PHP-Debug to continue to handle sessions after closing the windows. They will be reopened on new connections",

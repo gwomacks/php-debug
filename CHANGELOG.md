@@ -1,3 +1,13 @@
+## 0.3.4
+* Even more parser fixes
+* Feature: Ability to ignore paths/files via pathmap setting where the local side is set to "!"
+* Feature: New configuration option "Allow for multiple debug sessions at once" to disable/enable multi session support
+* Feature: New configuration option "Automatically scan projects in Atom to try and find path maps"
+* Feature: New configuration option "Continue to listen for debug sessions even if the debugger windows are all closed"
+* Breakpoints now print info to the PHP-Debug console
+* Fix missing code for atom commands
+* Update to require version 1.0.3 of atom-debug-ui
+
 ## 0.3.3
 * Additional parser fixes
 * Additional debugging functionality to the parser
