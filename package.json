@@ -281,6 +281,16 @@
       "type": "boolean",
       "default": true,
       "order": 6
+    },
+    "pathMapsSearchIgnore": {
+      "title": "Ignore paths during pathmaps search",
+      "description": "Comma separated list of paths to ignore during pathmaps search",
+      "type": "array",
+      "default": ["!**/.git/**","!**/.*/**"],
+      "items": {
+        "type": "string"
+      },
+      "order": 7
     }
   }
 }
