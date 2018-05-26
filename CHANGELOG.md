@@ -1,3 +1,10 @@
+## 0.3.5
+* Fix issue where turning off multiple sessions wasn't working
+* Fix several issues where pathmaps weren't functioning correctly
+* Add ability to ignore pathmap files by setting the local path to "?"
+* Misc bug Fixes
+* Add configuration to have pathmap searching ignore certain directories
+
 ## 0.3.4
 * Even more parser fixes
 * Feature: Ability to ignore paths/files via pathmap setting where the local side is set to "!"
