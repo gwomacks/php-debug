@@ -262,6 +262,13 @@
           "type" : "boolean",
           "description" : "Break on notice messages",
           "order": 7
+        },
+        "all": {
+          "title": "All Exceptions/Errors",
+          "default": false,
+          "type": "boolean",
+          "description": "Break on all thrown errors and exceptions",
+          "order": 8
         }
       }
     },
