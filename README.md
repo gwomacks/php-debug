@@ -29,11 +29,11 @@ Alternative installation or compiling instructions are available [here](http://x
 ```
 xdebug.remote_enable=1
 xdebug.remote_host=127.0.0.1
-xdebug.remote_connect_back=1    # Not safe for production servers
 xdebug.remote_port=9000
 xdebug.remote_handler=dbgp
 xdebug.remote_mode=req
-xdebug.remote_autostart=true
+xdebug.remote_autostart=1
+xdebug.remote_connect_back=1  # Note: Not safe for production servers
 ```
 
 With these settings, PHP will connect to your editor for every script it executes.
