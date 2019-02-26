@@ -41,7 +41,7 @@ The alternative is to switch xdebug.remote_autostart to false, and install an Xd
  - [The easiest Xdebug](https://addons.mozilla.org/en-US/firefox/addon/the-easiest-xdebug/) for Mozilla Firefox
  - [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) for Google Chrome
 
-These browser extensions will give you a button within your browser to enable/disable Xdebug. The extensions might have configuration options for an "IDE key" (which is used for an XDEBUG_SESSION cookie). The IDE key for Atom with PHP Debug is "xdebug-atom".
+These browser extensions will give you a button within your browser to enable/disable Xdebug. The extensions might have configuration options for an "IDE key" (which is used for an XDEBUG_SESSION cookie). The IDE key for Atom with PHP Debug is `xdebug-atom`.
 
 It is also possible to run a php script from the command line with Xdebug enabled.
 You can find more information on this at the Xdebug documentation for [Starting The Debugger](http://xdebug.org/docs/remote#starting).
@@ -54,10 +54,10 @@ To begin debugging:
 1. Open up your PHP file in atom
 2. Add a breakpoint:
 
-  Move the cursor to a line you want to break on and set a breakpoint by pressing `Alt+F9`, selecting Toggle Breakpoint from the Command Palette (`ctrl+shift+p`)or with the php-debug menu (`Packages -> php-debug->Toggle Breakpoint`).
+  Move the cursor to a line you want to break on and set a breakpoint by pressing `Alt+F9`, selecting Toggle Breakpoint from the Command Palette (`Ctrl+Shift+P`)or with the php-debug menu (`Packages` -> `php-debug` -> `Toggle Breakpoint`).
   This will highlight the line number green, to indicate the presence of a breakpoint.
 
-3. Open the debug view by pressing `ctrl+alt+d`, selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
+3. Open the debug view by pressing `Ctrl+Alt+D`, selecting 'Toggle Debugging' from the Command Palette or php-debug menu.
 4. Start the script with Xdebug enabled. If everything is setup correctly, the entire line of the breakpoint will be highlighted in green, indicating the current line of the script.
 
 If everything worked correctly, you can now use the various buttons/commands to step through the script.
@@ -66,11 +66,11 @@ If everything worked correctly, you can now use the various buttons/commands to 
 
 ### Server Port ###
 This is the port that the atom client will listen on.
-Defaults to 9000
+Defaults to `9000`
 
 ### Server Address ###
 This is the address that the atom client will listen on.
-Defaults to 127.0.0.1
+Defaults to `127.0.0.1`
 
 ### Xdebug DBGP Protocol Debugging ###
 Outputs protocol debugging messages to the atom debug console
