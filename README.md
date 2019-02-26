@@ -38,7 +38,7 @@ xdebug.remote_autostart=true
 
 With these settings, PHP will connect to your editor for every script it executes.
 The alternative is to switch xdebug.remote_autostart to false, and install an Xdebug helper extension for your browser of choice, such as:
- - [The easiest Xdebug](https://addons.mozilla.org/en-US/firefox/addon/the-easiest-xdebug/) for Mozilla Firefox
+ - [Xdebug Helper for Firefox](https://addons.mozilla.org/en-GB/firefox/addon/xdebug-helper-for-firefox/) for Mozilla Firefox
  - [Xdebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) for Google Chrome
 
 These browser extensions will give you a button within your browser to enable/disable Xdebug. The extensions might have configuration options for an "IDE key" (which is used for an XDEBUG_SESSION cookie). The IDE key for Atom with PHP Debug is "xdebug-atom".
